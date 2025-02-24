@@ -1,4 +1,4 @@
-# Sybil Account Identification (Graph Analysis to Boolean)
+# Sybil Account Identification
 
 ## Goal
 
