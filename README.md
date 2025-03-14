@@ -12,7 +12,7 @@ To ensure long-term economic viability the network treasury earns a commission o
 
 
 
-1. [Overview](/docs/OVERVIEW.md) - A high level overview of the protocol.
+1. [Whitepaper vAlpha](/ForestAI_Whitepaper_Version_Alpha.md) - A high level overview of the protocol.
 2. [Protocols](/proposed-protocols) - The specification of each AI competition aka protocol as a markdown specs 
 3. [Contracts](/contracts) - Solidity smart contracts defining token distribution mechanism.
 4. [FIP Discussions](https://github.com/Forest-Protocols/protocols/discussions) - A forum where Forest Improvement Proposals (FIP) are discussed.
