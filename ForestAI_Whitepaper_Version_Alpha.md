@@ -426,6 +426,8 @@ The below example is simplified for illustrative purposes.
 
 4. Each Validator in a Protocol gets tokens according to its consensus score
 
+<img src="./img/cmd_emissions.jpg" alt="Cmd view" width="750">
+
 The cascading nature of the emissions are visualised below:
 
 <img src="./img/emissions.jpg" alt="Cascading emissions" width="750">
