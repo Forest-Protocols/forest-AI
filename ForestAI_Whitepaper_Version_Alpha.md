@@ -507,11 +507,14 @@ Individual scores, where a Validator tests an individual Offer from a Provider, 
 
 To calculate a Provider's final rank in Protocol $p$, we take the weighted average of all score results. The weights are the Validator Credibility Coefficients (VCC).
 
+<!-- latex fomula
 $$
 \text{r}(pt, prov, epoch) 
   = \frac{\displaystyle\sum_{v \in \mathcal{V}, epoch \in \mathcal{E}}  \Bigl(\text{Score}(pt, prov, val, epoch)\times \text{VCC}_\text{val, epoch-1}\Bigr)}
-         {\displaystyle\sum_{v \in \mathcal{V}, epoch \in \mathcal{E}} \text{VCC}_\text{val, epoch-1}}.
+         {\displaystyle\sum_{v \in \mathcal{V}, epoch \in \mathcal{E}} \text{VCC}_\text{val, epoch-1}}
 $$
+ -->
+ <img src="./img/ranks_calculation.jpg" alt="Time progress" width="600">
 
 where:
 
@@ -536,6 +539,7 @@ where:
 
 If the Provider Rank is a positive number then the Provider takes part in the rewards distribution. If it's a negative number then the Provider gets slashed. 
 
+<!-- latex fomula
 $$
 \text{Emissions}(r, pt, epoch) =
 \begin{cases}
@@ -546,6 +550,9 @@ $$
     & \text{if } r < 0.
 \end{cases}
 $$
+-->
+ <img src="./img/emissions_calculation.jpg" alt="Time progress" width="500">
+
 where:
 - **$r$**  
   The final Rank of a Provider
