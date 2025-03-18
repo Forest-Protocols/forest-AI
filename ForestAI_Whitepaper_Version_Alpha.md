@@ -2,79 +2,79 @@
 
 ## Table of contents
 
-\# [**Abstract**](#abstract)
+> [**Abstract**](#abstract)
 
-\# [**Intro - Building an AI Innovation Engine**](#intro-building-an-ai-innovation-engine)
+> [**Intro - Building an AI Innovation Engine**](#intro-building-an-ai-innovation-engine)
 
-\# [**Motivation for Accelerating AI Innovation**](#motivation-for-accelerating-ai-innovation)
+> [**Motivation for Accelerating AI Innovation**](#motivation-for-accelerating-ai-innovation)
 
-[Societal vs. Technological Innovation](#societal-vs-technological-innovation)
+>> [Societal vs. Technological Innovation](#societal-vs-technological-innovation)
 
-[AI as the Highest-Impact Tech Innovation Frontier](#ai-as-the-highest-impact-tech-innovation-frontier)
+>> [AI as the Highest-Impact Tech Innovation Frontier](#ai-as-the-highest-impact-tech-innovation-frontier)
 
-\# [**Centralisation problem and AI's susceptibility**](#centralisation-problem-and-ais-susceptibility)
+>[**Centralisation problem and AI's susceptibility**](#centralisation-problem-and-ais-susceptibility)
 
-[AI Building Blocks](#ai-building-blocks)
+>> [AI Building Blocks](#ai-building-blocks)
 
-[Implications for Businesses](#implications-for-businesses)
+>> [Implications for Businesses](#implications-for-businesses)
 
-\# [**Roots of Innovation: Economic Theory and Historical Insights**](#roots-of-innovation-economic-theory-and-historical-insights)
+>[**Roots of Innovation: Economic Theory and Historical Insights**](#roots-of-innovation-economic-theory-and-historical-insights)
 
-\# [**Blockchain History Insights**](#blockchain-history-insights)
+>[**Blockchain History Insights**](#blockchain-history-insights)
 
-[Mining Workloads That Follow The Market](#mining-workloads-that-follow-the-market)
+>> [Mining Workloads That Follow The Market](#mining-workloads-that-follow-the-market)
 
-[Accelerating Innovation](#accelerating-innovation)
+>> [Accelerating Innovation](#accelerating-innovation)
 
-\# [**Addressing Industry Wide Overfitting of AI Models**](#addressing-industry-wide-overfitting-of-ai-models)
+>[**Addressing Industry Wide Overfitting of AI Models**](#addressing-industry-wide-overfitting-of-ai-models)
 
-\# [**How Forest Protocols Leverages Insights to Drive Innovation**](#how-forest-protocols-leverages-insights-to-drive-innovation)
+>[**How Forest Protocols Leverages Insights to Drive Innovation**](#how-forest-protocols-leverages-insights-to-drive-innovation)
 
-[Design Objectives](#design-objectives)
+>> [Design Objectives](#design-objectives)
 
-[High-level Feature Set](#high-level-feature-set)
+>> [High-level Feature Set](#high-level-feature-set)
 
-\# [**Forest Network**](#forest-network)
+>[**Forest Network**](#forest-network)
 
-[Network Actors](#network-actors)
+>> [Network Actors](#network-actors)
 
-[Basic Flow of Value between Actors](#basic-flow-of-value-between-actors)
+>> [Basic Flow of Value between Actors](#basic-flow-of-value-between-actors)
 
-\# [**Tokenomics**](#tokenomics)
+>[**Tokenomics**](#tokenomics)
 
-[Flow and Use](#flow-and-use)
+>> [Flow and Use](#flow-and-use)
 
-[Token Burning](#token-burning)
+>> [Token Burning](#token-burning)
 
-[Token Emissions](#token-emissions)
+>> [Token Emissions](#token-emissions)
 
-\# [**Validation**](#validation)
+>[**Validation**](#validation)
 
-\# [**Attack Vector Mitigation**](#attack-vector-mitigation)
+>[**Attack Vector Mitigation**](#attack-vector-mitigation)
 
-[Sybil Attack](#sybil-attack)
+>> [Sybil Attack](#sybil-attack)
 
-[Validator Vote Copying](#validator-vote-copying)
+>> [Validator Vote Copying](#validator-vote-copying)
 
-[Validator-Provider Collusion](#validator-provider-collusion)
+>> [Validator-Provider Collusion](#validator-provider-collusion)
 
-\# [**Deterministic Innovation Funding**](#deterministic-innovation-funding)
+>[**Deterministic Innovation Funding**](#deterministic-innovation-funding)
 
-\# [**Sample Use Cases**](#sample-use-cases)
+>[**Sample Use Cases**](#sample-use-cases)
 
-[Machine Translation [Text to Text]](#machine-translation-text-to-text)
+>> [Machine Translation [Text to Text]](#machine-translation-text-to-text)
 
-[Python Code Generation [Text To Text]](#python-code-generation-text-to-text)
+>> [Python Code Generation [Text To Text]](#python-code-generation-text-to-text)
 
-[Image Generation [Text to Image]](#image-generation-text-to-image)
+>> [Image Generation [Text to Image]](#image-generation-text-to-image)
 
-[Future Event Prediction [Text to Boolean]](#future-event-prediction-text-to-boolean)
+>> [Future Event Prediction [Text to Boolean]](#future-event-prediction-text-to-boolean)
 
-\# [**Moat**](#moat)
+>[**Moat**](#moat)
 
-[Strong Network Effects](#strong-network-effects)
+>> [Strong Network Effects](#strong-network-effects)
 
-\# [**References**](#references)
+>[**References**](#references)
 
 # Abstract
 
