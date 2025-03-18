@@ -1,6 +1,6 @@
 # FOREST WHITEPAPER ALPHA VERSION
 
-## Table of contents
+## Table of Contents
 
 > [**Abstract**](#abstract)
 
@@ -12,7 +12,7 @@
 
 >> [AI as the Highest-Impact Tech Innovation Frontier](#ai-as-the-highest-impact-tech-innovation-frontier)
 
->[**Centralisation problem and AI's susceptibility**](#centralisation-problem-and-ais-susceptibility)
+>[**Centralisation Problem and AI's Susceptibility**](#centralisation-problem-and-ais-susceptibility)
 
 >> [AI Building Blocks](#ai-building-blocks)
 
@@ -117,7 +117,7 @@ Moreover the overall **pace of innovation** **is** not only continuous but **dem
 
 **Artificial intelligence represents the next monumental leap in this accelerating curve.** AI is poised to transform not just individual industries but the very foundations of economic and social systems. 
 
-Some of AI’s breakthroughs already include:
+Some of AI's breakthroughs already include:
 
 * **Mastering complex strategy games like Go**[^9] where there are more possible board positions than there are atoms in the universe[^10].
 
@@ -129,7 +129,7 @@ And while most technology advancement is restricted in its impact to a few speci
 
 With global **AI investment** projected to reach **$200 billion by 2025**[^14] and AI expected to **contribute $15.7 trillion to the global economy** by 2030[^15], its influence will extend from macroeconomic growth to granular operational efficiencies. Goldman Sachs Research estimates AI could **boost** global labor **productivity by over 1% annually** in the decade following widespread adoption, with **U.S. AI-related investment peaking at 2.5–4% of GDP**.
 
-# Centralisation problem and AI’s susceptibility
+# Centralisation Problem and AI's Susceptibility
 
 However this Cambrian explosion of **AI-driven innovation paradoxically unfolds under the shadow of an emerging oligopoly**, a wider problem thwarting the whole digital space.
 
@@ -331,7 +331,7 @@ Forest Network is an **interoperable collective of incentivised Protocols**, eac
 
 ## Network Actors
 
-**Protocol** **Owners** (aka PTO): Define Protocols goals, rules, parameters and hyperparameters.
+**Protocol Owners** (aka PTO): Define Protocols goals, rules, parameters and hyperparameters.
 
 **Customers** (aka Users): Purchase AI services from Providers and influence token rewards. They get a wide & comparable offering from competing Providers, better prices, full transparency on Provider's past performance, unified interfaces and customer protection programme which mitigates the risk for trying out unknown Providers.
 
