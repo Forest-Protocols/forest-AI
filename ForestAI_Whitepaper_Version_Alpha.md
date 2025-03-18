@@ -78,7 +78,7 @@
 
 # Abstract
 
-**Forest is an AI-focused innovation engine** leveraging positive learnings from **Bitcoin mining** and **preventing tokenomics pitfalls** that allow an oligarchy of large token holders to control the network to their benefit **like in Bittensor**.
+**Forest is an AI-focused innovation engine** leveraging positive learnings from **Bitcoin mining** and **preventing tokenomics pitfalls** that allow oligarchies of large token holders to control networks to their benefit **like in Bittensor**.
 
 In Forest, **all services are available for purchase** by real-world clients on day one. This allows us to **move away from corruption-prone stake-weighted voting** and instead **distribute tokens based on verified blockchain data** on who attracts the most new customers to the network.
 
