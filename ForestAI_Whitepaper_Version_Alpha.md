@@ -50,6 +50,12 @@
 
 >[**Validation**](#validation)
 
+>> [Validation Lifecycle](#validation-lifecycle)
+
+>> [Score Aggregation](#score-aggregation)
+
+>> [Validator Credibility Coefficient](#validator-credibility-coefficient)
+
 >[**Attack Vector Mitigation**](#attack-vector-mitigation)
 
 >> [Sybil Attack](#sybil-attack)
@@ -416,6 +422,8 @@ Both this parametrization as well as control over Forest Treasury and roadmap wi
 
 While the majority of the token emissions will always be governed by on-chain revenue data, a component of the newly minted tokens can be directed to Protocols with user stake. This can function as an extention of the DAO where the token holders vote on what innovation to fund. This allows for nascent technologies that might be early on in their monetization roadmap to get sustained funding.
 
+The diagram below shows the tokonomics related flows and actions:
+
 <img src="./img/tokenomics.jpg" alt="Flow of the FOREST token" width="750">
 
 ## Token Burning 
@@ -455,10 +463,10 @@ Therefore the modified supply formula is a follows:
 
 Validation is a core pillar of the Forest Network, ensuring that AI-based services (Offers) submitted by Providers meet protocol-specific quality standards. To accomplish this, Forest Network defines a **Validator Daemon Template**, which Protocol Owners customize for their unique validation requirements. All Validators within a Protocol run an instance of this daemon. Below is an overview of the validation-related components and workflow.
 
-**Validation Lifecycle**
+## Validation Lifecycle
 
 1. **Enter Agreement**  
-   * Once an Offer is flagged for testing (immediately after registration, at random intervals, or both), the Validator Daemon must initiate an Agreement by invoking the Protocol’s smart contract.  
+   * Once an Offer is flagged for testing (immediately after registration, at random intervals, or both), the Validator Daemon must engage as a pseudonymous Customer and initiate an Agreement by invoking the Protocol’s smart contract.  
    * This action establishes a binding arrangement with the Provider, granting the Validator the right to test the Offer.  
 2. **Perform Validation Tests**  
    The daemon fetches the Offer details from both the smart contract and, if needed, directly from the Provider.  
@@ -476,7 +484,7 @@ Validation is a core pillar of the Forest Network, ensuring that AI-based servic
      ```
      struct ProviderScore {  
          uint24 provId;  
-         uint256 score;  
+         int16 score;  
          uint32 agreementId;  
      }
      ```  
@@ -492,6 +500,71 @@ Validation is a core pillar of the Forest Network, ensuring that AI-based servic
 <img src="./img/time_progress.jpg" alt="Time progress" width="750">
 
 The exact validation process is designed by the Protocol Owner who has the domain-specific know-how and is incentivised to produce the best Protocol. That’s because the better the Protocol, the more revenue it generates. The more revenue, the higher token emissions for this Protocol which translate directly to a payout for the Owner.
+
+## Score Aggregation
+
+Individual scores, where a Validator tests an individual Offer from a Provider, after they have been revealed, get aggregated into Ranks during the process of closing an Epoch. Each Provider gets assigned a Rank for each of the Protocols it takes part in for each of the processed Epochs.
+
+To calculate a Provider's final rank in Protocol $p$, we take the weighted average of all score results. The weights are the Validator Credibility Coefficients (VCC).
+
+$$
+\text{r}(pt, prov, epoch) 
+  = \frac{\displaystyle\sum_{v \in \mathcal{V}, epoch \in \mathcal{E}}  \Bigl(\text{Score}(pt, prov, val, epoch)\times \text{VCC}_\text{val, epoch-1}\Bigr)}
+         {\displaystyle\sum_{v \in \mathcal{V}, epoch \in \mathcal{E}} \text{VCC}_\text{val, epoch-1}}.
+$$
+
+where:
+
+- **$pt$**  
+  The protocol identifier
+- **$prov$**  
+  The provider whose rank we want to calculate
+- **$val$**  
+  The validator identifier
+- **$epoch$**  
+  The epoch end block number
+- **$\text{Score}(pt, prov, val, epoch)$**  
+  The individual score assigned by Validator $val$ to the Provider $prov$ in Protocol $pt$ for epoch $epoch$
+- **$\mathcal{V}$**  
+  The set of validator IDs participating in Protocol $pt$
+- **$\mathcal{E}$**  
+  The set of closed epoch block numbers
+- **$\text{VCC}_\text{val}$**  
+  The Validator Credibility Coefficient of Validator $val$
+- **$\text{r}(pt, prov, epoch)$**  
+  The final aggregated Rank (a weighted average) of the Provider $prov$ in Protocol $pt$ for epoch $epoch$
+
+If the Provider Rank is a positive number then the Provider takes part in the rewards distribution. If it's a negative number then the Provider gets slashed. 
+
+$$
+\text{Emissions}(r, pt, epoch) =
+\begin{cases}
+  \displaystyle
+  \frac{\text{EmissionAmount}_\text{pt, epoch} \cdot r}{\sum_{i=1}^{N_\text{pt, epoch}} r_\text{epoch,i}},
+    & \text{if } r \ge 0,\\[6pt]
+  r \cdot \text{MaxPunishment}_\text{pt},
+    & \text{if } r < 0.
+\end{cases}
+$$
+where:
+- **$r$**  
+  The final Rank of a Provider
+- **$pt$**  
+  The protocol identifier
+- **$epoch$**  
+  The epoch end block number
+- **$\text{EmissionAmount}_\text{pt, epoch}$**  
+  The emission amount specific to Protocol $pt$ in epoch $epoch$
+- **$\text{MaxPunishment}_\text{pt}$**  
+  The maximum punishment specific to Protocol $pt$  
+- **$N_\text{pt, epoch}$**  
+  The total number of ranks for Protocol $pt$ in epoch $epoch$
+- **$\displaystyle \sum_{i=1}^{N_\text{pt, epoch}} r_i$**  
+  The sum of all ranks $r_i$ in Protocol $pt$ in epoch $epoch$
+
+## Validator Credibility Coefficient
+
+The details will be published in a separate paper. The method for calculating the Coefficients will be similar to Yuma consensus vTrust calculations with tweaks that will allow for improved validation quality.
 
 # Attack Vector Mitigation
 
@@ -542,7 +615,7 @@ The implementation is as follows:
 
 Fundamental to our contribution to the AI industry are **robust trustworthy performance scores**. Additionally, an actor or **group controlling both a Validator and a Provider may attempt to extract unfair token rewards** by scoring themselves unfairly. In prior AI Crypto projects this kind of self-dealing was rampant and made it unattractive for fair players to compete.
 
-**We mitigate this issue by requiring all Validators to keep a publicly auditable log of every score** they have given for every prompt to every provider. If unfair scoring of one Provider is suspected **any token holder can request an audit and a DAO vote to slash** the Validator's collateral and simultaneously render the Validators' votes ineffective. The rules on how a Validator should score Providers is defined by the Protocol Owner hence also the auditing and slashing rules are defined by them. The vote may be a vote by a panel of experts over [Q](http://q.org/), a full public token holder snapshot or a combination of both.
+**We mitigate this issue by requiring all Validators to keep a publicly auditable log of every score** they have given for every prompt to every Provider. If unfair scoring of one Provider is suspected **any token holder can request an audit and a DAO vote to slash** the Validator's collateral and simultaneously render the Validators' votes ineffective. The rules on how a Validator should score Providers is defined by the Protocol Owner hence also the auditing and slashing rules are defined by them. The vote may be a vote by a panel of experts over [Q](http://q.org/), a full public token holder snapshot or a combination of both.
 
 Due to the decentralized nature of our AI performance evaluation it is easily visible if one validator unfairly favors one Provider due to their scores being a statistical outlier versus the remaining Validators. Knowing that naive collusion is easily visible will stop most people from taking the next step as they know it will take significant effort to hide the collusion and not get their stake slashed. Furthermore, the unfairly elevated score will not significantly influence Customers who can easily compare Providers themselves. When there is a mismatch between the Provider with the best score and the Provider with the most customers it might get investigated. 
 
