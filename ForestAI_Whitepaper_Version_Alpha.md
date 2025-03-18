@@ -598,9 +598,9 @@ Providers already have the common vested interest with other providers as they a
 
 [^11]:  Link: https://blog.google/technology/ai/google-deepmind-isomorphic-alphafold-3-ai-model/
 
-[^12]:  Link: https://arxiv.org/html/2309.07430v4
+[^12]:  Van Veen, D., Van Uden, C., Blankemeier, L., Delbrouck, J.-B., Aali, A., Bluethgen, C., et al. (2024). Adapted large language models can outperform medical experts in clinical text summarization. Stanford University, [link](https://arxiv.org/html/2309.07430v4)
 
-[^13]:  Link: https://arxiv.org/html/2401.16212v1
+[^13]:  Martin, L., Whitehouse, N., Yiu, S., Catterson, L., & Perera, R. (2024). Better Call GPT: Comparing large language models against lawyers, [link](https://arxiv.org/html/2401.16212v1)
 
 [^14]:  Link: https://www.goldmansachs.com/insights/articles/ai-investment-forecast-to-approach-200-billion-globally-by-2025
 
@@ -672,17 +672,17 @@ Providers already have the common vested interest with other providers as they a
 
 [^48]:  Shannon, Claude E. (1948). A Mathematical Theory of Communication Bell System Technical Journal 27: 379-423
 
-[^49]:  Srinivasan, B. (2022). The Network State: How To Start a New Country. 1729 Press, [link](Link: https://thenetworkstate.com/) 
+[^49]:  Srinivasan, B. (2022). The Network State: How To Start a New Country. 1729 Press, [link](https://thenetworkstate.com/) 
 
 [^50]:  Link: https://aclanthology.org/P02-1040.pdf
 
 [^51]:  Link: https://paperswithcode.com/sota/code-generation-on-mbpp
 
-[^52]:  [Link: https://huggingface.co/datasets/google-research-datasets/mbpp](Link: https://huggingface.co/datasets/google-research-datasets/mbpp)
+[^52]:  Link: https://huggingface.co/datasets/google-research-datasets/mbpp
 
-[^53]:  [Link: https://datasets-benchmarks-proceedings.neurips.cc/paper/2021/file/c24cd76e1ce41366a4bbe8a49b02a028-Paper-round2.pdf](Link: https://datasets-benchmarks-proceedings.neurips.cc/paper/2021/file/c24cd76e1ce41366a4bbe8a49b02a028-Paper-round2.pdf)
+[^53]:  Link: https://datasets-benchmarks-proceedings.neurips.cc/paper/2021/file/c24cd76e1ce41366a4bbe8a49b02a028-Paper-round2.pdf
 
-[^54]:  [Link: https://arxiv.org/abs/2107.03374](Link: https://arxiv.org/abs/2107.03374) [Link: https://huggingface.co/datasets/openai/openai\_humaneval](Link: https://huggingface.co/datasets/openai/openai_humaneval)
+[^54]:  Link: https://arxiv.org/abs/2107.03374  Link: https://huggingface.co/datasets/openai/openai_humaneval
 
 [^55]:  Link: https://github.com/Forest-Protocols/forest-AI/discussions/21
 
