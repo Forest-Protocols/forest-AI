@@ -1,4 +1,4 @@
-# FOREST WHITEPAPER ALPHA VERSION
+# FORESTAI WHITEPAPER ALPHA VERSION
 
 ## Table of Contents
 
@@ -28,13 +28,13 @@
 
 >[**Addressing Industry Wide Overfitting of AI Models**](#addressing-industry-wide-overfitting-of-ai-models)
 
->[**How Forest Protocols Leverages Insights to Drive Innovation**](#how-forest-protocols-leverages-insights-to-drive-innovation)
+>[**How ForestAI Leverages Insights to Drive Innovation**](#how-forestai-leverages-insights-to-drive-innovation)
 
 >> [Design Objectives](#design-objectives)
 
 >> [High-level Feature Set](#high-level-feature-set)
 
->[**Forest Network**](#forest-network)
+>[**ForestAI Network**](#forestai-network)
 
 >> [Network Actors](#network-actors)
 
@@ -84,9 +84,9 @@
 
 # Abstract
 
-**Forest is an AI-focused innovation engine** leveraging positive learnings from **Bitcoin mining** and **preventing tokenomics pitfalls** that allow oligarchies of large token holders to control networks to their benefit **like in Bittensor**.
+**ForestAI is an AI-focused innovation engine** leveraging positive learnings from **Bitcoin mining** and **preventing tokenomics pitfalls** that allow oligarchies of large token holders to control networks to their benefit **like in Bittensor**.
 
-In Forest, **all services are available for purchase** by real-world clients on day one. This allows us to **move away from corruption-prone stake-weighted voting** and instead **distribute tokens based on verified blockchain data** on who attracts the most new customers to the network.
+In ForestAI, **all services are available for purchase** by real-world clients on day one. This allows us to **move away from corruption-prone stake-weighted voting** and instead **distribute tokens based on verified blockchain data** on who attracts the most new customers to the network.
 
 Furthermore we ensure fair competition by utilizing **cheat-proof decentralized AI benchmarking** in the reward function and **collateral** **slashing** for attempted cheating. 
 
@@ -101,7 +101,7 @@ We propose a novel **solution** that **rewards innovators based on tangible, mea
 
 We believe such a radically open **system**, **steered by** indisputable **blockchain-verified monetary flows**, **free of legal overhead** and **cross-border bureaucracy**, **will accelerate the discovery** of valuable **AI problems** and the **pace of innovation itself**.
 
-**This whitepaper presents Forest** as a solution harnessing crypto- and behavioral- economics, growth theory and computer science **to realign incentives in digital markets**, **transforming AI** development **from a centralized arms race into a decentralized innovation network**.
+**This whitepaper presents ForestAI** as a solution harnessing crypto- and behavioral- economics, growth theory and computer science **to realign incentives in digital markets**, **transforming AI** development **from a centralized arms race into a decentralized innovation network**.
 
 # Motivation for Accelerating AI Innovation
 
@@ -279,7 +279,7 @@ For open source models **Dynabench**[^45] tries to solve the problem of overfitt
 
 **Decentralised systems are strongly positioned to solve** all of those issues thanks to providing proper incentivization to all parties involved while leveraging blockchains' decentralisation and transparency. **Private datasets** still can be a fundamental **part of the validation strategy**. Especially given current **advancement in privacy technologies like TEEs, ZKPs and FHE**.
 
-# How Forest Protocols Leverages Insights to Drive Innovation
+# How ForestAI Leverages Insights to Drive Innovation
 
 After analysing the problem of accelerating AI innovation from all those angles there are a number of insights that can be summarised as below:
 
@@ -292,7 +292,7 @@ After analysing the problem of accelerating AI innovation from all those angles 
 
 ## Design Objectives
 
-These insights can be applied to optimise outcomes. That’s why **Forest’s design objectives and guiding principles optimise towards**:
+These insights can be applied to optimise outcomes. That’s why **ForestAI’s design objectives and guiding principles optimise towards**:
 
 1. **discovering valuable problems to solve** to efficiently allocate capital,  
 2. **derisking the innovation game** so that Providers (incl. researches and budding entrepreneurs) can quickly get access to sustained funding if their service offers high quality,  
@@ -303,13 +303,14 @@ These insights can be applied to optimise outcomes. That’s why **Forest’s de
 7. **mitigating cognitive biases** to ensure more rational decision making,  
 8. **fostering healthy competition** to find a balance between the unproductive extremes,  
 9. **mitigating collusion between system’s Actors** to build a resilient and sustainable system,  
-10. **leveraging interoperability** to take advantage of network effects of leading ecosystems.
+10. **leveraging interoperability** to take advantage of network effects of leading ecosystems,
+11. **promoting synergy** between ForestAI-based ecosystem solutions.
 
 ## High-level Feature Set
 
-Forest’s high level feature set that addresses those points includes:
+ForestAI’s high level feature set that addresses those points includes:
 
-* **FOREST token**,   
+* **ForestAI token**,   
 * **Fair Validation**,  
 * **In-built Marketplace**,  
 * **Emission Target Discovery**,  
@@ -319,7 +320,7 @@ Forest’s high level feature set that addresses those points includes:
 * **DAO Governance,**  
 * **EVM-first Design**.
 
-By integrating **historical insights, radical transparency, behavioral incentives, and decentralized governance**, Forest creates a **blueprint for continuous AI-driven progress**. Its structure:
+By integrating **historical insights, radical transparency, behavioral incentives, and decentralized governance**, ForestAI creates a **blueprint for continuous AI-driven progress**. Its structure:
 
 * **Eliminates monopoly-driven bottlenecks in AI innovation**.
 
@@ -329,11 +330,11 @@ By integrating **historical insights, radical transparency, behavioral incentive
 
 Quoting an economist whose ideas we referred to at the beginning of this paper, **Schumpeter famously said**, when accused of being an anti-capitalist given his prediction that capitalism will fail: *“**if a doctor predicts that his patient will die presently, this does not mean that he desires it**".* We believe that blockchain-based systems, with their transparency, decentralised governance and effective crypto economics **are the cure that Schumpeter knew capitalism needed** but in his time wasn’t there. 
 
-**The cure is here \- Forest Network.**
+**The cure is here \- ForestAI Network.**
 
-# Forest Network
+# ForestAI Network
 
-Forest Network is an **interoperable collective of incentivised Protocols**, each solving a specific AI challenge with Providers offering solutions to Customers and Validators ensuring quality. **These Protocols are living organisms** that are created, managed and maintained by entities with specific roles who perform specific actions. **There are five distinct types of Actors** in the system.
+ForestAI Network is an **interoperable collective of incentivised Protocols**, each solving a specific AI challenge with Providers offering solutions to Customers and Validators ensuring quality. **These Protocols are living organisms** that are created, managed and maintained by entities with specific roles who perform specific actions. **There are five distinct types of Actors** in the system.
 
 ## Network Actors
 
@@ -343,15 +344,15 @@ Forest Network is an **interoperable collective of incentivised Protocols**, eac
 
 **Providers**: Compete to offer the best AI services. They receive USDC (later option for FOREST payments) from Customers for the Service they provide and FOREST from the Network proportional to their performance as judged by the Validators. Providers benefit from a new powerful distribution channel and rewards for innovating on valuable challenges. 
 
-**Validators**: Evaluate Providers' performance, ensure cross-compatibility, aggregate the results and rank all Providers in a specific Protocol to find the best innovators. The ranks get written to the Forest smartcontracts. For their work Validators get rewarded in FOREST.
+**Validators**: Evaluate Providers' performance, ensure cross-compatibility, aggregate the results and rank all Providers in a specific Protocol to find the best innovators. The ranks get written to the ForestAI smartcontracts. For their work Validators get rewarded in FOREST.
 
-**Forest DAO:** community of FOREST token holders that actively participate in shaping the Forest Network by discussing, proposing, voting and implementing changes.
+**ForestAI DAO:** community of FOREST token holders that actively participate in shaping the ForestAI Network by discussing, proposing, voting and implementing changes.
 
 related terms:
 
 **Protocols**: Standardize competition for an AI task. Define unified API for Providers and quality evaluation criteria for Validators.
 
-**Root Contracts**: A set of Forest smart contracts that govern on-chain network rules including Actor and Offer registrations, User-Provider Agreement accounting and billing, Validator rank submission and processing, as well as creation and distribution of FOREST tokens to Protocols and their Actors based on their customer revenue and performance.
+**Root Contracts**: A set of ForestAI smart contracts that govern on-chain network rules including Actor and Offer registrations, User-Provider Agreement accounting and billing, Validator rank submission and processing, as well as creation and distribution of FOREST tokens to Protocols and their Actors based on their customer revenue and performance.
 
 **Offer:** A proposal from a Provider to a potential Customer with details on terms and conditions of a Service or Resource that a Provider is able to deliver to a Customer should the Customer decide to enter an Agreement with the Provider.
 
@@ -371,7 +372,7 @@ FOREST token is an integral part of the incentivisation layer required for the s
 
 **A\. rewards for participating Actors**
 
-Rewarding positive behaviour that progresses the goals of the Forest Network with tokens aligns Actors’ interests with the Network’s interests. Forest rewards:
+Rewarding positive behaviour that progresses the goals of the ForestAI Network with tokens aligns Actors’ interests with the Network’s interests. ForestAI rewards:
 
 - Protocols for solving valuable challenges  
 - Providers for having high performance  
@@ -379,14 +380,14 @@ Rewarding positive behaviour that progresses the goals of the Forest Network wit
 
 **B\. payment for Services**
 
-Forest allows for two tokens to be used as means of payment for the Services: USDC stablecoin and FOREST native token.
+ForestAI allows for two tokens to be used as means of payment for the Services: USDC stablecoin and FOREST native token.
 
 In the first phase USDC will be used primarily. The decision is dictated based on the following:
 
 - Customers need to have an easy way to onboard and naturally USDC is one of the easiest cryptocurrencies to acquire.    
 - Since Provider operations come with recurrent costs in forms of payroll to employees, energy costs, infrastructure expenses and others, Providers need to have as much stability and predictability on the income for the Services they provide.
 
-However as the Forest ecosystem matures, and the FOREST token gains wider adoption, exchange recognition and most importantly high liquidity that will translate to lower volatility, the DAO plans to enable FOREST token payments as well. This will allow users to pay lower network fees for entering into agreements just like using native token on exchanges lowers transaction fees. Providers on the other hand will be able to charge higher fees as there will be smaller to no network commission on those deals.
+However as the ForestAI ecosystem matures, and the FOREST token gains wider adoption, exchange recognition and most importantly high liquidity that will translate to lower volatility, the DAO plans to enable FOREST token payments as well. This will allow users to pay lower network fees for entering into agreements just like using native token on exchanges lowers transaction fees. Providers on the other hand will be able to charge higher fees as there will be smaller to no network commission on those deals.
 
 **C\. payment for Actor registration**
 
@@ -398,25 +399,25 @@ This serves two primary goals:
 
   More participants in the Network comes with increased workloads. By putting a cost to joining the Network we make a variety of attacks economically unviable thereby protecting the Network from malicious actors.
 
-* Forest Treasury Funding
+* ForestAI Treasury Funding
 
-  Forest Network will go through numerous cycles of improvements. That’s why there needs to be a Treasury established that will fund operations and growth. Apart from getting part of the registration fees, the Treasury will have its share in the revenue generated by Protocols.
+  ForestAI Network will go through numerous cycles of improvements. That’s why there needs to be a Treasury established that will fund operations and growth. Apart from getting part of the registration fees, the Treasury will have its share in the revenue generated by Protocols.
 
 **D\. collateral for Validators and Providers**
 
-One of blockchain’s main value propositions that allowed for the trustless trust revolution is accountability of its actors. Similarly, for the Forest Network to be balanced we need not only a carrot (rewards for good behaviour) but also a stick (punishment for bad behaviour). To enforce a possibility for a punishment, a well tested method in decentralized and pseudo anonymous systems is the concept of collateral slashing.
+One of blockchain’s main value propositions that allowed for the trustless trust revolution is accountability of its actors. Similarly, for the ForestAI Network to be balanced we need not only a carrot (rewards for good behaviour) but also a stick (punishment for bad behaviour). To enforce a possibility for a punishment, a well tested method in decentralized and pseudo anonymous systems is the concept of collateral slashing.
 
-In Forest, Validators and Providers stake collateral in Forest smartcontracts that can be slashed if: a) a Provider aftering getting ranked by Validators is deemed to provide Services of quality not meeting minimum requirements of a Protocol b) a Validator repeatedly reports wrong ranks and by doing so distorts the quality of the Provider ranks.
+In ForestAI, Validators and Providers stake collateral in ForestAI smartcontracts that can be slashed if: a) a Provider aftering getting ranked by Validators is deemed to provide Services of quality not meeting minimum requirements of a Protocol b) a Validator repeatedly reports wrong ranks and by doing so distorts the quality of the Provider ranks.
 
 The slashed amount gets redistributed to affected users thereby creating a de facto customer protection programme that reimburses those that suffered because of Provider’s or Validator’s wrongdoing.
 
-This collateral is staked in FOREST token which naturally increases demand for the token while decreasing the float. Part of the redistribution amount flows to the Forest Treasury.
+This collateral is staked in FOREST token which naturally increases demand for the token while decreasing the float. Part of the redistribution amount flows to the ForestAI Treasury.
 
 **E\. voting weights for DAO participants**
 
-The system needs to be adaptable to the changing market conditions. That's why Forest is governed by a set of parametrizable variables that can be changed to adjust the outcomes.
+The system needs to be adaptable to the changing market conditions. That's why ForestAI is governed by a set of parametrizable variables that can be changed to adjust the outcomes.
 
-Both this parametrization as well as control over Forest Treasury and roadmap will be ultimately in the hands of the Forest DAO. The weights of individual votes will be based on the amount of FOREST tokens in posession of the owner.
+Both this parametrization as well as control over ForestAI Treasury and roadmap will be ultimately in the hands of the ForestAI DAO. The weights of individual votes will be based on the amount of FOREST tokens in posession of the owner.
 
 **F\. staking to Protocols**
 
@@ -428,7 +429,7 @@ The diagram below shows the tokonomics related flows and actions:
 
 ## Token Burning 
 
-Whenever there is a transaction that transfers Forest tokens to the Forest Treasury, part of the token amount is burned. The ratio of burned tokens is an adjustable smart contract parameter that will be governed by the Forest DAO. In this way the Network can have a more fine-tuned control over the inflation rate of the token supply.
+Whenever there is a transaction that transfers ForestAI tokens to the ForestAI Treasury, part of the token amount is burned. The ratio of burned tokens is an adjustable smart contract parameter that will be governed by the ForestAI DAO. In this way the Network can have a more fine-tuned control over the inflation rate of the token supply.
 
 <img src="./img/treasury_burn.jpg" alt="Token Burn" width="750">
 
@@ -461,7 +462,7 @@ Therefore the modified supply formula is a follows:
 
 # Validation
 
-Validation is a core pillar of the Forest Network, ensuring that AI-based services (Offers) submitted by Providers meet protocol-specific quality standards. To accomplish this, Forest Network defines a **Validator Daemon Template**, which Protocol Owners customize for their unique validation requirements. All Validators within a Protocol run an instance of this daemon. Below is an overview of the validation-related components and workflow.
+Validation is a core pillar of the ForestAI Network, ensuring that AI-based services (Offers) submitted by Providers meet protocol-specific quality standards. To accomplish this, ForestAI Network defines a **Validator Daemon Template**, which Protocol Owners customize for their unique validation requirements. All Validators within a Protocol run an instance of this daemon. Below is an overview of the validation-related components and workflow.
 
 ## Validation Lifecycle
 
@@ -628,11 +629,11 @@ Due to the decentralized nature of our AI performance evaluation it is easily vi
 
 # Deterministic Innovation Funding
 
-In Forest, since the majority of the rewards go to Providers who are typically AI startups, **one could consider the Network a form of startup funding**. The Network invests in innovative AI startups and **collects a return** on this investment **from the cumulative future customer fees** and **increased demand for the network token**. Token rewards are directly linked to new customer revenue coming into the Network and Validators further direct the rewards to the most innovative Providers with the best AI models.
+In ForestAI, since the majority of the rewards go to Providers who are typically AI startups, **one could consider the Network a form of startup funding**. The Network invests in innovative AI startups and **collects a return** on this investment **from the cumulative future customer fees** and **increased demand for the network token**. Token rewards are directly linked to new customer revenue coming into the Network and Validators further direct the rewards to the most innovative Providers with the best AI models.
 
 Traditional venture capital (VC) funding entrusts a lump sum of money to a group of people that have gone through an extensive but subjective vetting process. The overhead of traditional funding decision-making is huge not only on the VC side but also on the side of the startup. Founders must dedicate huge amounts of time to outreach, networking events and relationship building to get invited to a VC meeting, and they may need hundreds of such meetings over the course of months as each has \<1% probability of success. And once a funding decision has been made it is followed by even more overhead with legal contracting.
 
-**The Forest AI smart contracts can make funding decisions deterministically leaning on the self-motivated signals coming from Customers and Validators.** Funding requires no political connections or networking. An AI PhD student living in a smaller country without a significant VC network can simply register their model to a Protocol where they know it will win the highest scores, and they will immediately get funding to further its development.
+**The ForestAI smart contracts can make funding decisions deterministically leaning on the self-motivated signals coming from Customers and Validators.** Funding requires no political connections or networking. An AI PhD student living in a smaller country without a significant VC network can simply register their model to a Protocol where they know it will win the highest scores, and they will immediately get funding to further its development.
 
 Historically, innovation has flourished in **geographic clusters** such as **Silicon Valley, Shenzhen, and Berlin**, where funding, talent, and knowledge are concentrated. We believe that we are presented with a unique opportunity to build **a digital-first innovation network**. 
 
@@ -662,7 +663,7 @@ Future events prediction has utility in many industries such as insurance, finan
 
 Every provider adds to the network effect of getting more customers into one platform and bringing more services into one platform. New providers will always prefer to integrate with the platform that has the most users. And customers prefer the platform with the largest offering.
 
-Providers already have the common vested interest with other providers as they all hold the network token which goes up in price when the network goes. But additionally Forest AI fosters the network effect by directly rewarding providers if their customers also make purchases with other Protocols in the network (FIP21[^55] & FIP22[^56]).
+Providers already have the common vested interest with other providers as they all hold the network token which goes up in price when the network goes. But additionally ForestAI fosters the network effect by directly rewarding providers if their customers also make purchases with other Protocols in the network (FIP21[^55] & FIP22[^56]).
 
 # References
 
