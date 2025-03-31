@@ -6,79 +6,81 @@
 
 > [**Intro - Building an AI Innovation Engine**](#intro-building-an-ai-innovation-engine)
 
-> [**Motivation for Accelerating AI Innovation**](#motivation-for-accelerating-ai-innovation)
+> **Problem Framing**
 
->> [Societal vs. Technological Innovation](#societal-vs-technological-innovation)
+>> [**Motivation for Accelerating AI Innovation**](#motivation-for-accelerating-ai-innovation)
 
->> [AI as the Highest-Impact Tech Innovation Frontier](#ai-as-the-highest-impact-tech-innovation-frontier)
+>>> [Societal vs. Technological Innovation](#societal-vs-technological-innovation)
 
->[**Centralisation Problem and AI's Susceptibility**](#centralisation-problem-and-ais-susceptibility)
+>>> [AI as the Highest-Impact Tech Innovation Frontier](#ai-as-the-highest-impact-tech-innovation-frontier)
 
->> [AI Building Blocks](#ai-building-blocks)
+>>[**Centralisation Problem and AI's Susceptibility**](#centralisation-problem-and-ais-susceptibility)
 
->> [Implications for Businesses](#implications-for-businesses)
+>>> [AI Building Blocks](#ai-building-blocks)
 
->[**Roots of Innovation: Economic Theory and Historical Insights**](#roots-of-innovation-economic-theory-and-historical-insights)
+>>> [Implications for Businesses](#implications-for-businesses)
 
->[**Blockchain History Insights**](#blockchain-history-insights)
+>>[**Roots of Innovation: Economic Theory and Historical Insights**](#roots-of-innovation-economic-theory-and-historical-insights)
 
->> [Mining Workloads That Follow The Market](#mining-workloads-that-follow-the-market)
+>>[**Blockchain History Insights**](#blockchain-history-insights)
 
->> [Accelerating Innovation](#accelerating-innovation)
+>>> [Mining Workloads That Follow The Market](#mining-workloads-that-follow-the-market)
 
->[**Addressing Industry Wide Overfitting of AI Models**](#addressing-industry-wide-overfitting-of-ai-models)
+>>> [Accelerating Innovation](#accelerating-innovation)
 
->[**How ForestAI Leverages Insights to Drive Innovation**](#how-forestai-leverages-insights-to-drive-innovation)
+>>[**Addressing Industry Wide Overfitting of AI Models**](#addressing-industry-wide-overfitting-of-ai-models)
 
->> [Design Objectives](#design-objectives)
+>>[**How ForestAI Leverages Insights to Drive Innovation**](#how-forestai-leverages-insights-to-drive-innovation)
 
->> [High-level Feature Set](#high-level-feature-set)
+>>> [Design Objectives](#design-objectives)
 
->[**ForestAI Network**](#forestai-network)
+>>> [High-level Feature Set](#high-level-feature-set)
 
->> [Network Actors](#network-actors)
+> **Solution - ForestAI Network**
 
->> [Basic Flow of Value between Actors](#basic-flow-of-value-between-actors)
+>> [Network Actors](#forestai-network)
 
->[**Tokenomics**](#tokenomics)
+>>> [Basic Flow of Value between Actors](#basic-flow-of-value-between-actors)
 
->> [Flow and Use](#flow-and-use)
+>> [**Tokenomics**](#tokenomics)
 
->> [Token Burning](#token-burning)
+>>> [Flow and Use](#flow-and-use)
 
->> [Token Emissions](#token-emissions)
+>>> [Token Burning](#token-burning)
 
->[**Validation**](#validation)
+>>> [Token Emissions](#token-emissions)
 
->> [Validation Lifecycle](#validation-lifecycle)
+>> [**Validation**](#validation)
 
->> [Score Aggregation](#score-aggregation)
+>>> [Validation Lifecycle](#validation-lifecycle)
 
->> [Validator Credibility Coefficient](#validator-credibility-coefficient)
+>>> [Score Aggregation](#score-aggregation)
 
->[**Attack Vector Mitigation**](#attack-vector-mitigation)
+>>> [Validator Credibility Coefficient](#validator-credibility-coefficient)
 
->> [Sybil Attack](#sybil-attack)
+>> [**Attack Vector Mitigation**](#attack-vector-mitigation)
 
->> [Validator Vote Copying](#validator-vote-copying)
+>>> [Sybil Attack](#sybil-attack)
 
->> [Validator-Provider Collusion](#validator-provider-collusion)
+>>> [Validator Vote Copying](#validator-vote-copying)
 
->[**Deterministic Innovation Funding**](#deterministic-innovation-funding)
+>>> [Validator-Provider Collusion](#validator-provider-collusion)
 
->[**Sample Use Cases**](#sample-use-cases)
+>> [**Deterministic Innovation Funding**](#deterministic-innovation-funding)
 
->> [Machine Translation [Text to Text]](#machine-translation-text-to-text)
+>> [**Sample Use Cases**](#sample-use-cases)
 
->> [Python Code Generation [Text To Text]](#python-code-generation-text-to-text)
+>>> [Machine Translation [Text to Text]](#machine-translation-text-to-text)
 
->> [Image Generation [Text to Image]](#image-generation-text-to-image)
+>>> [Python Code Generation [Text To Text]](#python-code-generation-text-to-text)
 
->> [Future Event Prediction [Text to Boolean]](#future-event-prediction-text-to-boolean)
+>>> [Image Generation [Text to Image]](#image-generation-text-to-image)
 
->[**Moat**](#moat)
+>>> [Future Event Prediction [Text to Boolean]](#future-event-prediction-text-to-boolean)
 
->> [Strong Network Effects](#strong-network-effects)
+>> [**Moat**](#moat)
+
+>>> [Strong Network Effects](#strong-network-effects)
 
 >[**References**](#references)
 
