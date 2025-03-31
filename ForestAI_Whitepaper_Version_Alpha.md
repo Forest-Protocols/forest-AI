@@ -602,12 +602,12 @@ Sybil detection methods may include:
 
 * [FIP21](https://github.com/Forest-Protocols/forest-AI/discussions/21) **Shannon Entropy[^48] over Purchase Vector**. 
 
-Given the architecture of the system and its requirement to purchase Services before use, it's very likely that sybils will only interact with Providers that they control. Hence, low entropy of the purchase vector is a strong indicator of a sybil attack. 
+Given the architecture of the system and its requirement to purchase Services before use, it's very likely that sybils will only interact with Providers that they control. Hence, low Shannon entropy of the purchase vector is a strong indicator of a sybil attack. 
 
 Let:
 
-- $S = \{(p_a, v_a) : a \in \mathcal{A}_u\}$  
-  be the set of unique protocol–provider pairs.
+- S be the set of unique protocol–provider pairs:
+$$S = \{(p_a, v_a) \mid a \in \mathcal{A}_u\}$$  
 
 - $P_{ij}$ is the normalized value weight for each pair:
 
@@ -621,11 +621,8 @@ $$
 W_{\mathrm{total}} = \sum_{a \in \mathcal{A}_u} w_a
 $$
 
-- $W_{ij}$ is the total value for each $(i, j)$ protocol–provider pair:
+- $W_{ij} = \sum w_a$ that is the total value for each $(i, j)$ protocol–provider pair given  $a \in \mathcal{A}_u$ such that $p_a = i,\ v_a = j$
 
-$$
-W_{ij} = \sum_{\{a \in \mathcal{A}_u \mid p_a = i,\ v_a = j\}} w_a
-$$
 
 The final entropy score for user $u$ is:
 
