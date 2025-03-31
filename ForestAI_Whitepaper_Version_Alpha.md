@@ -608,8 +608,8 @@ Let:
 
 - S be the set of unique protocol–provider pairs:
 $$
-S = \{(p_a, v_a) | a \in \mathcal{A}_u\}
-$$  
+S = \left\{(p_a, v_a) \mid a \in \mathcal{A}_u\right\}
+$$
 
 - $P_{ij}$ is the normalized value weight for each pair:
 
