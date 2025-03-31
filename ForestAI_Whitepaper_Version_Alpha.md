@@ -607,7 +607,9 @@ Given the architecture of the system and its requirement to purchase Services be
 Let:
 
 - S be the set of unique protocol–provider pairs:
-$$S = \{(p_a, v_a) \mid a \in \mathcal{A}_u\}$$  
+$$
+S = \{(p_a, v_a) \mid a \in \mathcal{A}_u\}
+$$  
 
 - $P_{ij}$ is the normalized value weight for each pair:
 
