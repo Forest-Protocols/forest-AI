@@ -86,7 +86,7 @@
 
 **ForestAI is an AI-focused innovation engine** leveraging positive learnings from **Bitcoin mining** and **preventing tokenomics pitfalls** that allow oligarchies of large token holders to control networks to their benefit **like in Bittensor**.
 
-In ForestAI, **all services are available for purchase** by real-world clients on day one. This allows us to **move away from corruption-prone stake-weighted voting** and instead **distribute tokens based on verified blockchain data** on who attracts the most new customers to the network.
+In ForestAI, **all offered services are available for purchase** by real-world clients on day one. This allows us to **move away from corruption-prone stake-weighted voting** and instead **distribute tokens based on verified blockchain data** on who attracts the most new customers to the network.
 
 Furthermore we ensure fair competition by utilizing **cheat-proof decentralized AI benchmarking** in the reward function and **collateral** **slashing** for attempted cheating. 
 
@@ -203,7 +203,7 @@ Economists like **Luigi Zingales** and **Thomas Philippon** argue that modern ca
 
 **While Schumpeter acknowledged that oligopolies could foster technological progress** due to their resources and ability to invest in long-term transformative projects, **he was also concerned that this shift might lead to bureaucratization** and a decline in the entrepreneurial spirit.
 
-A similar dynamic plays out in the public-sector. One on hand public-sector has historically played a role in supporting early-stage, high-risk technologies. **Mariana Mazzucato**  highlights how agencies such as **DARPA, NIH, and NASA** have driven foundational breakthroughs in computing, medicine, and aerospace by **de-risking radical innovation[^34]**. On the other hand, state-driven innovation often suffers from **bureaucratic inefficiencies, slow decision-making, and lack of transparency**. 
+A similar dynamic plays out in the public-sector. On the one hand public-sector has historically played a role in supporting early-stage, high-risk technologies. **Mariana Mazzucato**  highlights how agencies such as **DARPA, NIH, and NASA** have driven foundational breakthroughs in computing, medicine, and aerospace by **de-risking radical innovation[^34]**. On the other hand, state-driven innovation often suffers from **bureaucratic inefficiencies, slow decision-making, and lack of transparency**. 
 
 Another idea worth noting is the **open innovation ecosystems[^35]** that builds on **Hayek’s theory of distributed knowledge[^36]**, which argues that decentralized decision-making fosters innovation by utilizing diverse information sources. Similarly, **Von Hippel’s work on user-driven innovation** shows that many **technological breakthroughs originate** not from corporate R\&D labs but **from independent researchers, startups, and early adopters**[^37].
 
@@ -245,13 +245,13 @@ and the current state-of-art:
 
 **A notable example of 3rd Gen Mining** with a mission to accelerate innovation **is Bittensor**. It launched in 2021 and established a decentralized network focused on improving AI by subsidizing innovation with its TAO token. While groundbreaking, especially in the flexibility of the validation process with its subnet system, **Bittensor faces significant challenges** that expose fundamental flaws in its design.
 
-A critical deficiency is the **absence of an in-protocol purchase mechanism** *for end-users to easily get access to the products and services* generated within the Bittensor ecosystem. The initial assumption that independent teams would build separate marketplaces for each subnet has not materialized, leaving a significant gap between the network's output and potential consumers. Miners who create the products know that and that’s why they optimize for playing the emission game rather than truly innovating. Additionally this lack of direct monetization creates a system where the TAO token's value relies primarily on attracting new participants (miners, validators, token investors), rather than on genuine demand for the AI services produced. **This means that the alleged innovation is subsidized by TAO token buyers and is not sustainable in the long run.**
+A critical deficiency is the **absence of an in-protocol purchase mechanism** for end-users to easily get access to the products and services generated within the Bittensor ecosystem. The initial assumption that independent teams would build separate marketplaces for each subnet has not materialized, leaving a significant gap between the network's output and potential consumers. Miners who create the products know that and that’s why they optimize for playing the emission game rather than truly innovating. Additionally this lack of direct monetization creates a system where the TAO token's value relies primarily on attracting new participants (miners, validators, token investors), rather than on genuine demand for the AI services produced. **This means that the alleged innovation is subsidized by TAO token buyers and is not sustainable in the long run.**
 
-Furthermore, the **power dynamics within Bittensor are severely imbalanced**. *Miners and Subnet Owners are vulnerable to extortion by validators*, as validators control the distribution of token rewards. Within the validator group itself, the control is *skewed towards the largest players*: only top validators with substantial stakes have significant influence over subnet emissions, leading miners to prioritize these validators and effectively disenfranchise smaller validators **effectively creating an oligopoly of large validators over the whole system.**
+Furthermore, the **power dynamics within Bittensor are severely imbalanced**. Miners and Subnet Owners are vulnerable to extortion by validators, as validators control the distribution of token rewards. Within the validator group itself, the control is skewed towards the largest players: only top validators with substantial stakes have significant influence over subnet emissions, leading miners to prioritize these validators and effectively disenfranchise smaller validators **effectively creating an oligopoly of large validators over the whole system.**
 
-Additionally what exacerbates the fundamental *validator-miner imbalance* is:
+Additionally what exacerbates the fundamental validator-miner imbalance is:
 
-* that Validators are not required to pay miners for servicing their requests. The **lack of interaction costs** also leads to *DDoS and Sybil attacks between miners*, as there are no effective economic disincentives to prevent such malicious behavior,   
+* that Validators are not required to pay miners for servicing their requests. The **lack of interaction costs** also leads to DDoS and Sybil attacks between miners, as there are no effective economic disincentives to prevent such malicious behavior,   
 * Validators have multiple avenues for monetization (emissions and monetizing miner’s work) while miners rely solely on emissions,  
 * Validators receive similar emissions to miners while performing significantly less complex work and without directly compensating miners for their services.
 
@@ -263,7 +263,7 @@ It’s also worth noting that Bittensor still **hasn’t implemented** an effect
 
 The ***decision to operate its own blockchain*** introduces **unnecessary overhead** and complexity without providing a clear advantage over utilizing existing, more established blockchain platforms. Actually it makes it **less interoperable with the wider blockchain ecosystem**.
 
-Finally, the *capped emission schedule*, coupled with the absence of direct payment for services, creates an **unsustainable long-term economic model**. As emissions decrease, **miners**, who bear the primary computational costs, **will inevitably leave the network** when rewards no longer cover their expenses. 
+Finally, the capped emission schedule, coupled with the absence of direct payment for services, creates an **unsustainable long-term economic model**. As emissions decrease, **miners**, who bear the primary computational costs, **will inevitably leave the network** when rewards no longer cover their expenses. 
 
 The recent **dTao upgrade** was marketed as solving some of the problems with the oligopoly and collusion but unfortunately in our view as well as early insights from within the Bittensor ecosystem this turns out to be a move that **adds complexity to the system** but **doesn’t solve the core issues Bittensor faces**. The main reason being that any form of **staking which in its nature is a financial and speculative task**, **can’t be a good metric** of real world utility of real tech products. **Only real customers using and most importantly paying for these products can be an effective judge of their value.**
 
@@ -407,7 +407,7 @@ This serves two primary goals:
 
 One of blockchain’s main value propositions that allowed for the trustless trust revolution is accountability of its actors. Similarly, for the ForestAI Network to be balanced we need not only a carrot (rewards for good behaviour) but also a stick (punishment for bad behaviour). To enforce a possibility for a punishment, a well tested method in decentralized and pseudo anonymous systems is the concept of collateral slashing.
 
-In ForestAI, Validators and Providers stake collateral in ForestAI smartcontracts that can be slashed if: a) a Provider aftering getting ranked by Validators is deemed to provide Services of quality not meeting minimum requirements of a Protocol b) a Validator repeatedly reports wrong ranks and by doing so distorts the quality of the Provider ranks.
+In ForestAI, Validators and Providers stake collateral in ForestAI smartcontracts that can be slashed if: a) a Provider after getting ranked by Validators is deemed to provide Services of quality not meeting minimum requirements of a Protocol b) a Validator repeatedly reports wrong ranks and by doing so distorts the quality of the Provider validation process.
 
 The slashed amount gets redistributed to affected users thereby creating a de facto customer protection programme that reimburses those that suffered because of Provider’s or Validator’s wrongdoing.
 
@@ -578,27 +578,27 @@ The details will be published in a separate paper. The method for calculating th
 
 ## Sybil Attack 
 
-Providers may try to cheat the token reward mechanism by creating many fake accounts and buying from themselves cycling the money. Multiple robust anti-sybil mechanisms are utilized to deter these types of attacks. However a sybil attack like this is not immediately harmful for the network for the following reasons:
+Providers may try to cheat the token reward mechanism by creating many fake accounts and buying from themselves cycling the money. Multiple robust anti-sybil mechanisms are utilized to deter these types of attacks. However, even in the event of anti-sybil mechanisms absence, a sybil attack like this would not be immediately harmful for the Network for the following reasons:
 
 * Every purchase has a significant network fee that goes to the Treasury
 
-* The network's total value locked (TVL) increases because customers must pre purchase at least a full month and providers can not immediately withdraw
+* The Network's total value locked (TVL) increases because Customers must pre-purchase at least a full month and Providers can not immediately withdraw
 
-* The customer revenue brought in by one provider does not only give them rewards but also other providers on the same Protocol with a high performance score
+* The customer revenue brought in by one Provider does not only increase rewards for the particular Provider but also for other Providers on the same Protocol with a high performance score
 
 * Token rewards have a lockup period
 
-In order for an attacker to benefit from a sybil attack they would need to a) dedicate a significant amount of capital to the attack (minimum staking requirements, fees and prepayments), b) they must have the capabilities to run a high scoring AI model in their Protocol and c) then they must accept the risk that their rewards and stake can get slashed during the lockup period if they are found to have been running a sybil farm.
+In order for an attacker to benefit from a sybil attack they would need to: a) dedicate a significant amount of capital to the attack (minimum staking requirements, fees and prepayments), b) have the capabilities to run a high scoring AI model in their Protocol and c) accept the risk that their rewards and stake can get slashed during the lockup period if they are found to have been running a sybil farm.
 
 Sybil detection methods may include:
 
-* [FIP21](https://github.com/Forest-Protocols/forest-AI/discussions/21) Shannon Entropy[^48] over Purchase Vector
+* [FIP21](https://github.com/Forest-Protocols/forest-AI/discussions/21) **Shannon Entropy[^48] over Purchase Vector**. Given the architecture of the system and its requirement to purchase Services before use, it's very likely that sybils will only interact with Providers that they control. Hence, low entropy of the purchase vector is a strong indicator of a sybil attack. $H_u = - \sum_{(i, j) \in S} P_{ij} \log_2 P_{ij}$ where $S = \{(p_a, v_a) \mid a \in \mathcal{A}_u \}$ is the set of unique protocol-provider pairs, $P_{ij} = \frac{W_{ij}}{W_{\text{total}}}$ is the normalized value weight for each pair, $W_{\text{total}} = \sum_{a \in \mathcal{A}_u} w_a$ is the total agreement value and $W_{ij} = \sum_{\substack{a \in \mathcal{A}_u \\\\ p_a = i, v_a = j}} w_a$ is the total value for each $(i, j)$ protocol-provider pair.
 
-* [FIP24](https://github.com/Forest-Protocols/forest-AI/discussions/24) Off-chain Verifiable Identifiers
+* [FIP24](https://github.com/Forest-Protocols/forest-AI/discussions/24) **Off-chain Verifiable Identifiers**
 
-* [FIP27](https://github.com/Forest-Protocols/forest-AI/discussions/27) Proof of B2B Transaction and New KYB Onboarding
+* [FIP27](https://github.com/Forest-Protocols/forest-AI/discussions/27) **Proof of B2B Transaction and New KYB Onboarding**
 
-* [FIP28](https://github.com/Forest-Protocols/forest-AI/discussions/28) Chain Analysis Clique Detection
+* [FIP28](https://github.com/Forest-Protocols/forest-AI/discussions/28) **Chain Analysis Clique Detection**
 
 ## Validator Vote Copying
 
