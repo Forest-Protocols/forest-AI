@@ -594,13 +594,44 @@ In order for an attacker to benefit from a sybil attack they would need to: a) d
 
 Sybil detection methods may include:
 
-* [FIP21](https://github.com/Forest-Protocols/forest-AI/discussions/21) **Shannon Entropy[^48] over Purchase Vector**. Given the architecture of the system and its requirement to purchase Services before use, it's very likely that sybils will only interact with Providers that they control. Hence, low entropy of the purchase vector is a strong indicator of a sybil attack. $H_u = - \sum_{(i, j) \in S} P_{ij} \log_2 P_{ij}$ where $S = \{(p_a, v_a) | a \in \mathcal{A}_u\}$ is the set of unique protocol-provider pairs, $P_{ij} = \frac{W_{ij}}{W_{\mathrm{total}}}$ is the normalized value weight for each pair, $W_{\mathrm{total}} = \sum_{a \in \mathcal{A}_u} w_a$ is the total agreement value and $W_{ij} = \sum_{\{a \in \mathcal{A}_u | p_a = i, v_a = j\}} w_a$ is the total value for each $(i, j)$ protocol-provider pair.
-
 * [FIP24](https://github.com/Forest-Protocols/forest-AI/discussions/24) **Off-chain Verifiable Identifiers**
 
 * [FIP27](https://github.com/Forest-Protocols/forest-AI/discussions/27) **Proof of B2B Transaction and New KYB Onboarding**
 
 * [FIP28](https://github.com/Forest-Protocols/forest-AI/discussions/28) **Chain Analysis Clique Detection**
+
+* [FIP21](https://github.com/Forest-Protocols/forest-AI/discussions/21) **Shannon Entropy[^48] over Purchase Vector**. 
+
+Given the architecture of the system and its requirement to purchase Services before use, it's very likely that sybils will only interact with Providers that they control. Hence, low entropy of the purchase vector is a strong indicator of a sybil attack. 
+
+Let:
+
+- $S = \{(p_a, v_a) : a \in \mathcal{A}_u\}$  
+  be the set of unique protocol–provider pairs.
+
+- $P_{ij}$ is the normalized value weight for each pair:
+
+$$
+P_{ij} = \frac{W_{ij}}{W_{\mathrm{total}}}
+$$
+
+- $W_{\mathrm{total}}$ is the total agreement value:
+
+$$
+W_{\mathrm{total}} = \sum_{a \in \mathcal{A}_u} w_a
+$$
+
+- $W_{ij}$ is the total value for each $(i, j)$ protocol–provider pair:
+
+$$
+W_{ij} = \sum_{\{a \in \mathcal{A}_u \mid p_a = i,\ v_a = j\}} w_a
+$$
+
+The final entropy score for user $u$ is:
+
+$$
+H_u = - \sum_{(i, j) \in S} P_{ij} \log_2 P_{ij}
+$$
 
 ## Validator Vote Copying
 
