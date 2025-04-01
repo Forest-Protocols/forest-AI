@@ -6,7 +6,7 @@
 
 > [**Intro - Building an AI Innovation Engine**](#intro-building-an-ai-innovation-engine)
 
-> **Problem Framing**
+> **Part 1: Problem Framing**
 
 >> [**Motivation for Accelerating AI Innovation**](#motivation-for-accelerating-ai-innovation)
 
@@ -36,9 +36,9 @@
 
 >>> [High-level Feature Set](#high-level-feature-set)
 
-> **Solution - ForestAI Network**
+> **Part 2: Solution - ForestAI Network**
 
->> [Network Actors](#forestai-network)
+>> [**Network Actors**](#forestai-network)
 
 >>> [Basic Flow of Value between Actors](#basic-flow-of-value-between-actors)
 
@@ -104,6 +104,8 @@ We propose a novel **solution** that **rewards innovators based on tangible, mea
 We believe such a radically open **system**, **steered by** indisputable **blockchain-verified monetary flows**, **free of legal overhead** and **cross-border bureaucracy**, **will accelerate the discovery** of valuable **AI problems** and the **pace of innovation itself**.
 
 **This whitepaper presents ForestAI** as a solution harnessing crypto- and behavioral- economics, growth theory and computer science **to realign incentives in digital markets**, **transforming AI** development **from a centralized arms race into a decentralized innovation network**.
+
+# Part 1: Problem Framing
 
 # Motivation for Accelerating AI Innovation
 
@@ -334,11 +336,12 @@ Quoting an economist whose ideas we referred to at the beginning of this paper, 
 
 **The cure is here \- ForestAI Network.**
 
-# ForestAI Network
+<a id="forestai-network"></a>
+# Part 2: Solution - ForestAI Network
 
 ForestAI Network is an **interoperable collective of incentivised Protocols**, each solving a specific AI challenge with Providers offering solutions to Customers and Validators ensuring quality. **These Protocols are living organisms** that are created, managed and maintained by entities with specific roles who perform specific actions. **There are five distinct types of Actors** in the system.
 
-## Network Actors
+# Network Actors
 
 **Protocol Owners** (aka PTO): Define Protocols goals, rules, parameters and hyperparameters.
 
