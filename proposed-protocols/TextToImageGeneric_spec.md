@@ -23,10 +23,8 @@ Additional automated scoring criteria:
     - `"JPEG"`
 
 - **Returns**:
-  - `image`: A generated image as a single file.
+  - `image url`: Image url to download as a single file.
     - Image must be in PNG or JPEG format.
-    - Image must be <1MB in size.
-    - Image must be 1024 x 1024 pixels. 
 
 ## Performance Requirements
 - Query response within 60 seconds.
