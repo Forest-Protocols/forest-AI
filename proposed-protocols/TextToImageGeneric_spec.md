@@ -23,7 +23,7 @@ Additional automated scoring criteria:
     - `"JPEG"`
 
 - **Returns**:
-  - `image url`: Image url to download as a single file.
+  - `url`: Image url to download as a single file.
     - Image must be in PNG or JPEG format.
 
 ## Performance Requirements
