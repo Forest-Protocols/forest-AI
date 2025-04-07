@@ -14,7 +14,7 @@
 
 >>> [AI as the Highest-Impact Tech Innovation Frontier](#ai-as-the-highest-impact-tech-innovation-frontier)
 
->>[**Centralisation Problem and AI's Susceptibility**](#centralisation-problem-and-ais-susceptibility)
+>>[**Centralization Problem and AI's Susceptibility**](#centralization-problem-and-ais-susceptibility)
 
 >>> [AI Building Blocks](#ai-building-blocks)
 
@@ -72,7 +72,7 @@
 
 >>> [Machine Translation [Text to Text]](#machine-translation-text-to-text)
 
->>> [Python Code Generation [Text To Text]](#python-code-generation-text-to-text)
+>>> [Python Code Generation [Text to Text]](#python-code-generation-text-to-text)
 
 >>> [Image Generation [Text to Image]](#image-generation-text-to-image)
 
@@ -139,7 +139,7 @@ And while most technology advancement is restricted in its impact to a few speci
 
 With global **AI investment** projected to reach **$200 billion by 2025**[^14] and AI expected to **contribute $15.7 trillion to the global economy** by 2030[^15], its influence will extend from macroeconomic growth to granular operational efficiencies. Goldman Sachs Research estimates AI could **boost** global labor **productivity by over 1% annually** in the decade following widespread adoption, with **U.S. AI-related investment peaking at 2.5–4% of GDP**.
 
-# Centralisation Problem and AI's Susceptibility
+# Centralization Problem and AI's Susceptibility
 
 However this Cambrian explosion of **AI-driven innovation paradoxically unfolds under the shadow of an emerging oligopoly**, a wider problem thwarting the whole digital space.
 
@@ -171,7 +171,7 @@ Additionally, **regulatory and ethical considerations** surrounding AI **further
 
 ## Implications for Businesses 
 
-This centralisation in the cloud and in the AI space comes at a cost for businesses and users. The major ones being:
+This centralization in the cloud and in the AI space comes at a cost for businesses and users. The major ones being:
 
 * **Vendor Lock-In and High Costs:** The dominance of a few providers exacerbates vendor lock-in issues. Migrating away from these providers is complex and costly due to proprietary technologies and contracts, trapping businesses in long-term commitments. With limited competition, there's less pressure on these providers to offer competitive pricing, making services expensive for businesses, especially startups and SMEs.
 
@@ -187,7 +187,7 @@ Furthermore lack of diverse offerings can hinder businesses from finding solutio
 
 * **Data Sovereignty and Security Concerns**: Centralized control raises concerns about data sovereignty, privacy, and compliance with regional regulations. It also makes cloud services attractive targets for cyberattacks, posing economic and security risks.
 
-This shows how centralisation can impact business and why the artificial intelligence industry in general is uniquely vulnerable to monopolistic control. 
+This shows how centralization can impact business and why the artificial intelligence industry in general is uniquely vulnerable to monopolistic control. 
 
 # Roots of Innovation: Economic Theory and Historical Insights
 
@@ -239,7 +239,7 @@ The progress on the second approach can be described by defining three generatio
 
 **1st Gen**: Bitcoin mining is just a competition for who can randomly guess the right numbers to hash together and hence seen as a significant waste of energy. Bitcoin consumes a comparable amount of energy as Poland[^40] (21th biggest world economy).
 
-**2nd Gen**: Projects like LivePeer[^41], FileCoin[^42] or Render Network[^43] that give mining rewards for workloads that have real world utility, but they define that utility, as well as the results validation process, in a narrow way with rigid smart contracts making it hard for the networks to adapt to a changing market. Both FileCoin and LivePeer struggled for instance with Miners gaming the system to receive the rewards for empty work.
+**2nd Gen**: Projects like LivePeer[^41], FileCoin[^42] or Render Network[^43] that give mining rewards for workloads that have real world utility, but they define that utility, as well as the results validation process, in a narrow way with rigid smartcontracts making it hard for the networks to adapt to a changing market. Both FileCoin and LivePeer struggled for instance with Miners gaming the system to receive the rewards for empty work.
 
 and the current state-of-art:
 
@@ -281,7 +281,7 @@ For open source models **Dynabench**[^45] tries to solve the problem of overfitt
 
 **Centralized private test data evaluation** is another approach that has been attempted to resolve the problem of AI companies gaming benchmark results. One currently active private evaluator is the SEAL LLM Leaderboards[^46] by Scale.ai[^47]. However, this lacks the transparency and audibility to be fully trustworthy and widely used as a standard. 
 
-**Decentralised systems are strongly positioned to solve** all of those issues thanks to providing proper incentivization to all parties involved while leveraging blockchains' decentralisation and transparency. **Private datasets** still can be a fundamental **part of the validation strategy**. Especially given current **advancement in privacy technologies like TEEs, ZKPs and FHE**.
+**Decentralised systems are strongly positioned to solve** all of those issues thanks to providing proper incentivization to all parties involved while leveraging blockchains' decentralization and transparency. **Private datasets** still can be a fundamental **part of the validation strategy**. Especially given current **advancement in privacy technologies like TEEs, ZKPs and FHE**.
 
 # How ForestAI Leverages Insights to Drive Innovation
 
@@ -289,14 +289,14 @@ After analysing the problem of accelerating AI innovation from all those angles 
 
 * technological innovation is what drives humanity forward,  
 * AI is the highest impact tech on the market and in the foreseeable future,  
-* history and economic theory show monopolies and centralisation can hinder innovation so they must be avoided, however sustained and large-scale funding is crucial to derisking the innovation game for entrepreneurs,  
+* history and economic theory show monopolies and centralization can hinder innovation so they must be avoided, however sustained and large-scale funding is crucial to derisking the innovation game for entrepreneurs,  
 * another learning from economic theory is that maximizing knowledge spillovers is the root of the process, that’s why transparency and interoperability is paramount,  
 * studying blockchains, even though they are nascent technologies in the grand scheme of things, shows how proper incentivization of actors, flexibility and adaptability, oligopoly deterrence and proper validation by the market using monetary flows are all required of a sustainable and effective system,  
 * for AI focused systems model validation is an inseparable part of the equation and new cryptographic techniques should be incorporated to create a robust solution.
 
 ## Design Objectives
 
-These insights can be applied to optimise outcomes. That’s why **ForestAI’s design objectives and guiding principles optimise towards**:
+These insights can be applied to optimize outcomes. That’s why **ForestAI’s design objectives and guiding principles optimise towards**:
 
 1. **discovering valuable problems to solve** to efficiently allocate capital,  
 2. **derisking the innovation game** so that Providers (incl. researches and budding entrepreneurs) can quickly get access to sustained funding if their service offers high quality,  
@@ -357,7 +357,7 @@ related terms:
 
 **Protocols**: Standardize competition for an AI task. Define unified API for Providers and quality evaluation criteria for Validators.
 
-**Root Contracts**: A set of ForestAI smart contracts that govern on-chain network rules including Actor and Offer registrations, User-Provider Agreement accounting and billing, Validator rank submission and processing, as well as creation and distribution of FOREST tokens to Protocols and their Actors based on their customer revenue and performance.
+**Root Contracts**: A set of ForestAI smartcontracts that govern on-chain network rules including Actor and Offer registrations, User-Provider Agreement accounting and billing, Validator rank submission and processing, as well as creation and distribution of FOREST tokens to Protocols and their Actors based on their customer revenue and performance.
 
 **Offer:** A proposal from a Provider to a potential Customer with details on terms and conditions of a Service or Resource that a Provider is able to deliver to a Customer should the Customer decide to enter an Agreement with the Provider.
 
@@ -428,13 +428,13 @@ Both this parametrization as well as control over ForestAI Treasury and roadmap 
 
 While the majority of the token emissions will always be governed by on-chain revenue data, a component of the newly minted tokens can be directed to Protocols with user stake. This can function as an extention of the DAO where the token holders vote on what innovation to fund. This allows for nascent technologies that might be early on in their monetization roadmap to get sustained funding.
 
-The diagram below shows the tokonomics related flows and actions:
+The diagram below shows the tokenomics related flows and actions:
 
 <img src="./img/tokenomics.jpg" alt="Flow of the FOREST token" width="750">
 
 ## Token Burning 
 
-Whenever there is a transaction that transfers ForestAI tokens to the ForestAI Treasury, part of the token amount is burned. The ratio of burned tokens is an adjustable smart contract parameter that will be governed by the ForestAI DAO. In this way the Network can have a more fine-tuned control over the inflation rate of the token supply.
+Whenever there is a transaction that transfers ForestAI tokens to the ForestAI Treasury, part of the token amount is burned. The ratio of burned tokens is an adjustable smartcontract parameter that will be governed by the ForestAI DAO. In this way the Network can have a more fine-tuned control over the inflation rate of the token supply.
 
 <img src="./img/treasury_burn.jpg" alt="Token Burn" width="750">
 
@@ -472,10 +472,10 @@ Validation is a core pillar of the ForestAI Network, ensuring that AI-based serv
 ## Validation Lifecycle
 
 1. **Enter Agreement**  
-   * Once an Offer is flagged for testing (immediately after registration, at random intervals, or both), the Validator Daemon must engage as a pseudonymous Customer and initiate an Agreement by invoking the Protocol’s smart contract.  
+   * Once an Offer is flagged for testing (immediately after registration, at random intervals, or both), the Validator Daemon must engage as a pseudonymous Customer and initiate an Agreement by invoking the Protocol’s smartcontract.  
    * This action establishes a binding arrangement with the Provider, granting the Validator the right to test the Offer.  
 2. **Perform Validation Tests**  
-   The daemon fetches the Offer details from both the smart contract and, if needed, directly from the Provider.  
+   The daemon fetches the Offer details from both the smartcontract and, if needed, directly from the Provider.  
    * Depending on the configured test types, the daemon runs one or more of the following:  
      * **Automated Performance Tests:** Results that are direct performance measurements (e.g., response time in milliseconds).  
      * **Tests with Ground Truths**  
@@ -496,7 +496,7 @@ Validation is a core pillar of the ForestAI Network, ensuring that AI-based serv
      ```  
    * This struct captures the Provider ID, an aggregated score, and the agreement ID established in the previous step.  
 4. **Commit Phase (Voting Window)**  
-   * The daemon computes and submits a hash of the results to the ForestSlasher smart contract with a commit() transaction, ensuring the Validator’s scores are “locked in” without revealing them publicly yet.  
+   * The daemon computes and submits a hash of the results to the ForestSlasher smartcontract with a commit() transaction, ensuring the Validator’s scores are “locked in” without revealing them publicly yet.  
 5. **Reveal Phase (Reveal Window)**  
    * After the epoch closes and the reveal window opens, the Validator must call reveal() on the ForestSlasher contract, passing in the same hash along with the original ProviderScore array.  
    * This completes the commit-reveal cycle, making the validated scores visible on-chain for further processing such as consensus or reward distribution.  
@@ -643,16 +643,16 @@ The implementation is as follows:
 
 <img src="./img/time_progress.jpg" alt="Time progress" width="750">
 
-**Each Epoch begins with a Reveal Window**. In this phase results from a previous Epoch are published. That means that the vector of Provider scores from each Validator needs to be sent to the blockchain and pass the validation which includes a number of checks such as:
+**Each Epoch begins with a Reveal Window**. In this phase results from a previous Epoch are published. That means that the vector of provider scores from each Validator needs to be sent to the blockchain and pass the validation which includes a number of checks such as:
 
 - check if the hash being revealed has been previously committed by the same Validator now trying to reveal it  
-- if it has been committed than if it hasn’t already been revealed  
-- check if the hash computed from the now submitted Provider scores computes to the same hash that was committed to make sure nothing was changed in-between the commit time and the reveal time  
+- if it has been committed then if it hasn’t already been revealed  
+- check if the hash computed from the now submitted provider scores computes to the same hash that was committed to make sure nothing was changed in-between the commit time and the reveal time  
 - all Agreements that were tested as part of this commit exist, belong to the Validator and point to the Provider for which the score was submitted and that the Validator hasn’t reported the score for the same Provider multiple times
 
-**Once the Reveal Window ends**, it’s possible to close the previous Epoch. During the close the Root Contracts aggregate Provider scores from all of the Validators to produce a unified ranking of Providers in each of the Protocols as well as the consensus metric for the Validators. At this point the ForestSlasher contract checks and saves the revenue of each of the Protocols that is later used for emissions. 
+**Once the Reveal Window ends**, it’s possible to close the previous Epoch. During the close the Root Contracts aggregate provider scores from all of the Validators to produce a unified ranking of Providers in each of the Protocols as well as the consensus metric for the Validators. At this point the ForestSlasher contract checks and saves the revenue of each of the Protocols that is later used for emissions. 
 
-**Once the previous Epoch is closed** two possibilities are unlocked. 1**. FOREST token rewards can be emitted** for the closed Epoch, 2\. **The Root Contracts now open the Commit Window** for the current Epoch allowing Validators to commit to Provider scores vectors that they computed as part of the validation process in specific Protocols. Neither of those processes can happen if the previously processed Epoch wasn’t closed. 
+**Once the previous Epoch is closed** two possibilities are unlocked. 1**. FOREST token rewards can be emitted** for the closed Epoch, 2\. **The Root Contracts now open the Commit Window** for the current Epoch allowing Validators to commit to provider scores vectors that they computed as part of the validation process in specific Protocols. Neither of those processes can happen if the previously processed Epoch wasn’t closed. 
 
 ## Validator-Provider Collusion
 
@@ -666,9 +666,9 @@ Due to the decentralized nature of our AI performance evaluation it is easily vi
 
 In ForestAI, since the majority of the rewards go to Providers who are typically AI startups, **one could consider the Network a form of startup funding**. The Network invests in innovative AI startups and **collects a return** on this investment **from the cumulative future customer fees** and **increased demand for the network token**. Token rewards are directly linked to new customer revenue coming into the Network and Validators further direct the rewards to the most innovative Providers with the best AI models.
 
-Traditional venture capital (VC) funding entrusts a lump sum of money to a group of people that have gone through an extensive but subjective vetting process. The overhead of traditional funding decision-making is huge not only on the VC side but also on the side of the startup. Founders must dedicate huge amounts of time to outreach, networking events and relationship building to get invited to a VC meeting, and they may need hundreds of such meetings over the course of months as each has \<1% probability of success. And once a funding decision has been made it is followed by even more overhead with legal contracting.
+Traditional venture capital (VC) funding entrusts a lump sum of money to a group of people that have gone through an extensive but subjective vetting process. The overhead of traditional funding decision-making is huge not only on the VC side but also on the side of the startup. Founders must dedicate huge amounts of time to outreach, networking events and relationship building to get invited to a VC meeting, and they may need hundreds of such meetings over the course of months as each has \< 1% probability of success. And once a funding decision has been made it is followed by even more overhead with legal contracting.
 
-**The ForestAI smart contracts can make funding decisions deterministically leaning on the self-motivated signals coming from Customers and Validators.** Funding requires no political connections or networking. An AI PhD student living in a smaller country without a significant VC network can simply register their model to a Protocol where they know it will win the highest scores, and they will immediately get funding to further its development.
+**The ForestAI smartcontracts can make funding decisions deterministically leaning on the self-motivated signals coming from Customers and Validators.** Funding requires no political connections or networking. An AI PhD student living in a smaller country without a significant VC network can simply register their model to a Protocol where they know it will win the highest scores, and they will immediately get funding to further its development.
 
 Historically, innovation has flourished in **geographic clusters** such as **Silicon Valley, Shenzhen, and Berlin**, where funding, talent, and knowledge are concentrated. We believe that we are presented with a unique opportunity to build **a digital-first innovation network**. 
 
@@ -678,15 +678,15 @@ With its focus on community building, ecosystem interaction and stakeholder gove
 
 ### Machine Translation \[Text to Text\]:
 
-A text to text problem with multiple correct answers such as translating from English to Korean. Validators will create specialized test datasets with one English prompt and 3-5 correct reference translations. When validators get translated answers from each of the participating Providers they will score them based on how close they are to the reference translations using the BLEU[^50] scoring method.
+A Text to Text problem with multiple correct answers such as translating from English to Korean. Validators will create specialized test datasets with one English prompt and 3-5 correct reference translations. When validators get translated answers from each of the participating Providers they will score them based on how close they are to the reference translations using the BLEU[^50] scoring method.
 
-### Python Code Generation \[Text To Text\]:
+### Python Code Generation \[Text to Text\]:
 
-This subnet would be the continually evaluated alternative to current standards in academia like MBPP PAPER[^51] [^52], APPS[^53] or HumanEval[^54]. The current standards have known questions and hence particularly closed source models can pretrain on this test data to overfit their results making the models seem superior while they only overfit this specific testset. Validators in a Text To Code subnet would independently generate their own coding challenges with test cases on how to check for correctness (in python for instance). The text prompts are sent to the Providers who must return functioning code that is executed by the Validator to check for correctness and CPU efficiency of the solution.
+This subnet would be the continuously evaluated alternative to current standards in academia like MBPP PAPER[^51] [^52], APPS[^53] or HumanEval[^54]. The current standards have known questions and hence particularly closed source models can pretrain on this test data to overfit their results making the models seem superior while they only overfit this specific testset. Validators in a Text to Code subnet would independently generate their own coding challenges with test cases on how to check for correctness (in python for instance). The text prompts are sent to the Providers who must return functioning code that is executed by the Validator to check for correctness and CPU efficiency of the solution.
 
 ### Image Generation \[Text to Image\]:
 
-While being one of the most common everyday uses of AI it is also one of the hardest to define a scoring standard due to the subjectivity of what is the most accurate or most beautiful image. Here it is important to note that the Validators have two scoring mechanism, one is a boolean vote if the Provider is in compliance with the basic requirements such as responding promptly with an image, abiding by the defined API and producing an image which on a very basic level can be considered to depict most of the text prompt. The validators output a scalar value which is designed as a relative score against the other answers provided. In the case of text to image it will be easy for users themselves to test multiple providers since the queries are standardized over all the providers a user can directly ask for the same prompt from all providers (aided by the user interface) and after a few prompts choosing only their favorite providers for the remaining prompts or let the validator ranking guide their choice by default. As previously stated the Protocol values users' purchasing decisions higher than validator votes themselves and in the case of text to image this alleviates the issue of ambiguity of evaluation by the wisdom of the crowd.
+While being one of the most common everyday uses of AI it is also one of the hardest to define a scoring standard due to the subjectivity of what is the most accurate or most beautiful image. Here it is important to note that the Validators have two scoring mechanism, one is a boolean vote if the Provider is in compliance with the basic requirements such as responding promptly with an image, abiding by the defined API and producing an image which on a very basic level can be considered to depict most of the text prompt. The validators output a scalar value which is designed as a relative score against the other answers provided. In the case of Text to Image it will be easy for users themselves to test multiple providers since the queries are standardized over all the providers a user can directly ask for the same prompt from all providers (aided by the user interface) and after a few prompts choosing only their favorite providers for the remaining prompts or let the validator ranking guide their choice by default. As previously stated the Protocol values users' purchasing decisions higher than validator votes themselves and in the case of Text to Image this alleviates the issue of ambiguity of evaluation by the wisdom of the crowd.
 
 ### Future Event Prediction \[Text to Boolean\]:
 
