@@ -436,7 +436,7 @@ The diagram below shows the tokenomics related flows and actions:
 
 Whenever there is a transaction that transfers ForestAI tokens to the ForestAI Treasury, part of the token amount is burned. The ratio of burned tokens is an adjustable smartcontract parameter that will be governed by the ForestAI DAO. In this way the Network can have a more fine-tuned control over the inflation rate of the token supply.
 
-<img src="./img/treasury_burn.jpg" alt="Token Burn" width="750">
+<img src="./img/treasury_burn.jpg" alt="Token Burn" width="500">
 
 ## Token Emissions
 
