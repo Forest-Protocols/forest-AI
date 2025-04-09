@@ -601,8 +601,6 @@ Validation is a core pillar of the ForestAI Network, ensuring that AI-based serv
 6. **Raw Results Publication**  
    * Although on-chain scores are publicly accessible, the detailed raw results must also be published to a public storage location. This transparency ensures that anyone can audit how each aggregated score was derived.
 
-<img src="./img/time_progress.jpg" alt="Time progress" width="750">
-
 The exact validation process is designed by the Protocol Owner who has the domain-specific know-how and is incentivised to produce the best Protocol. That’s because the better the Protocol, the more revenue it generates. The more revenue, the higher token emissions for this Protocol which translate directly to a payout for the Owner.
 
 ## Score Aggregation
