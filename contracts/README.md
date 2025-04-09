@@ -50,12 +50,18 @@ For test tokens:
 
 [current] 
 
+v0.44 (bug fixes, optimisations for easier SDK interactions)
+- [dev env] ForestRegistry contract: 0x2dF5969aE1eACAbE5e911F49Eb07f9Ce900942dB: [explorer link](https://sepolia-optimism.etherscan.io/address/0x2dF5969aE1eACAbE5e911F49Eb07f9Ce900942dB)
+- [dev env] ForestSlasher contract: 0xE5baE709081755Dc97aDd9c40ab4bFF505eC0D2c: [explorer link](https://sepolia-optimism.etherscan.io/address/0xE5baE709081755Dc97aDd9c40ab4bFF505eC0D2c)
+- [dev env] ForestToken contract: 0xF52A100Ae7ddB4aC9d6dB508C9DF9c7613CAe06E: [explorer link](https://sepolia-optimism.etherscan.io/address/0xF52A100Ae7ddB4aC9d6dB508C9DF9c7613CAe06E)
+- [dev env] MockedUsdcToken contracts: 0x8A278cc8f4c0c8A93B322b5461153fAcf4121112: [explorer link](https://sepolia-optimism.etherscan.io/address/0x8A278cc8f4c0c8A93B322b5461153fAcf4121112)
+
+[previous]
+
 v0.43 (makes Slasher epoch & reveal window changeable for testing + optimisations)
 - [dev env] ForestRegistry contract: 0xfd57c88098550f2929c1200400Cf611Be207eBC4: [explorer link](https://sepolia-optimism.etherscan.io/address/0xfd57c88098550f2929c1200400Cf611Be207eBC4)
 - [dev env] ForestSlasher contract: 0xbC970527ac59E19DD12D4b4F69627e9eC354E848: [explorer link](https://sepolia-optimism.etherscan.io/address/0xbC970527ac59E19DD12D4b4F69627e9eC354E848)
 - [dev env] ForestToken contract: 0x3b494BcC7c9dE07610269eFE0305f2906845E2e7: [explorer link](https://sepolia-optimism.etherscan.io/address/0x3b494BcC7c9dE07610269eFE0305f2906845E2e7)
-
-[previous]
 
 v0.42 (unified errors + bitcoin-like emissions)
 
