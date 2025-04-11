@@ -2,7 +2,7 @@
 
 ## Goal
 
-The goal of this subnet is to provide incentivizing fast SQL query execution on public datasets that are kept always up to date, including the Space And Time schemas for blockchain data. It is expected that most participants will directly run SXTChain nodes and compete on query performance, but it is also possible to use alternative backend technologies, provided they adhere to the same schemas.
+The goal of this protocol is to provide incentivizing fast SQL query execution on public datasets that are kept always up to date, including the Space And Time schemas for blockchain data. It is expected that most participants will directly run SXTChain nodes and compete on query performance, but it is also possible to use alternative backend technologies, provided they adhere to the same schemas.
 
 ## Evaluation
 
@@ -86,7 +86,7 @@ graph LR;
     - The SQL text must be less than 10,000 characters.
     - The SQL text must be a valid SQL statement.
     - The SQL text must not contain any UPDATE, INSERT or DELETE statements
-  - `apiKey` (_string_, required): the user's Space and Time DWH API Key. For instructions on how to generate, see: https://docs.spaceandtime.io/docs/api-keys 
+  - `apiKey` (_string_, required): the user's Space and Time DWH API Key. For instructions on how to generate, see: https://docs.spaceandtime.io/reference/about-rest-apis
   
     **RETURNS**: data output from sqlText, as JSON
 
