@@ -2,7 +2,7 @@
 
 # Abstract
 
-**Forest is an AI-focused innovation engine** leveraging positive learnings from **Bitcoin mining** and **preventing tokenomics pitfalls** that allow oligarchies of large token holders to control networks to their benefit **like in Bittensor**.
+**Forest is an AI-focused innovation market** leveraging positive learnings from **Bitcoin mining** and **preventing tokenomics pitfalls** that allow oligarchies of large token holders to control networks to their benefit **like in Bittensor**.
 
 In Forest, **all services are available for purchase** by real-world clients on day one. This allows us to **move away from corruption-prone stake-weighted voting** and instead **distribute tokens based on verified blockchain data** on who attracts the most new customers to the network.
 
@@ -12,7 +12,15 @@ To ensure **long-term economic viability** the network treasury **earns a commis
 
 ## Outline
 
-1. [Whitepaper vAlpha](/ForestAI_Whitepaper_Version_Alpha.md) - A high level overview of the protocol.
-2. [Protocols](/proposed-protocols) - The specification of each AI competition aka protocol as a markdown specs 
+1. [Whitepaper vAlpha](/ForestAI_Whitepaper_Version_Alpha.md) - A high level overview of the ForestAI Network.
+2. [Protocols](/proposed-protocols) - The specification of each AI Competition (aka Protocol) as a markdown specs.
 3. [Contracts](/contracts) - Solidity smart contracts defining token distribution mechanism.
-4. [FIP Discussions](https://github.com/Forest-Protocols/protocols/discussions) - A forum where Forest Improvement Proposals (FIP) are discussed.
+4. [SDK](/sdk) - Software Development Kit for building software that interacts with ForestAI.
+5. [Provider Base Template](https://github.com/Forest-Protocols/provider-template) - Base Provider Template used by Protocol Owners to define their Protocol.
+   * [doc: Become a Provider in a Protocol](https://github.com/Forest-Protocols/provider-template/blob/main/docs/become-a-provider.md)
+   * [doc: Best Coding Practices & Tips](https://github.com/Forest-Protocols/provider-template/blob/main/docs/best-practices-and-tips.md)
+   * [doc: Sync a Repo after Base Template update](https://github.com/Forest-Protocols/provider-template/blob/main/docs/how-to-sync-repository.md)
+   * [doc: Create OpenAPI for you Protocol](https://github.com/Forest-Protocols/provider-template/blob/main/docs/openapi-spec.md)
+7. [Validator Base Template](https://github.com/Forest-Protocols/validator-template) - Base Validator Template used by Protocol Owners to define the validation process for their Protocol.
+8. [Docs & Tutorials]()
+9. [FIP Discussions](https://github.com/Forest-Protocols/protocols/discussions) - A forum where Forest Improvement Proposals (FIP) are discussed.
