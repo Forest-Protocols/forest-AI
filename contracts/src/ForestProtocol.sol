@@ -6,13 +6,17 @@ import "@openzeppelin/contracts/interfaces/IERC20Metadata.sol";
 import "./interfaces/IForestRegistry.sol";
 import "./interfaces/IForestSlasher.sol";
 
+/**
+ * @title Template contract for a Protocol in Forest Network
+ * @notice This contract manages single Forest Network Protocol's lifecycle
+ */
 contract ForestProtocol is OwnableUpgradeable {
 
     /***********************************|
     |              Events               |
     |__________________________________*/
 
-    event ActorToPcRegistered(
+    event ActorToProtocolRegistered(
         ForestCommon.ActorType indexed actorType,
         address indexed ownerAddr,
         uint initialCollateral
@@ -56,45 +60,46 @@ contract ForestProtocol is OwnableUpgradeable {
         address indexed addr
     );
 
-    // event PcParamUpdated(
+    // event ProtocolParamUpdated(
     //     string indexed paramName
     // );
 
     /***********************************|
-    |             PC Params             |
+    |         Protocol Params          |
     |__________________________________*/
 
-    struct PcSettings {
-        uint maxValsNum; // Maximum number of validators allowed in the PC, 0 means no limit
-        uint maxProvsNum; // Maximum number of providers allowed in the PC, 0 means no limit
-        uint minCollateral; // Minimum collateral required to register an actor in the PC
-        uint valRegFee; // Registration fee in this PC for a validator
-        uint provRegFee; // Registration fee in this PC for a provider
-        uint offerRegFee; // Registration fee in this PC for an offer
-        uint termUpdateDelay; // Delay in seconds before terms update can take effect
-        uint provShare; // Share of the revenue in this PC for providers, 0 - 10000
-        uint valShare; // Share of the revenue in this PC for validators, 0 - 10000
-        uint pcOwnerShare; // Share of the revenue in this PC for the PC owner, 0 - 10000
-        string detailsLink; // Hash of the PC details file
+    struct ProtocolSettings {
+        uint maxValsNum; // Maximum number of Validators allowed in this Protocol, 0 means no limit
+        uint maxProvsNum; // Maximum number of Providers allowed in this Protocol, 0 means no limit
+        uint minCollateral; // Minimum collateral required for Actors
+        uint valRegFee; // Registration fee in this Protocol for a Validator
+        uint provRegFee; // Registration fee in this Protocol for a Provider
+        uint offerRegFee; // Registration fee in this Protocol for an Offer
+        uint termUpdateDelay; // Delay required before terms can be updated
+        uint provShare; // Provider's share of rewards, 0 - 10000
+        uint valShare; // Validator's share of rewards, 0 - 10000
+        uint ptoShare; // Protocol Owner's share of rewards, 0 - 10000
+        string detailsLink; // Hash of the Protocol details file
+        // TODO: add a maxSlashAmount 
     }
 
     /***********************************|
     |            Variables              |
     |__________________________________*/
 
-    // PC meta data
-    address ownerAddr; // Address of the PC owner
-    uint registrationTs; // Timestamp when the PC was registered
-    // PC base state
-    uint24[] provIds; // Array of provider IDs
-    uint24[] valIds; // Array of validator IDs
-    mapping(address => ForestCommon.ActorType) registeredActors; // Map of registered actors, key is the actor address, value is the actor type with 0 value meaning no actor registered
-    ForestCommon.Offer[] offers; // Array of offers
+    // Protocol meta data
+    address ownerAddr; // Address of the Protocol Owner
+    uint registrationTs; // Timestamp when the Protocol was registered
+    // Protocol base state
+    uint24[] provIds; // Array of Provider IDs
+    uint24[] valIds; // Array of Validator IDs
+    mapping(address => ForestCommon.ActorType) registeredActors; // Map of registered Actors, key is the Actor address, value is the Actor type with 0 value meaning no Actor registered
+    ForestCommon.Offer[] offers; // Array of Offers
     ForestCommon.Agreement[] agreements;
-    // parameters set by PC Owner
-    PcSettings settings;
+    // parameters set by Protocol Owner
+    ProtocolSettings settings;
     // stats
-    uint activeAgreementsValue; // How much revenue per month is this PC facilitating for its Providers 
+    uint activeAgreementsValue; // How much revenue per month this Protocol is facilitating for its Providers 
     uint32 offerIdCounter; // Counter for offer IDs
     uint32 agreementIdCounter; // Counter for agreement IDs
     mapping(address => uint256) actorTvs; // Map of Total Value Serviced for each actor
@@ -107,8 +112,8 @@ contract ForestProtocol is OwnableUpgradeable {
     |            Constructor            |
     |__________________________________*/
 
-    /// @notice Initializes the PC with related contracts (sets registry and the subsequent contracts based on info from the registry), sets the owner and registration timestamp
-    /// @dev Since this is an upgradeable-style contract, we need to initialize with a call to initialize rather than depending on the constructor. This can be called only once. Hence the initializer modifier.
+    /// @notice Initializes the Protocol with related contracts (sets Registry and the subsequent contracts based on info from the Registry), sets the Owner and registration timestamp
+    /// @dev Since this is an upgradeable-style contract, we need to initialize with a call to initialize rather than depending on the constructor. This can be called only once.
     /// @param _registryAddr Address of the Registry contract
     function initialize(address _registryAddr) initializer public {
         if (_registryAddr == address(0))
@@ -149,21 +154,21 @@ contract ForestProtocol is OwnableUpgradeable {
     |          SC Functions             |
     |__________________________________*/
 
-    /// @notice Registers a new actor (Provider or Validator) in this Protocol, transfers collateral to the Slasher contract, transfers registration fee to the Treasury
-    /// @dev Requires actor to be registered in Registry and provide sufficient collateral
-    /// @param _actorType Type of actor (Provider or Validator allowed only)
+    /// @notice Registers a new Actor (Provider or Validator) in this Protocol, transfers collateral to the Slasher contract, transfers registration fee to the Treasury
+    /// @dev Requires Actor to be registered in Registry and provide sufficient collateral
+    /// @param _actorType Type of Actor (Provider or Validator allowed only)
     /// @param initialCollateral Amount of collateral to stake
     function registerActor(ForestCommon.ActorType _actorType, uint initialCollateral) public { // whenNotPaused
         // allow only Provider or Validator to register
-        if (_actorType == ForestCommon.ActorType.NONE || _actorType == ForestCommon.ActorType.PC_OWNER)
+        if (_actorType == ForestCommon.ActorType.NONE || _actorType == ForestCommon.ActorType.PT_OWNER)
             revert ForestCommon.ActorWrongType();
-        // check if actor of the requested type is already registered in registry
+        // check if Actor of the requested type is already registered in Registry
         if (!registry.isRegisteredActiveActor(_actorType, _msgSender()))
             revert ForestCommon.ActorNotRegistered();
-        // check if actor is already registered in this PC
+        // check if Actor is already registered in this Protocol
         if (registeredActors[_msgSender()] != ForestCommon.ActorType.NONE)
             revert ForestCommon.ActorAlreadyRegistered();
-        // check if we haven't exceeded the max number of actors of this type
+        // check if we haven't exceeded the max number of Actors of this type
         if (_actorType == ForestCommon.ActorType.PROVIDER && provIds.length >= settings.maxProvsNum)
             revert ForestCommon.LimitExceeded();
         if (_actorType == ForestCommon.ActorType.VALIDATOR && valIds.length >= settings.maxValsNum)
@@ -173,26 +178,26 @@ contract ForestProtocol is OwnableUpgradeable {
             revert ForestCommon.InsufficientAmount();
         
         // pay registration fee
-        uint actorRegFee = registry.getActorInPcRegFee() + (_actorType == ForestCommon.ActorType.PROVIDER ? settings.provRegFee : settings.valRegFee);
+        uint actorRegFee = registry.getActorInPtRegFee() + (_actorType == ForestCommon.ActorType.PROVIDER ? settings.provRegFee : settings.valRegFee);
         registry.transferTokensToTreasury(_msgSender(), actorRegFee); // @dev so the approval needs to be for the registry contract
 
         // transfer the collateral to the Slasher contract
         slasher.topupActorCollateral(address(this), _actorType, _msgSender(), initialCollateral);
 
-        // save this registration info in the PC state
+        // save this registration info in the PT state
         registeredActors[_msgSender()] = _actorType;
         if (_actorType == ForestCommon.ActorType.PROVIDER)
             provIds.push(registry.getActor(_msgSender()).id);
         else
             valIds.push(registry.getActor(_msgSender()).id);
 
-        emit ActorToPcRegistered(_actorType, _msgSender(), initialCollateral);
+        emit ActorToProtocolRegistered(_actorType, _msgSender(), initialCollateral);
     }
 
-    // TODO: deregister an actor forcefully by PCO and self deregistration by Actor
+    // TODO: deregister an Actor forcefully by Protocol Owner and self deregistration by Actor
 
-    /// @notice Registers a new offer from a Provider
-    /// @dev Provider must be registered and active in this PC, can be called only by authorized representatives of the Provider (himself or operator)
+    /// @notice Registers a new Offer from a Provider
+    /// @dev Provider must be registered and active in this Protocol, can be called only by authorized representatives of the Provider (Owner or Operator)
     /// @param _providerOwnerAddr Address of the Provider owner
     /// @param _fee Fee per time unit for the service
     /// @param _stockAmount Available capacity for this service
@@ -213,12 +218,12 @@ contract ForestProtocol is OwnableUpgradeable {
             revert ForestCommon.InvalidParam();
 
         // check if the provider is registered in the protocol and if the sender is allowed to act on the providers behalf
-        // and check if the provider is registered in this PC as a Provider 
+        // and check if the Provider is registered in this Protocol as a Provider 
         if (!isActiveRegisteredAndAuthorizedRepresentative(ForestCommon.ActorType.PROVIDER, _providerOwnerAddr, _msgSender()))
             revert ForestCommon.OnlyOwnerOrOperatorAllowed();
 
-        // pay the protocol fee for registration
-        registry.transferTokensToTreasury(_msgSender(), settings.offerRegFee + registry.getOfferInPcRegFee());
+        // pay the registration fee
+        registry.transferTokensToTreasury(_msgSender(), settings.offerRegFee + registry.getOfferInPtRegFee());
 
         // create the offer
         uint32 offerId = offerIdCounter++;
@@ -246,8 +251,8 @@ contract ForestProtocol is OwnableUpgradeable {
         return offerId;
     }
 
-    /// @notice Requests to close an offer. This is to be used by Providers who want to stop providing a service based on a previously created offer. When the request is made and the required by the PC delay passes, the Provider will be able to force close all active agreements based on this offer.
-    /// @dev Can be called only by authorized representatives of the Provider (himself or operator)
+    /// @notice Requests to close an Offer. This is to be used by Providers who want to stop providing a service based on a previously created Offer.
+    /// @dev Can be called only by authorized representatives of the Provider (Owner or Operator)
     /// @param _offerId ID of the offer to request close
     function requestOfferClose(uint32 _offerId) public {
         if (!registry.isOwnerOrOperatorOfRegisteredActiveActor(ForestCommon.ActorType.PROVIDER, offers[_offerId].ownerAddr, _msgSender()))
@@ -255,11 +260,11 @@ contract ForestProtocol is OwnableUpgradeable {
          offers[_offerId].closeRequestTs = block.timestamp;
     }
 
-    // TODO: change offer params, not now, Provider can pause an offer not to allow new agreements and create a new one with update specs, also it's possible to request offer close which means that after time from PC settings passed, Provider can close all agreements based on this offer
+    // TODO: change Offer params, not now, Provider can pause an Offer not to allow new Agreements and create a new one with updated specs, also it's possible to request Offer close which means that after time from Protocol settings passed, Provider can close all Agreements based on this Offer
 
-    /// @notice Pauses an offer to prevent new agreements from being created based on it
-    /// @dev Can be called only by authorized representatives of the Provider (himself or operator)
-    /// @param _offerId ID of the offer to pause
+    /// @notice Pauses an Offer to prevent new Agreements from being created based on it
+    /// @dev Can be called only by authorized representatives of the Provider (Owner or Operator)
+    /// @param _offerId ID of the Offer to pause
     function pauseOffer(uint32 _offerId) public {
         if (!registry.isOwnerOrOperatorOfRegisteredActiveActor(ForestCommon.ActorType.PROVIDER, offers[_offerId].ownerAddr, _msgSender()))
             revert ForestCommon.OnlyOwnerOrOperatorAllowed();
@@ -269,9 +274,9 @@ contract ForestProtocol is OwnableUpgradeable {
         emit OfferPaused(_offerId);
     }
 
-    /// @notice Unpauses an offer to allow new agreements to be created based on it
-    /// @dev Can be called only by authorized representatives of the Provider (himself or operator)
-    /// @param _offerId ID of the offer to unpause
+    /// @notice Unpauses an Offer to allow new Agreements to be created based on it
+    /// @dev Can be called only by authorized representatives of the Provider (Owner or Operator)
+    /// @param _offerId ID of the Offer to unpause
     function unpauseOffer(uint32 _offerId) public {
         if (!registry.isOwnerOrOperatorOfRegisteredActiveActor(ForestCommon.ActorType.PROVIDER, offers[_offerId].ownerAddr, _msgSender()))
             revert ForestCommon.OnlyOwnerOrOperatorAllowed();
@@ -281,10 +286,10 @@ contract ForestProtocol is OwnableUpgradeable {
         emit OfferUnpaused(_offerId);
     }
 
-    /// @notice Creates a new service agreement between user and provider
-    /// @dev Requires active offer and sufficient initial deposit
-    /// @param _offerId ID of the service offer
-    /// @param _initialDeposit Initial balance for the agreement
+    /// @notice Creates a new service Agreement between User and Provider
+    /// @dev Requires active Offer and sufficient initial deposit
+    /// @param _offerId ID of the service Offer
+    /// @param _initialDeposit Initial balance for the Agreement
     /// @return Agreement ID
     function enterAgreement(
         uint32 _offerId,
@@ -297,7 +302,7 @@ contract ForestProtocol is OwnableUpgradeable {
             revert ForestCommon.ObjectNotActive();
 
         uint _minimumFee = 2 * 2635200 * chosenOffer.fee;
-        uint protocolRevenueShareFee = _initialDeposit * registry.getRevenueShare() / ForestCommon.HUNDRED_PERCENT_POINTS;
+        uint networkRevenueShareFee = _initialDeposit * registry.getRevenueShare() / ForestCommon.HUNDRED_PERCENT_POINTS;
         
         // check if initialDeposit is enough
         if (_initialDeposit < _minimumFee)
@@ -307,14 +312,14 @@ contract ForestProtocol is OwnableUpgradeable {
         if (chosenOffer.stockAmount <= chosenOffer.activeAgreements)
             revert ForestCommon.LimitExceeded();
 
-        // pay the protool fee
-        usdcToken.transferFrom(_msgSender(), registry.getTreasuryAddr(), protocolRevenueShareFee);
+        // pay the Network fee
+        usdcToken.transferFrom(_msgSender(), registry.getTreasuryAddr(), networkRevenueShareFee);
 
         // pay the initial deposit
-        uint initialBalance = _initialDeposit - protocolRevenueShareFee;
+        uint initialBalance = _initialDeposit - networkRevenueShareFee;
         usdcToken.transferFrom(_msgSender(), address(this), initialBalance);
 
-        // craete a new agreement
+        // create a new Agreement
         uint32 agreementId = agreementIdCounter++;
 
         ForestCommon.Agreement memory agreement = ForestCommon.Agreement(
@@ -337,7 +342,7 @@ contract ForestProtocol is OwnableUpgradeable {
         // add the fee value to activeAgreementsValue for subsequent ranking of Protocols
         activeAgreementsValue += chosenOffer.fee;
 
-        // add the fee value to the Actor's TVL
+        // add the fee value to the Actor's TVS
         actorTvs[chosenOffer.ownerAddr] += chosenOffer.fee;
 
         emit AgreementCreated(
@@ -352,7 +357,7 @@ contract ForestProtocol is OwnableUpgradeable {
         return agreementId;
     }
 
-    // TODO: business question: should we allow topup from nonowners?
+    // TODO: business question: should we allow topup from non-Owners?
 
     /// @notice Topups an existing agreement with additional funds
     /// @dev Can be called by the user who is a party to the agreement
@@ -400,12 +405,12 @@ contract ForestProtocol is OwnableUpgradeable {
             revert ForestCommon.InsufficientAmount();
      
         // update agreement state
-        _agreement.balance -= amount;
+        _agreement.balance -= _amount;
         
         // transfer tokens to user
-        usdcToken.transfer(_agreement.userAddr, amount);
+        usdcToken.transfer(_agreement.userAddr, _amount);
 
-        emit BalanceWithdrawn(_agreement.id, amount, _agreement.userAddr);
+        emit BalanceWithdrawn(_agreement.id, _amount, _agreement.userAddr);
     }
 
     /// @notice Withdraws the Provider's earned fees from an agreement.
@@ -502,12 +507,12 @@ contract ForestProtocol is OwnableUpgradeable {
     //     // TODO: the accounting on the agreement level falls apart when the contract is paused
     //     // we should pay out the outstanding rewards to all of the providers
     //     // and then we can pause the contract for it to work properly
-    //     registry.pausePc();
+    //     registry.pausePt();
     // }
 
     // function unpause() external onlyOwner whenPaused {
     //     // TODO: for the accounting to work properly we need to set all agreements' provClaimedTs to timestamp of the block when the contract was unpaused
-    //     registry.unpausePc();
+    //     registry.unpausePt();
     // }
 
     /***********************************|
@@ -515,20 +520,20 @@ contract ForestProtocol is OwnableUpgradeable {
     |__________________________________*/
 
     // function isPaused() public view returns (bool) {
-    //     return !registry.isPcRegisteredAndActive(address(this));
+    //     return !registry.isPtRegisteredAndActive(address(this));
     // }
 
-    /// @notice Checks if an actor is registered and active in this PC
-    /// @param _actorType Type of actor (Provider or Validator allowed only)
-    /// @param _addr Address of the actor
-    /// @return isRegistered True if the actor is registered and active in this PC
+    /// @notice Checks if an Actor is registered and active in this Protocol
+    /// @param _actorType Type of Actor (Provider or Validator allowed only)
+    /// @param _addr Address of the Actor
+    /// @return isRegistered True if the Actor is registered and active in this Protocol
     function isRegisteredActiveActor(ForestCommon.ActorType _actorType, address _addr) public view returns (bool isRegistered) {
         return registeredActors[_addr] == _actorType;
     }
 
-    /// @notice Checks if an actor is active and registered in this PC as well in the Registry and if the calling address is an authorized representative of that actor
-    /// @param _actorType Type of actor (Provider or Validator allowed only)
-    /// @param _ownerAddr Owner address of the actor to be checked
+    /// @notice Checks if an Actor is active and registered in this Protocol as well in the Registry and if the calling address is an authorized representative of that actor
+    /// @param _actorType Type of Actor (Provider or Validator allowed only)
+    /// @param _ownerAddr Owner address of the Actor to be checked
     /// @param _senderAddr Address of the caller
     /// @return isRepresentativeOfActiveRegistered True if the calling address is an authorized representative of a registered and active actor
     function isActiveRegisteredAndAuthorizedRepresentative(ForestCommon.ActorType _actorType, address _ownerAddr, address _senderAddr) public view returns (bool isRepresentativeOfActiveRegistered) {
@@ -538,10 +543,10 @@ contract ForestProtocol is OwnableUpgradeable {
         return true;
     }
 
-    /// @notice Checks if an actor is active and registered in this PC as well in the Registry
-    /// @param _actorType Type of actor (Provider or Validator allowed only)
-    /// @param _ownerAddr Owner address of the actor to be checked
-    /// @return isOwnerOfActiveRegistered True if the actor is active and registered in this PC as well in the Registry
+    /// @notice Checks if an Actor is active and registered in this Protocol as well in the Registry
+    /// @param _actorType Type of Actor (Provider or Validator allowed only)
+    /// @param _ownerAddr Owner address of the Actor to be checked
+    /// @return isOwnerOfActiveRegistered True if the Actor is active and registered in this Protocol as well in the Registry
     function isActiveRegisteredOwner(ForestCommon.ActorType _actorType, address _ownerAddr) public view returns (bool isOwnerOfActiveRegistered) {
         if (!registry.isRegisteredActiveActor(_actorType, _ownerAddr)
         || !isRegisteredActiveActor(_actorType, _ownerAddr))
@@ -553,11 +558,11 @@ contract ForestProtocol is OwnableUpgradeable {
     |         Setter Functions          |
     |__________________________________*/
 
-    /// @notice Sets the owner of the PC
-    /// @dev Can be called only by the owner of the PC
-    /// @param _ownerAddr Address of the new owner, can't be 0 address and must be registered as a PC owner in the Registry
+    /// @notice Sets the owner of the Protocol
+    /// @dev Can be called only by the Owner of the Protocol
+    /// @param _ownerAddr Address of the new Owner, can't be 0 address and must be registered as a Protocol Owner in the Registry
     function setOwner(address _ownerAddr) external onlyOwner {
-        if (!registry.isRegisteredActiveActor(ForestCommon.ActorType.PC_OWNER, _ownerAddr))
+        if (!registry.isRegisteredActiveActor(ForestCommon.ActorType.PT_OWNER, _ownerAddr))
             revert ForestCommon.ActorNotRegistered();
         if (_ownerAddr == address(0))
             revert ForestCommon.InvalidAddress();
@@ -570,72 +575,72 @@ contract ForestProtocol is OwnableUpgradeable {
         revert ForestCommon.Unauthorized();
     }
 
-    /// @notice Sets the maximum number of validators and providers allowed in the PC
-    /// @dev Can be called only by the owner of the PC
-    /// @param _maxValsNum Maximum number of validators allowed in the PC
-    /// @param _maxProvsNum Maximum number of providers allowed in the PC
+    /// @notice Sets the maximum number of Validators and Providers allowed in the Protocol
+    /// @dev Can be called only by the Owner of the Protocol
+    /// @param _maxValsNum Maximum number of Validators allowed in the Protocol
+    /// @param _maxProvsNum Maximum number of Providers allowed in the Protocol
     function setMaxActors(uint _maxValsNum, uint _maxProvsNum) external onlyOwner {
         settings.maxValsNum = _maxValsNum;
         settings.maxProvsNum = _maxProvsNum;
-        //emit PcParamUpdated("maxActorsNums");
+        //emit ProtocolParamUpdated("maxActorsNums");
     }
 
-    /// @notice Sets the minimum collateral required to register an actor in the PC
-    /// @dev Can be called only by the owner of the PC
-    /// @param _minCollateral Minimum collateral required to register an actor in the PC
+    /// @notice Sets the minimum collateral required to register an Actor in the Protocol
+    /// @dev Can be called only by the Owner of the Protocol
+    /// @param _minCollateral Minimum collateral required to register an Actor in the Protocol
     function setMinCollateral(uint _minCollateral) external onlyOwner {
         settings.minCollateral = _minCollateral;
-        //emit PcParamUpdated("minCollateral");
+        //emit ProtocolParamUpdated("minCollateral");
     }
 
-    /// @notice Sets the registration fees for validators, providers and offers in the PC
-    /// @dev Can be called only by the owner of the PC
-    /// @param _valRegFee Registration fee in this PC for a validator
-    /// @param _provRegFee Registration fee in this PC for a provider
-    /// @param _offerRegFee Registration fee in this PC for an offer
+    /// @notice Sets the registration fees for Validators, Providers and Offers in the Protocol
+    /// @dev Can be called only by the Owner of the Protocol
+    /// @param _valRegFee Registration fee in this Protocol for a Validator
+    /// @param _provRegFee Registration fee in this Protocol for a Provider
+    /// @param _offerRegFee Registration fee in this Protocol for an Offer
     function setFees(uint _valRegFee, uint _provRegFee, uint _offerRegFee) external onlyOwner {
         settings.valRegFee = _valRegFee;
         settings.provRegFee = _provRegFee;
         settings.offerRegFee = _offerRegFee;
-        //emit PcParamUpdated("regFees");
+        //emit ProtocolParamUpdated("regFees");
     }
 
-    /// @notice Sets the delay before terms of offers / agreements can be updated in this PC
-    /// @dev Can be called only by the owner of the PC
-    /// @param _termUpdateDelay Delay in seconds before a new term can be updated
+    /// @notice Sets the delay before terms of Offers / Agreements can be updated in this Protocol
+    /// @dev Can be called only by the Owner of the Protocol
+    /// @param _termUpdateDelay Delay in seconds before terms can be updated
     function setTermUpdateDelay(uint _termUpdateDelay) external onlyOwner {
         settings.termUpdateDelay = _termUpdateDelay;
-        //emit PcParamUpdated("termUpdateDelay");
+        //emit ProtocolParamUpdated("termUpdateDelay");
     }
 
-    /// @notice Sets the emission shares for providers, validators and the PC owner
-    /// @dev Can be called only by the owner of the PC
-    /// @param _provShare Share of the revenue in this PC for providers, 0 - 10000
-    /// @param _valShare Share of the revenue in this PC for validators, 0 - 10000
-    /// @param _pcOwnerShare Share of the revenue in this PC for the PC owner, 0 - 10000
-    function setEmissionShares(uint _provShare, uint _valShare, uint _pcOwnerShare) external onlyOwner {
-        if (_provShare + _valShare + _pcOwnerShare != ForestCommon.HUNDRED_PERCENT_POINTS)
+    /// @notice Sets the emission shares for Providers, Validators and the Protocol Owner
+    /// @dev Can be called only by the Owner of the Protocol
+    /// @param _provShare Share of the revenue in this Protocol for Providers, 0 - 10000
+    /// @param _valShare Share of the revenue in this Protocol for Validators, 0 - 10000
+    /// @param _ptoShare Share of the revenue in this Protocol for the Protocol Owner, 0 - 10000
+    function setEmissionShares(uint _provShare, uint _valShare, uint _ptoShare) external onlyOwner {
+        if (_provShare + _valShare + _ptoShare != ForestCommon.HUNDRED_PERCENT_POINTS)
             revert ForestCommon.InvalidParam();
         settings.provShare = _provShare;
         settings.valShare = _valShare;
-        settings.pcOwnerShare = _pcOwnerShare;
-        //emit PcParamUpdated("emissionShares");
+        settings.ptoShare = _ptoShare;
+        //emit ProtocolParamUpdated("emissionShares");
     }
 
-    /// @notice Sets the hash of the PC details file
-    /// @dev Can be called only by the owner of the PC
-    /// @param _detailsLink Hash of the PC details file
+    /// @notice Sets the hash of the Protocol details file
+    /// @dev Can be called only by the Owner of the Protocol
+    /// @param _detailsLink Hash of the Protocol details file
     function setDetailsLink(string memory _detailsLink) external onlyOwner {
         settings.detailsLink = _detailsLink;
-        //emit PcParamUpdated("detailsLink");
+        //emit ProtocolParamUpdated("detailsLink");
     }
 
     /***********************************|
     |         Getter Functions          |
     |__________________________________*/
     
-    /// @notice Gets the address of the PC owner
-    /// @return ownerAddr Address of the PC owner
+    /// @notice Gets the address of the Protocol Owner
+    /// @return ownerAddr Address of the Protocol Owner
     function getOwnerAddr() external view returns (address) {
         return ownerAddr;
     }
@@ -646,95 +651,95 @@ contract ForestProtocol is OwnableUpgradeable {
         return address(registry);
     }
 
-    /// @notice Gets the maximum number of validators and providers allowed in the PC
-    /// @return maxValsNum Maximum number of validators allowed in the PC
-    /// @return maxProvsNum Maximum number of providers allowed in the PC
+    /// @notice Gets the maximum number of Validators and Providers allowed in the Protocol
+    /// @return maxValsNum Maximum number of Validators allowed in the Protocol
+    /// @return maxProvsNum Maximum number of Providers allowed in the Protocol
     function getMaxActors() external view returns (uint, uint) {
         return (settings.maxValsNum, settings.maxProvsNum);
     }
 
-    /// @notice Gets the minimum collateral required to register an actor in the PC
-    /// @return minCollateral Minimum collateral required to register an actor in the PC
+    /// @notice Gets the minimum collateral required to register an Actor in the Protocol
+    /// @return minCollateral Minimum collateral required to register an Actor in the Protocol
     function getMinCollateral() external view returns (uint) {
         return settings.minCollateral;
     }
 
-    /// @notice Gets the registration fees for validators, providers and offers in the PC
-    /// @return valRegFee Registration fee in this PC for a validator
-    /// @return provRegFee Registration fee in this PC for a provider
-    /// @return offerRegFee Registration fee in this PC for an offer
+    /// @notice Gets the registration fees for Validators, Providers and Offers in the Protocol
+    /// @return valRegFee Registration fee in this Protocol for a Validator
+    /// @return provRegFee Registration fee in this Protocol for a Provider
+    /// @return offerRegFee Registration fee in this Protocol for an Offer
     function getFees() external view returns (uint, uint, uint) {
         return (settings.valRegFee, settings.provRegFee, settings.offerRegFee);
     }
 
-    /// @notice Gets the delay before terms of offers / agreements can be updated in this PC
-    /// @return termUpdateDelay Delay in seconds before a new term can be updated
+    /// @notice Gets the delay before terms of Offers / Agreements can be updated in this Protocol
+    /// @return termUpdateDelay Delay in seconds before terms can be updated
     function getTermUpdateDelay() external view returns (uint) {
         return settings.termUpdateDelay;
     }
 
-    /// @notice Gets the emission shares for providers, validators and the PC owner
-    /// @return provShare Share of the revenue in this PC for providers, 0 - 10000
-    /// @return valShare Share of the revenue in this PC for validators, 0 - 10000
-    /// @return pcOwnerShare Share of the revenue in this PC for the PC owner, 0 - 10000
+    /// @notice Gets the emission shares for Providers, Validators and the Protocol Owner
+    /// @return provShare Share of the revenue in this Protocol for Providers, 0 - 10000
+    /// @return valShare Share of the revenue in this Protocol for Validators, 0 - 10000
+    /// @return ptoShare Share of the revenue in this Protocol for the Protocol Owner, 0 - 10000
     function getEmissionShares() external view returns (uint, uint, uint) {
-        return (settings.provShare, settings.valShare, settings.pcOwnerShare);
+        return (settings.provShare, settings.valShare, settings.ptoShare);
     }
 
-    /// @notice Gets the hash of the PC details file
-    /// @return detailsLink Hash of the PC details file
+    /// @notice Gets the hash of the Protocol details file
+    /// @return detailsLink Hash of the Protocol details file
     function getDetailsLink() external view returns (string memory) {
         return settings.detailsLink;
     }
 
-    /// @notice Gets the number of offers in the PC
-    /// @return count Number of offers in the PC
+    /// @notice Gets the number of Offers in the Protocol
+    /// @return count Number of Offers in the Protocol
     function getOffersCount() external view returns (uint count) {
         return offers.length;
     }
 
-    /// @notice Gets an offer by its ID
-    /// @param id ID of the offer to get
+    /// @notice Gets an Offer by its ID
+    /// @param id ID of the Offer to get
     /// @return offer Offer with the given ID
     function getOffer(uint32 id) external view returns (ForestCommon.Offer memory) {
         return offers[id];
     }
 
-    /// @notice Gets the number of agreements in the PC including inactive ones
-    /// @return count Number of agreements in the PC
+    /// @notice Gets the number of Agreements in the Protocol including inactive ones
+    /// @return count Number of Agreements in the Protocol
     function getAgreementsCount() external view returns (uint count) {
         return agreements.length;
     }
 
-    /// @notice Gets an agreement by its ID
-    /// @param id ID of the agreement to get
+    /// @notice Gets an Agreement by its ID
+    /// @param id ID of the Agreement to get
     /// @return agreement Agreement with the given ID
     function getAgreement(uint32 id) external view returns (ForestCommon.Agreement memory) {
         return agreements[id];
     }
 
-    /// @notice Gets all provider IDs in the PC
-    /// @return provIds Array of provider IDs
+    /// @notice Gets all Provider IDs in the Protocol
+    /// @return provIds Array of Provider IDs
     function getAllProviderIds() external view returns (uint24[] memory) {
         return provIds;
     }
 
-    /// @notice Gets all validator IDs in the PC
-    /// @return valIds Array of validator IDs
+    /// @notice Gets all Validator IDs in the Protocol
+    /// @return valIds Array of Validator IDs
     function getAllValidatorIds() external view returns (uint24[] memory) {
         return valIds;
     }
 
-    /// @notice Gets the total revenue in this PC for providers
-    /// @return activeAgreementsValue Total revenue in this PC for providers
+    /// @notice Gets the total revenue in this Protocol for Providers
+    /// @return activeAgreementsValue Total revenue in this Protocol for Providers
     function getActiveAgreementsValue() external view returns (uint) {
         return activeAgreementsValue;
     }
 
-    /// @notice Gets the outstanding reward for an agreement
-    /// @dev There is an assumption that the agreement can't be paused
-    /// @param _agreementId ID of the agreement to get the outstanding reward for
-    /// @return outstandingRewardAmount Outstanding reward for the given agreement
+    /// @notice Gets the outstanding reward for an Agreement
+    /// @dev There is an assumption that the Agreement can't be paused
+    /// @param _agreementId ID of the Agreement to get the outstanding reward for
+    /// @return outstandingRewardAmount Outstanding reward for the given Agreement
     function getOutstandingReward(
         uint32 _agreementId
     ) public view returns (uint) {
@@ -745,10 +750,10 @@ contract ForestProtocol is OwnableUpgradeable {
         return outstandingRewardAmount;
     }
 
-    /// @notice Gets the balance of an agreement minus the outstanding reward
-    /// @dev There is an assumption that the agreement can't be paused
-    /// @param _agreementId ID of the agreement to get the balance for
-    /// @return balance Balance of the given agreement minus the outstanding reward
+    /// @notice Gets the balance of an Agreement minus the outstanding reward
+    /// @dev There is an assumption that the Agreement can't be paused
+    /// @param _agreementId ID of the Agreement to get the balance for
+    /// @return balance Balance of the given Agreement minus the outstanding reward
     function getBalanceMinusOutstanding(
         uint32 _agreementId
     ) public view returns (uint) {
@@ -759,18 +764,18 @@ contract ForestProtocol is OwnableUpgradeable {
             return agreementBalance - getOutstandingReward(_agreementId);
     }
 
-    /// @notice Gets the balance of an agreement
-    /// @param _agreementId ID of the agreement to get the balance for
-    /// @return balance Balance of the given agreement
+    /// @notice Gets the balance of an Agreement
+    /// @param _agreementId ID of the Agreement to get the balance for
+    /// @return balance Balance of the given Agreement
     function getAgreementBalance(
         uint32 _agreementId
     ) public view returns (uint) {
         return agreements[_agreementId].balance;
     }
 
-    /// @notice Gets the Total Value Serviced for an actor (value of all active agreements for the actor)
-    /// @param _actorAddr Address of the actor to get the Total Value Serviced for
-    /// @return actorTvs Total Value Serviced for the given actor
+    /// @notice Gets the Total Value Serviced for an Actor (value of all active Agreements for the Actor)
+    /// @param _actorAddr Address of the Actor to get the Total Value Serviced for
+    /// @return actorTvs Total Value Serviced for the given Actor
     function getActorTvs(address _actorAddr) public view returns (uint256) {
         return actorTvs[_actorAddr];
     }

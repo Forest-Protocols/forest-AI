@@ -22,7 +22,7 @@ interface IForestProtocol {
     error OwnableUnauthorizedAccount(address account);
     error Unauthorized();
 
-    event ActorToPcRegistered(
+    event ActorToProtocolRegistered(
         ForestCommon.ActorType indexed actorType, address indexed ownerAddr, uint256 initialCollateral
     );
     event AgreementClosed(uint32 indexed id, address indexed closingAddr);
@@ -43,7 +43,7 @@ interface IForestProtocol {
     function getActiveAgreementsValue() external view returns (uint256);
     function getActorTvs(address _actorAddr) external view returns (uint256);
     function getAgreement(uint32 id) external view returns (ForestCommon.Agreement memory);
-    function getAgreementBalanace(uint32 _agreementId) external view returns (uint256);
+    function getAgreementBalance(uint32 _agreementId) external view returns (uint256);
     function getAgreementsCount() external view returns (uint256 count);
     function getAllProviderIds() external view returns (uint24[] memory);
     function getAllValidatorIds() external view returns (uint24[] memory);
@@ -82,7 +82,7 @@ interface IForestProtocol {
     function renounceOwnership() external;
     function requestOfferClose(uint32 _offerId) external;
     function setDetailsLink(string memory _detailsLink) external;
-    function setEmissionShares(uint256 _provShare, uint256 _valShare, uint256 _pcOwnerShare) external;
+    function setEmissionShares(uint256 _provShare, uint256 _valShare, uint256 _ptoShare) external;
     function setFees(uint256 _valRegFee, uint256 _provRegFee, uint256 _offerRegFee) external;
     function setMaxActors(uint256 _maxValsNum, uint256 _maxProvsNum) external;
     function setMinCollateral(uint256 _minCollateral) external;

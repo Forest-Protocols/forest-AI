@@ -20,7 +20,7 @@ library ForestCommon {
         NONE,
         PROVIDER,
         VALIDATOR,
-        PC_OWNER
+        PT_OWNER
     }
 
     /***********************************|
@@ -71,17 +71,17 @@ library ForestCommon {
     // Access & Authorization
     /// @dev Thrown when sender is not authorized for the operation
     error Unauthorized();                    
-    /// @dev Thrown when sender is not the actor's owner or when sender is not the owner of the agreement
+    /// @dev Thrown when sender is not the Actor's Owner or when sender is not the Owner of the agreement
     error OnlyOwnerAllowed();               
-    /// @dev Thrown when sender is not a registered owner or operator of the specified actor
+    /// @dev Thrown when sender is not a registered Owner or Operator of the specified Actor
     error OnlyOwnerOrOperatorAllowed();                  
 
     // Actor Management
-    /// @dev Thrown when attempting to access an unregistered actor
+    /// @dev Thrown when attempting to access an unregistered Actor
     error ActorNotRegistered();             
-    /// @dev Thrown when attempting to register an already registered actor
+    /// @dev Thrown when attempting to register an already registered Actor
     error ActorAlreadyRegistered();         
-    /// @dev Thrown when actor type is invalid for the operation
+    /// @dev Thrown when Actor type is invalid for the operation
     error ActorWrongType();                       
 
     // State & Validation
@@ -101,13 +101,13 @@ library ForestCommon {
     error CommitmentAlreadySubmitted();      
     /// @dev Thrown when attempting to submit a reveal that points to a commitment that doesn't exist
     error CommitmentNotSubmitted();   
-    /// @dev Throw when object doesn't belong to the actor
+    /// @dev Throw when object doesn't belong to the Actor
     error ProviderDoesNotMatchAgreement(uint24 _providerId, uint32 _agreementId);
-    /// @dev Thrown when validator does not match agreement
+    /// @dev Thrown when Validator does not match agreement
     error ValidatorDoesNotMatchAgreement(uint24 _validatorId, uint32 _agreementId);
     /// @dev Thrown when object is not in active state
     error ObjectNotActive();    
-     /// @dev Thrown when object is in active state
+    /// @dev Thrown when object is in active state
     error ObjectActive();              
     /// @dev Thrown when attempting to access unclosed epoch
     error EpochNotClosed();                  

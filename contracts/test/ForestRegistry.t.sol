@@ -32,20 +32,20 @@ contract ForestRegistryTest is Test {
     address public user2 = address(8);
     address public user3 = address(9);
     string public providerDetailsLink = "https://provider.com";
-    string public pcDetailsLink = "https://product.com";
+    string public ptDetailsLink = "https://product.com";
     string public offerDetailsLink = "https://inventory.com";
 
     // Protocol Sample Params
     uint public PARAM_REVENUE_SHARE = 1000; //10.00%
-    uint public PARAM_MAX_PCS_NUM = 2;
+    uint public PARAM_MAX_PTS_NUM = 2;
     uint public PARAM_ACTOR_REG_FEE = 1 ether;
-    uint public PARAM_PC_REG_FEE = 10 ether;
-    uint public PARAM_ACTOR_IN_PC_REG_FEE = 2 ether;
-    uint public PARAM_OFFER_IN_PC_REG_FEE = 3 ether;
+    uint public PARAM_PT_REG_FEE = 10 ether;
+    uint public PARAM_ACTOR_IN_PT_REG_FEE = 2 ether;
+    uint public PARAM_OFFER_IN_PT_REG_FEE = 3 ether;
     address public PARAM_TREASURY_ADDR = treasuryAddr;
     uint public PARAM_BURN_RATIO = 2000; // 20.00%
 
-    // PC Sample Params
+    // PT Sample Params
     uint public constant MAX_VALS_NUM = 2;
     uint public constant MAX_PROVS_NUM = 2;
     uint public constant MIN_COLLATERAL = 10 ether;
@@ -55,12 +55,12 @@ contract ForestRegistryTest is Test {
     uint public constant TERM_UPDATE_DELAY = 400;
     uint public constant PROV_SHARE = 4500;
     uint public constant VAL_SHARE = 4500;
-    uint public constant PC_OWNER_SHARE = 1000;
+    uint public constant PT_OWNER_SHARE = 1000;
     uint public constant PERFORMANCE_WEIGHT = 7000;
     uint public constant PRICE_WEIGHT = 1000;
     uint public constant PTP_WEIGHT = 1000;
     uint public constant POPULARITY_WEIGHT = 1000;
-    string public constant DETAILS_LINK = "https://pc123.com";
+    string public constant DETAILS_LINK = "https://pt123.com";
 
     // Actor Sample Deploy Params
     uint public constant INITIAL_COLLATERAL = 10 ether;
@@ -73,7 +73,7 @@ contract ForestRegistryTest is Test {
         
         // TODO: update the creation process not to be dependent on the updateRegistryAddr function call and correct order
         slasher = new ForestSlasher();
-        registry = new ForestRegistry(address(slasher), address(iUsdcToken), address(iForestToken), PARAM_REVENUE_SHARE, PARAM_MAX_PCS_NUM, PARAM_ACTOR_REG_FEE, PARAM_PC_REG_FEE, PARAM_ACTOR_IN_PC_REG_FEE, PARAM_OFFER_IN_PC_REG_FEE, PARAM_TREASURY_ADDR, PARAM_BURN_RATIO);
+        registry = new ForestRegistry(address(slasher), address(iUsdcToken), address(iForestToken), PARAM_REVENUE_SHARE, PARAM_MAX_PTS_NUM, PARAM_ACTOR_REG_FEE, PARAM_PT_REG_FEE, PARAM_ACTOR_IN_PT_REG_FEE, PARAM_OFFER_IN_PT_REG_FEE, PARAM_TREASURY_ADDR, PARAM_BURN_RATIO);
         slasher.setRegistryAndForestAddr(address(registry));
         forestContract.setRegistryAndSlasherAddr(address(registry));
     }
@@ -99,7 +99,7 @@ contract ForestRegistryTest is Test {
     }
 
     /***********************************|
-    | In Protocol: Provider Registration |
+    | In Network: Provider Registration |
     |__________________________________*/
 
     function testRegisterTwoProvidersInProtocol() public {
@@ -120,7 +120,7 @@ contract ForestRegistryTest is Test {
         assertEq(tmp.billingAddr, p1Addr);
         assertEq(tmp.detailsLink, providerDetailsLink);
 
-        assertEq(registry.getAllPcAddresses().length, 0);
+        assertEq(registry.getAllPtAddresses().length, 0);
         assertEq(registry.getAllProviders().length, 1);
         assertEq(registry.getAllValidators().length, 0);
         assertEq(registry.isRegisteredActiveActor(ForestCommon.ActorType.PROVIDER, p1Addr), true);
@@ -143,7 +143,7 @@ contract ForestRegistryTest is Test {
         assertEq(tmp.billingAddr, p2Addr);
         assertEq(tmp.detailsLink, providerDetailsLink);
 
-        assertEq(registry.getAllPcAddresses().length, 0);
+        assertEq(registry.getAllPtAddresses().length, 0);
         assertEq(registry.getAllProviders().length, 2);
         assertEq(registry.getAllValidators().length, 0);
         assertEq(registry.isRegisteredActiveActor(ForestCommon.ActorType.PROVIDER, p2Addr), true);
@@ -216,7 +216,7 @@ contract ForestRegistryTest is Test {
     }
 
     /***********************************|
-    | In Protocol: Validator Registration |
+    | In Network: Validator Registration |
     |__________________________________*/
 
     function testRegisterTwoValidatorsInProtocol() public {
@@ -237,7 +237,7 @@ contract ForestRegistryTest is Test {
         assertEq(tmp.billingAddr, p1Addr);
         assertEq(tmp.detailsLink, providerDetailsLink);
 
-        assertEq(registry.getAllPcAddresses().length, 0);
+        assertEq(registry.getAllPtAddresses().length, 0);
         assertEq(registry.getAllProviders().length, 0);
         assertEq(registry.getAllValidators().length, 1);
         assertEq(registry.isRegisteredActiveActor(ForestCommon.ActorType.VALIDATOR, p1Addr), true);
@@ -260,7 +260,7 @@ contract ForestRegistryTest is Test {
         assertEq(tmp.billingAddr, p2Addr);
         assertEq(tmp.detailsLink, providerDetailsLink);
 
-        assertEq(registry.getAllPcAddresses().length, 0);
+        assertEq(registry.getAllPtAddresses().length, 0);
         assertEq(registry.getAllProviders().length, 0);
         assertEq(registry.getAllValidators().length, 2);
         assertEq(registry.isRegisteredActiveActor(ForestCommon.ActorType.VALIDATOR, p2Addr), true);
@@ -308,7 +308,7 @@ contract ForestRegistryTest is Test {
     }
 
     /*******************************************|
-    | In Protocol: Actor Registration Common    |
+    | In Network: Actor Registration Common    |
     |___________________________________________*/
 
     function testUpdateActorDetails() public {
@@ -335,47 +335,47 @@ contract ForestRegistryTest is Test {
     }
 
     /***********************************|
-    |   In Protocol: PC Registration    |
+    |   In Network: PT Registration    |
     |__________________________________*/
 
     function testRegisterOneProduct() public {
         fundAccountWithToken(p1Addr, 11);
 
         vm.startPrank(p1Addr);
-        registry.registerActor(ForestCommon.ActorType.PC_OWNER, address(0), address(0), providerDetailsLink);
-        address pcAddr = registry.createProtocol(1, 2, 1, 1, 2, 3, 10, 4000, 4000, 2000, pcDetailsLink);
-        IForestProtocol pc = IForestProtocol(pcAddr);
+        registry.registerActor(ForestCommon.ActorType.PT_OWNER, address(0), address(0), providerDetailsLink);
+        address ptAddr = registry.createProtocol(1, 2, 1, 1, 2, 3, 10, 4000, 4000, 2000, ptDetailsLink);
+        IForestProtocol pt = IForestProtocol(ptAddr);
 
-        assertEq(pcAddr, registry.getAllPcAddresses()[0]);
-        assertEq(registry.getAllPcAddresses().length, 1);
+        assertEq(ptAddr, registry.getAllPtAddresses()[0]);
+        assertEq(registry.getAllPtAddresses().length, 1);
        
-        assertEq(iForestToken.balanceOf(PARAM_TREASURY_ADDR), ((registry.getPcRegFee()*(10000-registry.getBurnRatio())/10000)+(registry.getActorRegFee()*(10000-registry.getBurnRatio())/10000)));
+        assertEq(iForestToken.balanceOf(PARAM_TREASURY_ADDR), ((registry.getPtRegFee()*(10000-registry.getBurnRatio())/10000)+(registry.getActorRegFee()*(10000-registry.getBurnRatio())/10000)));
 
-        (uint256 maxVals, uint256 maxProvs) = pc.getMaxActors();
-        (uint256 provRegFee, uint valRegFee, uint offerRegFee) = pc.getFees();
-        (uint provShare, uint valShare, uint pcOwnerShare) = pc.getEmissionShares();
+        (uint256 maxVals, uint256 maxProvs) = pt.getMaxActors();
+        (uint256 provRegFee, uint valRegFee, uint offerRegFee) = pt.getFees();
+        (uint provShare, uint valShare, uint ptOwnerShare) = pt.getEmissionShares();
 
-        assertEq(pc.getRegistryAddr(), address(registry));
-        assertEq(pc.getOwnerAddr(), p1Addr);
+        assertEq(pt.getRegistryAddr(), address(registry));
+        assertEq(pt.getOwnerAddr(), p1Addr);
         assertEq(maxVals, 1);
         assertEq(maxProvs, 2);
-        assertEq(pc.getMinCollateral(), 1);
+        assertEq(pt.getMinCollateral(), 1);
         assertEq(provRegFee, 1);
         assertEq(valRegFee, 2);
         assertEq(offerRegFee, 3);
-        assertEq(pc.getTermUpdateDelay(), 10);
+        assertEq(pt.getTermUpdateDelay(), 10);
         assertEq(provShare, 4000);
         assertEq(valShare, 4000);
-        assertEq(pcOwnerShare, 2000);
-        assertEq(pc.getDetailsLink(), pcDetailsLink);
-        assertEq(registry.isPcRegisteredAndActive(pcAddr), true);
+        assertEq(ptOwnerShare, 2000);
+        assertEq(pt.getDetailsLink(), ptDetailsLink);
+        assertEq(registry.isPtRegisteredAndActive(ptAddr), true);
         
-        assertEq(pc.getOffersCount(), 0);
-        assertEq(pc.getAgreementsCount(), 0);
-        assertEq(pc.getAllProviderIds().length, 0);
-        assertEq(pc.getAllValidatorIds().length, 0);
+        assertEq(pt.getOffersCount(), 0);
+        assertEq(pt.getAgreementsCount(), 0);
+        assertEq(pt.getAllProviderIds().length, 0);
+        assertEq(pt.getAllValidatorIds().length, 0);
 
-        assertEq(pc.getActiveAgreementsValue(), 0);
+        assertEq(pt.getActiveAgreementsValue(), 0);
     }
 
     function testRegisterTwoProducts() public {
@@ -383,90 +383,90 @@ contract ForestRegistryTest is Test {
         fundAccountWithToken(p2Addr, 11);
 
         vm.startPrank(p1Addr);
-        registry.registerActor(ForestCommon.ActorType.PC_OWNER, address(0), address(0), providerDetailsLink);
+        registry.registerActor(ForestCommon.ActorType.PT_OWNER, address(0), address(0), providerDetailsLink);
         
-        address pcAddr = registry.createProtocol(1, 2, 1, 1, 2, 3, 10, 4000, 4000, 2000, pcDetailsLink);
-        IForestProtocol pc = IForestProtocol(pcAddr);
+        address ptAddr = registry.createProtocol(1, 2, 1, 1, 2, 3, 10, 4000, 4000, 2000, ptDetailsLink);
+        IForestProtocol pt = IForestProtocol(ptAddr);
 
         vm.startPrank(p2Addr);
-        registry.registerActor(ForestCommon.ActorType.PC_OWNER, address(0), address(0), providerDetailsLink);
+        registry.registerActor(ForestCommon.ActorType.PT_OWNER, address(0), address(0), providerDetailsLink);
         
-        address pc2Addr = registry.createProtocol(2, 3, 2, 2, 3, 4, 11, 3500, 3500, 3000, pcDetailsLink);
-        IForestProtocol pc2 = IForestProtocol(pc2Addr);
+        address pt2Addr = registry.createProtocol(2, 3, 2, 2, 3, 4, 11, 3500, 3500, 3000, ptDetailsLink);
+        IForestProtocol pt2 = IForestProtocol(pt2Addr);
 
         // check protocol level data
         
-        assertEq(pcAddr, registry.getAllPcAddresses()[0]);
-        assertEq(pc2Addr, registry.getAllPcAddresses()[1]);
-        assertEq(registry.getAllPcAddresses().length, 2);
+        assertEq(ptAddr, registry.getAllPtAddresses()[0]);
+        assertEq(pt2Addr, registry.getAllPtAddresses()[1]);
+        assertEq(registry.getAllPtAddresses().length, 2);
        
-        assertEq(iForestToken.balanceOf(PARAM_TREASURY_ADDR), 2*((registry.getPcRegFee()*(10000-registry.getBurnRatio())/10000)+(registry.getActorRegFee()*(10000-registry.getBurnRatio())/10000)));
+        assertEq(iForestToken.balanceOf(PARAM_TREASURY_ADDR), 2*((registry.getPtRegFee()*(10000-registry.getBurnRatio())/10000)+(registry.getActorRegFee()*(10000-registry.getBurnRatio())/10000)));
 
-        // check first PC data
+        // check first PT data
         
-        (uint256 maxVals, uint256 maxProvs) = pc.getMaxActors();
-        (uint256 provRegFee, uint valRegFee, uint offerRegFee) = pc.getFees();
-        (uint provShare, uint valShare, uint pcOwnerShare) = pc.getEmissionShares();
+        (uint256 maxVals, uint256 maxProvs) = pt.getMaxActors();
+        (uint256 provRegFee, uint valRegFee, uint offerRegFee) = pt.getFees();
+        (uint provShare, uint valShare, uint ptOwnerShare) = pt.getEmissionShares();
 
-        assertEq(pc.getRegistryAddr(), address(registry));
-        assertEq(pc.getOwnerAddr(), p1Addr);
+        assertEq(pt.getRegistryAddr(), address(registry));
+        assertEq(pt.getOwnerAddr(), p1Addr);
         assertEq(maxVals, 1);
         assertEq(maxProvs, 2);
-        assertEq(pc.getMinCollateral(), 1);
+        assertEq(pt.getMinCollateral(), 1);
         assertEq(provRegFee, 1);
         assertEq(valRegFee, 2);
         assertEq(offerRegFee, 3);
-        assertEq(pc.getTermUpdateDelay(), 10);
+        assertEq(pt.getTermUpdateDelay(), 10);
         assertEq(provShare, 4000);
         assertEq(valShare, 4000);
-        assertEq(pcOwnerShare, 2000);
-        assertEq(pc.getDetailsLink(), pcDetailsLink);
-        assertEq(registry.isPcRegisteredAndActive(pcAddr), true);
+        assertEq(ptOwnerShare, 2000);
+        assertEq(pt.getDetailsLink(), ptDetailsLink);
+        assertEq(registry.isPtRegisteredAndActive(ptAddr), true);
         
-        assertEq(pc.getOffersCount(), 0);
-        assertEq(pc.getAgreementsCount(), 0);
-        assertEq(pc.getAllProviderIds().length, 0);
-        assertEq(pc.getAllValidatorIds().length, 0);
+        assertEq(pt.getOffersCount(), 0);
+        assertEq(pt.getAgreementsCount(), 0);
+        assertEq(pt.getAllProviderIds().length, 0);
+        assertEq(pt.getAllValidatorIds().length, 0);
 
-        assertEq(pc.getActiveAgreementsValue(), 0);
+        assertEq(pt.getActiveAgreementsValue(), 0);
 
-        /// check second PC data
+        /// check second PT data
 
-        (maxVals, maxProvs) = pc2.getMaxActors();
-        (provRegFee, valRegFee, offerRegFee) = pc2.getFees();
-        (provShare, valShare, pcOwnerShare) = pc2.getEmissionShares();
+        (maxVals, maxProvs) = pt2.getMaxActors();
+        (provRegFee, valRegFee, offerRegFee) = pt2.getFees();
+        (provShare, valShare, ptOwnerShare) = pt2.getEmissionShares();
 
-        assertEq(pc2.getRegistryAddr(), address(registry));
-        assertEq(pc2.getOwnerAddr(), p2Addr);
+        assertEq(pt2.getRegistryAddr(), address(registry));
+        assertEq(pt2.getOwnerAddr(), p2Addr);
         assertEq(maxVals, 2);
         assertEq(maxProvs, 3);
-        assertEq(pc2.getMinCollateral(), 2);
+        assertEq(pt2.getMinCollateral(), 2);
         assertEq(provRegFee, 2);
         assertEq(valRegFee, 3);
         assertEq(offerRegFee, 4);
-        assertEq(pc2.getTermUpdateDelay(), 11);
+        assertEq(pt2.getTermUpdateDelay(), 11);
         assertEq(provShare, 3500);
         assertEq(valShare, 3500);
-        assertEq(pcOwnerShare, 3000);
-        assertEq(pc2.getDetailsLink(), pcDetailsLink);
-        assertEq(registry.isPcRegisteredAndActive(pc2Addr), true);
+        assertEq(ptOwnerShare, 3000);
+        assertEq(pt2.getDetailsLink(), ptDetailsLink);
+        assertEq(registry.isPtRegisteredAndActive(pt2Addr), true);
         
-        assertEq(pc.getOffersCount(), 0);
-        assertEq(pc.getAgreementsCount(), 0);
-        assertEq(pc.getAllProviderIds().length, 0);
-        assertEq(pc.getAllValidatorIds().length, 0);
+        assertEq(pt.getOffersCount(), 0);
+        assertEq(pt.getAgreementsCount(), 0);
+        assertEq(pt.getAllProviderIds().length, 0);
+        assertEq(pt.getAllValidatorIds().length, 0);
 
-        assertEq(pc.getActiveAgreementsValue(), 0);
+        assertEq(pt.getActiveAgreementsValue(), 0);
     }
 
-     function testRegisterOneProductWithNonPcOwneActor() public {
+     function testRegisterOneProductWithNonPtOwnerActor() public {
         fundAccountWithToken(p1Addr, 11);
 
         vm.startPrank(p1Addr);
         registry.registerActor(ForestCommon.ActorType.PROVIDER, address(0), address(0), providerDetailsLink);
         
         vm.expectRevert();
-        address pcAddr = registry.createProtocol(1, 2, 1, 1, 2, 3, 10, 4000, 4000, 2000, pcDetailsLink);
+        address ptAddr = registry.createProtocol(1, 2, 1, 1, 2, 3, 10, 4000, 4000, 2000, ptDetailsLink);
      }
 
     function testRegisterOneProductWithNotRegisteredActor() public {
@@ -475,43 +475,43 @@ contract ForestRegistryTest is Test {
         vm.startPrank(p1Addr);
         
         vm.expectPartialRevert(ForestCommon.OnlyOwnerAllowed.selector);
-        address pcAddr = registry.createProtocol(1, 2, 1, 1, 2, 3, 10, 4000, 4000, 2000, pcDetailsLink);
+        address ptAddr = registry.createProtocol(1, 2, 1, 1, 2, 3, 10, 4000, 4000, 2000, ptDetailsLink);
      }
 
     function testRegisterProductWithSharesNot100() public {
         fundAccountWithToken(p1Addr, 11);
         
         vm.startPrank(p1Addr);
-        registry.registerActor(ForestCommon.ActorType.PC_OWNER, address(0), address(0), providerDetailsLink);
+        registry.registerActor(ForestCommon.ActorType.PT_OWNER, address(0), address(0), providerDetailsLink);
         
         vm.expectPartialRevert(ForestCommon.InvalidParam.selector);
-        address pcAddr = registry.createProtocol(1, 2, 1, 1, 2, 3, 10, 1000, 4000, 2000, pcDetailsLink);
+        address ptAddr = registry.createProtocol(1, 2, 1, 1, 2, 3, 10, 1000, 4000, 2000, ptDetailsLink);
     }
 
     function testRestRegisterProductWithEmptyDetails() public {
         fundAccountWithToken(p1Addr, 11);
         
         vm.startPrank(p1Addr);
-        registry.registerActor(ForestCommon.ActorType.PC_OWNER, address(0), address(0), providerDetailsLink);
+        registry.registerActor(ForestCommon.ActorType.PT_OWNER, address(0), address(0), providerDetailsLink);
         
         vm.expectPartialRevert(ForestCommon.InvalidParam.selector);
-        address pcAddr = registry.createProtocol(1, 2, 1, 1, 2, 3, 10, 4000, 4000, 2000, "");
+        address ptAddr = registry.createProtocol(1, 2, 1, 1, 2, 3, 10, 4000, 4000, 2000, "");
     }
 
     function testRegisterTooManyProducts() public {
         fundAccountWithToken(p1Addr, 31);
         
         vm.startPrank(p1Addr);
-        registry.registerActor(ForestCommon.ActorType.PC_OWNER, address(0), address(0), "");
+        registry.registerActor(ForestCommon.ActorType.PT_OWNER, address(0), address(0), "");
         
-        registry.createProtocol(1, 2, 1, 1, 2, 3, 10, 4000, 4000, 2000, pcDetailsLink);
-        registry.createProtocol(1, 2, 1, 1, 2, 3, 10, 4000, 4000, 2000, pcDetailsLink);
+        registry.createProtocol(1, 2, 1, 1, 2, 3, 10, 4000, 4000, 2000, ptDetailsLink);
+        registry.createProtocol(1, 2, 1, 1, 2, 3, 10, 4000, 4000, 2000, ptDetailsLink);
         vm.expectPartialRevert(ForestCommon.LimitExceeded.selector);
-        registry.createProtocol(1, 2, 1, 1, 2, 3, 10, 4000, 4000, 2000, pcDetailsLink);
+        registry.createProtocol(1, 2, 1, 1, 2, 3, 10, 4000, 4000, 2000, ptDetailsLink);
     }
 
     /***********************************|
-    |   In Protocol: Updating settings  |
+    |   In Network: Updating settings  |
     |__________________________________*/
 
     function testUpdateProtocolSettings() public {
@@ -521,11 +521,11 @@ contract ForestRegistryTest is Test {
         vm.expectRevert();
         registry.setBurnRatio(1000);
         vm.expectRevert();
-        registry.setMaxPcsNum(10);
+        registry.setMaxProtocolsNum(10);
         vm.expectRevert();
-        registry.setOfferInPcRegFee(1000);
+        registry.setOfferInPtRegFee(1000);
         vm.expectRevert();
-        registry.setPcRegFee(1000);
+        registry.setPtRegFee(1000);
         vm.expectRevert();
         registry.setRevenueShare(1000);
         vm.expectRevert();
@@ -545,25 +545,25 @@ contract ForestRegistryTest is Test {
         registry.setBurnRatio(1000);
         assertEq(1000, registry.getBurnRatio());
 
-        assertEq(PARAM_MAX_PCS_NUM, registry.getMaxPcsNum());
-        registry.setMaxPcsNum(10);
-        assertEq(10, registry.getMaxPcsNum());
+        assertEq(PARAM_MAX_PTS_NUM, registry.getMaxProtocolsNum());
+        registry.setMaxProtocolsNum(10);
+        assertEq(10, registry.getMaxProtocolsNum());
 
         assertEq(PARAM_ACTOR_REG_FEE, registry.getActorRegFee());
         registry.setActorRegFee(1000);
         assertEq(1000, registry.getActorRegFee());
 
-        assertEq (PARAM_PC_REG_FEE, registry.getPcRegFee());
-        registry.setPcRegFee(1000);
-        assertEq(1000, registry.getPcRegFee());
+        assertEq (PARAM_PT_REG_FEE, registry.getPtRegFee());
+        registry.setPtRegFee(1000);
+        assertEq(1000, registry.getPtRegFee());
 
-        assertEq(PARAM_ACTOR_IN_PC_REG_FEE, registry.getActorInPcRegFee());
-        registry.setActorInPcRegFee(1000);
-        assertEq(1000, registry.getActorInPcRegFee());
+        assertEq(PARAM_ACTOR_IN_PT_REG_FEE, registry.getActorInPtRegFee());
+        registry.setActorInPtRegFee(1000);
+        assertEq(1000, registry.getActorInPtRegFee());
 
-        assertEq(PARAM_OFFER_IN_PC_REG_FEE, registry.getOfferInPcRegFee());
-        registry.setOfferInPcRegFee(1000);
-        assertEq(1000, registry.getOfferInPcRegFee());
+        assertEq(PARAM_OFFER_IN_PT_REG_FEE, registry.getOfferInPtRegFee());
+        registry.setOfferInPtRegFee(1000);
+        assertEq(1000, registry.getOfferInPtRegFee());
 
         assertEq(PARAM_REVENUE_SHARE, registry.getRevenueShare());
         registry.setRevenueShare(1000);
@@ -613,7 +613,7 @@ contract ForestRegistryTest is Test {
     }
 
     /***********************************|
-    |  In Protocol: Pausing / Unpausing |
+    |  In Network: Pausing / Unpausing |
     |__________________________________*/
 
     function testPause() public {
@@ -672,6 +672,6 @@ contract ForestRegistryTest is Test {
 
         vm.startPrank(p1Addr);
         vm.expectRevert();
-        registry.createProtocol(1, 2, 1, 1, 2, 3, 10, 4000, 4000, 2000, pcDetailsLink);
+        registry.createProtocol(1, 2, 1, 1, 2, 3, 10, 4000, 4000, 2000, ptDetailsLink);
     }
 }

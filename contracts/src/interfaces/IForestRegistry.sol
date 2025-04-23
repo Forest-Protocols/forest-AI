@@ -23,6 +23,7 @@ interface IForestRegistry {
         address billingAddr,
         string detailsLink
     );
+    event NetworkParamUpdated(string indexed paramName);
     event NewActorRegistered(
         ForestCommon.ActorType indexed actorType,
         address indexed ownerAddr,
@@ -33,9 +34,8 @@ interface IForestRegistry {
     event NewProtocolRegistered(address indexed addr, address indexed ownerAddr, string detailsLink);
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
     event Paused(address account);
-    event PcDetailsUpdated(address indexed ownerAddr, address indexed operatorAddr, string detailsLink);
-    event PcStatusUpdated(address indexed ownerAddr, ForestCommon.Status status);
-    event ProtocolParamUpdated(string indexed paramName);
+    event ProtocolDetailsUpdated(address indexed ownerAddr, address indexed operatorAddr, string detailsLink);
+    event PtStatusUpdated(address indexed ownerAddr, ForestCommon.Status status);
     event Unpaused(address account);
 
     function createProtocol(
@@ -48,25 +48,26 @@ interface IForestRegistry {
         uint256 _termUpdateDelay,
         uint256 _provShare,
         uint256 _valShare,
-        uint256 _pcOwnerShare,
+        uint256 _ptoShare,
         string memory _detailsLink
     ) external returns (address);
     function getActor(address _addr) external view returns (ForestCommon.Actor memory);
     function getActorBillingAddressById(uint24 _id) external view returns (address);
     function getActorById(uint24 _id) external view returns (ForestCommon.Actor memory);
     function getActorCount() external view returns (uint256);
-    function getActorInPcRegFee() external view returns (uint256);
+    function getActorInPtRegFee() external view returns (uint256);
     function getActorRegFee() external view returns (uint256);
-    function getAllPcAddresses() external view returns (address[] memory);
     function getAllProviders() external view returns (ForestCommon.Actor[] memory);
+    function getAllPtAddresses() external view returns (address[] memory);
+    function getAllPtos() external view returns (ForestCommon.Actor[] memory);
     function getAllValidators() external view returns (ForestCommon.Actor[] memory);
     function getBurnRatio() external view returns (uint256);
     function getForestTokenAddr() external view returns (address);
-    function getMaxPcsNum() external view returns (uint256);
-    function getOfferInPcRegFee() external view returns (uint256);
-    function getPcRegFee() external view returns (uint256);
-    function getPcsCount() external view returns (uint256);
+    function getMaxProtocolsNum() external view returns (uint256);
+    function getOfferInPtRegFee() external view returns (uint256);
     function getProvidersCount() external view returns (uint256);
+    function getPtCount() external view returns (uint256);
+    function getPtRegFee() external view returns (uint256);
     function getRevenueShare() external view returns (uint256);
     function getSlasherAddr() external view returns (address);
     function getTreasuryAddr() external view returns (address);
@@ -78,7 +79,7 @@ interface IForestRegistry {
         address _owner,
         address _senderAddr
     ) external view returns (bool isRegistered);
-    function isPcRegisteredAndActive(address _addr) external view returns (bool);
+    function isPtRegisteredAndActive(address _addr) external view returns (bool);
     function isRegisteredActiveActor(ForestCommon.ActorType _actorType, address _owner)
         external
         view
@@ -91,15 +92,15 @@ interface IForestRegistry {
         address _operatorAddr,
         address _billingAddr,
         string memory _detailsLink
-    ) external returns (uint256);
+    ) external returns (uint24);
     function renounceOwnership() external;
-    function setActorInPcRegFee(uint256 _newValue) external;
+    function setActorInPtRegFee(uint256 _newValue) external;
     function setActorRegFee(uint256 _newValue) external;
     function setBurnRatio(uint256 _newValue) external;
     function setForestTokenAddress(address _newValue) external;
-    function setMaxPcsNum(uint256 _newValue) external;
-    function setOfferInPcRegFee(uint256 _newValue) external;
-    function setPcRegFee(uint256 _newValue) external;
+    function setMaxProtocolsNum(uint256 _newValue) external;
+    function setOfferInPtRegFee(uint256 _newValue) external;
+    function setPtRegFee(uint256 _newValue) external;
     function setRevenueShare(uint256 _newValue) external;
     function setSlasherAddress(address _newValue) external;
     function setTreasuryAddrParam(address _newValue) external;

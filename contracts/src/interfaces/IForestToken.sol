@@ -29,6 +29,9 @@ interface IForestToken {
     event EIP712DomainChanged();
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
     event Paused(address account);
+    event RewardsMinted(
+        uint256 indexed epoch, address indexed ptAddr, uint256 revenueAtEpochClose, uint256 totalTokensEmitted
+    );
     event Transfer(address indexed from, address indexed to, uint256 value);
     event Unpaused(address account);
 
@@ -57,6 +60,8 @@ interface IForestToken {
             uint256[] memory extensions
         );
     function emitRewards(uint256 _epoch) external;
+    function getLastEmissionsBlockNum() external view returns (uint256);
+    function getLastEmittedEpochBlockNum() external view returns (uint256);
     function getRegistryAddr() external view returns (address);
     function getSlasherAddr() external view returns (address);
     function isRewardEmitted(uint256 _epoch) external view returns (bool);
