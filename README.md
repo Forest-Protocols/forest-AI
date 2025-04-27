@@ -1,4 +1,4 @@
-ForestAI Network is an **interoperable collective of incentivised Protocols**, each solving a **specific AI challenge** with **Providers selling solutions to Customers** and **Validators ensuring quality** by utilizing a **novel fair validation framework.** 
+Forest AI a **network of incentivised Protocols**, each solving a **specific AI challenge** with **Providers selling solutions to Customers** and **Validators ensuring quality** by utilizing a **novel fair validation framework.** 
 
 
 # Abstract
@@ -32,22 +32,19 @@ To ensure **long-term economic viability** the network treasury **earns a commis
 
 <img src="./img/basic_flow.jpg" alt="Basic Flow of Value between Actors" width="750">
 
-# Live Protocols
+#  Protocols
 
 
 | Name | Goal |
 |-|-|
+| Generic LLM | AI Model: General Purpose LLM (Text-to-Text) | 
+| Machine Translation | AI Model: Language-to-Language | 
 | Imaginify | AI Model: Text-to-Image | 
 | VectorNest | AI Infra: Vector Storage | 
 | Ball Predict | AI Model: Football Fixture-to-Score | 
 | AI Compute | AI Infra: High Performance GPU Rentals |
 | Event Predict | AI Model: Event-to-Outcome | 
-| Web3S3 Lake | AI Infra: S3-compatible Filecoin Storage | 
-| PostgresQL | Cloud Infra: PSQL Databases | 
-| Generic LLM | AI Model: General Purpose LLM (Text-to-Text) | 
-| Machine Translation | AI Model: Language-to-Language | 
 | IPFS Storage | Cloud Infra: IPFS Pinning Serices | 
-| On-Chain Data Analytics | Analytics: SQL Queries for On-chain Data | 
 | Medical Q&A | AI Model: Medicine Fine-tuned LLM (Text-to-Text) | 
 
 **More in the works.**
