@@ -1,25 +1,5 @@
-# Outline
-> [**📋 Abstract**](#abstract)
+ForestAI Network is an **interoperable collective of incentivised Protocols**, each solving a **specific AI challenge** with **Providers selling solutions to Customers** and **Validators ensuring quality** by utilizing  **novel fair validation framework.** 
 
-> [**🔗 Important Links**](#important-links)
-
-> [**💡 ForestAI in One Sentence**](#forestai-in-one-sentece)
-
-> [**📊 ForestAI in One Diagram**](#forestai-in-one-diagram)
-
-> [**🚀 Live Protocols**](#live-protocols)
-
-> [**📚 Vocab Cheatsheet**](#vocab-cheatsheet)
-
-> [**💎 ForestAI's Value Proposition**](#forestai-value-proposition)
-
-> [**💰 Emissions**](#emissions)
-
-> [**📈 Tokenomics**](#tokenomics)
-
-> [**📖 Detailed Info**](#detailed-info)
-
-> [**🤝 Join Us**](#join-us)
 
 # 📋 Abstract
 
@@ -47,8 +27,6 @@ To ensure **long-term economic viability** the network treasury **earns a commis
    * [doc: Create OpenAPI for you Protocol](https://github.com/Forest-Protocols/provider-template/blob/main/docs/openapi-spec.md)
 8. [FIP Discussions](https://github.com/Forest-Protocols/protocols/discussions) - A forum where Forest Improvement Proposals (FIP) are discussed.
 
-# 💡 ForestAI in One Sentece
-ForestAI Network is an **interoperable collective of incentivised Protocols**, each solving a **specific AI challenge** with **Providers selling solutions to Customers** and **Validators ensuring quality** by utilizing  **novel fair validation framework.** 
 
 # 📊 ForestAI in One Diagram
 
