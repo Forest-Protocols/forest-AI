@@ -1,4 +1,4 @@
-ForestAI Network is an **interoperable collective of incentivised Protocols**, each solving a **specific AI challenge** with **Providers selling solutions to Customers** and **Validators ensuring quality** by utilizing  **novel fair validation framework.** 
+ForestAI Network is an **interoperable collective of incentivised Protocols**, each solving a **specific AI challenge** with **Providers selling solutions to Customers** and **Validators ensuring quality** by utilizing a **novel fair validation framework.** 
 
 
 # 📋 Abstract
