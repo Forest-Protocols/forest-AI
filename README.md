@@ -21,7 +21,7 @@ To ensure **long-term economic viability** the network treasury **earns a commis
 6. [Validator Base Template](https://github.com/Forest-Protocols/validator-template) - Base Validator Template used by Protocol Owners to define the validation process for their Protocol.
 7. Docs:
    * [doc: Become a Provider in a Protocol](https://github.com/Forest-Protocols/provider-template/blob/main/docs/become-a-provider.md)
-   * [doc: Become a Provider in a Protocol](https://github.com/Forest-Protocols/validator-template/blob/main/docs/become-a-validator.md)
+   * [doc: Become a Validator in a Protocol](https://github.com/Forest-Protocols/validator-template/blob/main/docs/become-a-validator.md)
    * [doc: Best Coding Practices & Tips](https://github.com/Forest-Protocols/provider-template/blob/main/docs/best-practices-and-tips.md)
    * [doc: Sync a Repo after Base Template update](https://github.com/Forest-Protocols/provider-template/blob/main/docs/how-to-sync-repository.md)
    * [doc: Create OpenAPI for you Protocol](https://github.com/Forest-Protocols/provider-template/blob/main/docs/openapi-spec.md)
