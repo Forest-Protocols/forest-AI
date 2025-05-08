@@ -1,6 +1,5 @@
 Forest AI a **network of incentivised Protocols**, each solving a **specific AI challenge** with **Providers selling solutions to Customers** and **Validators ensuring quality** by utilizing a **novel fair validation framework.** 
 
-
 # Abstract
 
 **Forest is an AI-focused innovation market** leveraging positive learnings from **Bitcoin mining** and **preventing tokenomics pitfalls** that allow oligarchies of large token holders to control networks to their benefit **like in Bittensor**.
@@ -71,13 +70,13 @@ To ensure **long-term economic viability** the network treasury **earns a commis
 
 # ForestAI Value Proposition
 
-**For Protocol Owners**: PTOs get a share of reward emissions (in FOREST) and a revenue share (in USDC/FOREST) for facilited user-provider transactions within their Protocols.
+**For Protocol Owners**: PTOs get a share of reward emissions (in FOREST) and a revenue share (in USDC/FOREST) for facilited user-provider transactions within their Protocols. 
 
-**For Providers**: Providers benefit from a new powerful distribution channel for their Services and get rewards for innovating on valuable challenges if their performance is high enough. 
+**For Providers**: Providers benefit from a new powerful distribution channel for their Services, prove their performance to the whole world and get rewards for innovating on valuable challenges if their performance is high enough. 
 
-**For Validators**: For their work Validators get rewarded in FOREST.
+**For Validators**: For checking the performance and quality of provider services, Validators get rewarded in FOREST.
 
-**For Users**: 10x better AI Cloud experience and cost reduction (access to a wide & comparable offering from competing Providers, better prices, full transparency on Provider's past performance, unified interfaces and customer protection programme which mitigates the risk for trying out unknown Providers).
+**For Users**: 10x better AI Cloud experience and cost reduction: access to a wide & comparable offering from competing Providers, better prices, full transparency on Provider's past performance, unified interfaces and customer protection programme which mitigates the risk for trying out unknown Providers.
 
 > [More Info](ForestAI_Whitepaper_Version_Alpha.md#how-forestai-leverages-insights-to-drive-innovation)
 
