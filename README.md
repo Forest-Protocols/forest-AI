@@ -1,4 +1,4 @@
-Forest AI a **network of incentivised Protocols**, each solving a **specific AI challenge** with **Providers selling solutions to Customers** and **Validators ensuring quality** by utilizing a **novel fair validation framework.** 
+Forest AI is a **network of incentivised Protocols**, each solving a **specific AI challenge** with **Providers selling solutions to Customers** and **Validators ensuring quality** by utilizing a **novel fair validation framework.** 
 
 # Abstract
 
