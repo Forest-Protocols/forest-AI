@@ -15,7 +15,7 @@ To ensure **long-term economic viability** the network treasury **earns a commis
 1. [Whitepaper vAlpha](/ForestAI_Whitepaper_Version_Alpha.md) - An alpha version of the whitepaper that includes both problem framing as well as solution overview.
 2. [Protocols](/proposed-protocols) - The specification of AI Competitions (aka Protocols) currently being built on Forest AI. They are defined as markdown specs that include the aim, description of the unified interface of supported funcitonalities as well as rules and requirements for Providers.
 3. [Contracts](/contracts) - Solidity smart contracts defining token distribution mechanism.
-4. [SDK](/sdk) - Software Development Kit for building software that interacts with ForestAI.
+4. [SDK](/sdk-js) - Software Development Kit for building software that interacts with ForestAI.
 5. [Provider Base Template](https://github.com/Forest-Protocols/provider-template) - Base Provider Template used by Protocol Owners to define their Protocols.
 6. [Validator Base Template](https://github.com/Forest-Protocols/validator-template) - Base Validator Template used by Protocol Owners to define the validation process for their Protocol.
 7. Docs:
