@@ -466,6 +466,7 @@ contract ForestRegistryTest is Test {
         registry.registerActor(ForestCommon.ActorType.PROVIDER, address(0), address(0), providerDetailsLink);
         
         vm.expectRevert();
+        
         address ptAddr = registry.createProtocol(1, 2, 1, 1, 2, 3, 10, 4000, 4000, 2000, ptDetailsLink);
      }
 
@@ -475,6 +476,7 @@ contract ForestRegistryTest is Test {
         vm.startPrank(p1Addr);
         
         vm.expectPartialRevert(ForestCommon.OnlyOwnerAllowed.selector);
+        
         address ptAddr = registry.createProtocol(1, 2, 1, 1, 2, 3, 10, 4000, 4000, 2000, ptDetailsLink);
      }
 
@@ -485,6 +487,7 @@ contract ForestRegistryTest is Test {
         registry.registerActor(ForestCommon.ActorType.PT_OWNER, address(0), address(0), providerDetailsLink);
         
         vm.expectPartialRevert(ForestCommon.InvalidParam.selector);
+        
         address ptAddr = registry.createProtocol(1, 2, 1, 1, 2, 3, 10, 1000, 4000, 2000, ptDetailsLink);
     }
 
@@ -495,6 +498,7 @@ contract ForestRegistryTest is Test {
         registry.registerActor(ForestCommon.ActorType.PT_OWNER, address(0), address(0), providerDetailsLink);
         
         vm.expectPartialRevert(ForestCommon.InvalidParam.selector);
+        
         address ptAddr = registry.createProtocol(1, 2, 1, 1, 2, 3, 10, 4000, 4000, 2000, "");
     }
 
@@ -503,6 +507,7 @@ contract ForestRegistryTest is Test {
         
         vm.startPrank(p1Addr);
         registry.registerActor(ForestCommon.ActorType.PT_OWNER, address(0), address(0), "");
+        
         
         registry.createProtocol(1, 2, 1, 1, 2, 3, 10, 4000, 4000, 2000, ptDetailsLink);
         registry.createProtocol(1, 2, 1, 1, 2, 3, 10, 4000, 4000, 2000, ptDetailsLink);
@@ -672,6 +677,7 @@ contract ForestRegistryTest is Test {
 
         vm.startPrank(p1Addr);
         vm.expectRevert();
+        
         registry.createProtocol(1, 2, 1, 1, 2, 3, 10, 4000, 4000, 2000, ptDetailsLink);
     }
 }

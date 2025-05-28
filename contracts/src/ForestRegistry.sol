@@ -162,6 +162,8 @@ contract ForestRegistry is Ownable, Pausable {
         // check if Actor is already registered
         if (actorsMap[_msgSender()].actorType != ForestCommon.ActorType.NONE)
             revert ForestCommon.ActorAlreadyRegistered();
+        if (_actorType == ForestCommon.ActorType.USER)
+            revert ForestCommon.InvalidParam();
 
         // handle default values for alternative addresses
         if (_billingAddr == address(0)) {

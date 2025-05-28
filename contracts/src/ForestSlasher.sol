@@ -13,8 +13,13 @@ contract ForestSlasher is Ownable, Pausable {
     |              Events               |
     |__________________________________*/
 
+    // TODO: add an EpochClosed event
+    
     event CommitSubmitted(  
-        bytes32 hashValue
+        bytes32 hashValue,
+        uint24 indexed valId,
+        address indexed ptAddr,
+        string detailsLink
     );
     
     event CommitRevealed(
@@ -51,7 +56,6 @@ contract ForestSlasher is Ownable, Pausable {
         uint24 valId; // we are using IDs to save on space, 24 bits vs 20*8 bits
         ProviderScore[] provScores;
         bytes32 commitHash;
-        string detailsLink; // details link to the EpochScoreGranular object which would be the CID of raw test results which are to be stored on IPFS
         CommitStatus status;
     }
 
@@ -134,12 +138,13 @@ contract ForestSlasher is Ownable, Pausable {
         if (!pt.isActiveRegisteredAndAuthorizedRepresentative(ForestCommon.ActorType.VALIDATOR, _valAddr, _msgSender()))
             revert ForestCommon.OnlyOwnerOrOperatorAllowed();
         
+        uint24 valId = registry.getActor(_valAddr).id;
+
         // create the object commited object
         EpochScoreGranular memory granularScore = EpochScoreGranular(
-            registry.getActor(_valAddr).id,
+            valId,
             new ProviderScore[](1),
             _commitHash,
-            _detailsLink,
             CommitStatus.COMMITED
         );
 
@@ -153,7 +158,10 @@ contract ForestSlasher is Ownable, Pausable {
         
         // emit event
         emit CommitSubmitted(
-            _commitHash
+            _commitHash,
+            valId,
+            _ptAddr,
+            _detailsLink
         );
     }
 

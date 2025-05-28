@@ -1,0 +1,59 @@
+{
+  "name": "@forest-protocols/cli",
+  "version": "3.6.3",
+  "description": "CLI tool to interact with Forest Protocols",
+  "keywords": [
+    "forest",
+    "forest-protocols",
+    "cloud",
+    "cli",
+    "web3",
+    "blockchain"
+  ],
+  "homepage": "https://github.com/Forest-Protocols/forest-protocols#readme",
+  "bugs": {
+    "url": "https://github.com/Forest-Protocols/forest-protocols/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Forest-Protocols/forest-protocols.git"
+  },
+  "license": "MIT",
+  "author": "Forest Protocols Development Team",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bin": {
+    "forest": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "scripts": {
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "lint": "nx exec -- eslint",
+    "watch": "tsup --watch ./src",
+    "build": "nx exec -- tsup",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@forest-protocols/sdk": "2.7.0",
+    "@inquirer/prompts": "^7.2.3",
+    "ajv-draft-04": "^1.0.0",
+    "ansis": "^3.9.0",
+    "ascii-table3": "^0.9.0",
+    "commander": "^13.1.0",
+    "dayjs": "^1.11.13",
+    "multiformats": "^13.3.1",
+    "nanospinner": "^1.2.2",
+    "oas": "^25.3.0",
+    "oas-normalize": "^12.1.0",
+    "ora": "^8.1.1",
+    "table": "^6.9.0",
+    "viem": "^2.22.12",
+    "zod": "^3.24.1",
+    "zod-validation-error": "^3.4.0"
+  }
+}

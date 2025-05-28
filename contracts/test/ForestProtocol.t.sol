@@ -28,6 +28,8 @@ contract ForestProtocolTest is Test {
     address public p2Addr = address(4);
     address public p2BillAddr = address(5);
     address public p2OperatorAddr = address(6);
+    address public v1Addr = address(12);
+    address public v2Addr = address(13);
     address public user1 = address(7);
     address public user2 = address(8);
     address public user3 = address(9);
@@ -228,6 +230,61 @@ contract ForestProtocolTest is Test {
         registry.registerActor(ForestCommon.ActorType.VALIDATOR, address(0), address(0), providerDetailsLink);
         vm.expectRevert(IForestProtocol.InsufficientAmount.selector);
         pt.registerActor(ForestCommon.ActorType.VALIDATOR, 10);
+    }
+
+    function deploySamplePtWithP1AddrAndWhitelist() public returns (IForestProtocol) {
+        vm.startPrank(address(this));
+        fundAccountWithToken(p1Addr, 11);
+        vm.startPrank(p1Addr);
+        registry.registerActor(ForestCommon.ActorType.PT_OWNER, address(0), address(0), providerDetailsLink);
+   
+        address ptAddr = registry.createProtocol(MAX_VALS_NUM, MAX_PROVS_NUM, MIN_COLLATERAL, VAL_REG_FEE, PROV_REG_FEE, OFFER_REG_FEE, TERM_UPDATE_DELAY, PROV_SHARE, VAL_SHARE, PT_OWNER_SHARE, DETAILS_LINK);
+        IForestProtocol pt = IForestProtocol(ptAddr);
+        return pt;
+    }
+
+    function testRegisterInWhitelistedPtDifferentActors() public {
+        fundAccountWithToken(v1Addr, 100);
+        fundAccountWithToken(v2Addr, 100);
+        fundAccountWithToken(user1, 100);
+        fundAccountWithToken(user2, 100);
+
+        IForestProtocol pt = deploySamplePtWithP1AddrAndWhitelist();
+        deploySampleProviderWithP2Addr(pt);
+        vm.startPrank(p2Addr);
+        pt.registerOffer(p2Addr, 1, 100, "test");
+        
+        // try registering as a whitelisted validator and enter an agreement
+        vm.startPrank(v1Addr);
+        registry.registerActor(ForestCommon.ActorType.VALIDATOR, address(0), address(0), providerDetailsLink);
+        pt.registerActor(ForestCommon.ActorType.VALIDATOR, INITIAL_COLLATERAL);
+        iUsdcToken.approve(address(pt), 2*60*60*24*31);
+        pt.enterAgreement(0, 2*60*60*24*31);
+        
+        // try registering as a non-whitelisted validator
+        // uncomment for full whitelist implementation test
+        // vm.startPrank(v2Addr);
+        // registry.registerActor(ForestCommon.ActorType.VALIDATOR, address(0), address(0), providerDetailsLink);
+        // vm.expectRevert(); 
+        // pt.registerActor(ForestCommon.ActorType.VALIDATOR, INITIAL_COLLATERAL);
+
+        // try entering an agreement as a random user while these is no whitelist
+        vm.startPrank(user1);
+        iUsdcToken.approve(address(pt), 2*60*60*24*31);
+        pt.enterAgreement(0, 2*60*60*24*31);
+
+        // set the whitelist and try entering an agreement as a whitelisted user and non-whitelisted user
+        vm.startPrank(p1Addr);
+        address[] memory newUserWhitelist = new address[](1);
+        newUserWhitelist[0] = user2;
+        pt.setWhitelistedActors(ForestCommon.ActorType.USER, newUserWhitelist);
+        vm.startPrank(user2);
+        iUsdcToken.approve(address(pt), 2*60*60*24*31);
+        pt.enterAgreement(0, 2*60*60*24*31);
+        vm.startPrank(user1);
+        iUsdcToken.approve(address(pt), 2*60*60*24*31);
+        vm.expectRevert();
+        pt.enterAgreement(0, 2*60*60*24*31);
     }
 
     function deploySamplePtWithP1Addr() public returns (IForestProtocol) {

@@ -1,0 +1,58 @@
+{
+  "name": "@forest-protocols/sdk",
+  "version": "2.7.0",
+  "description": "Forest Protocols SDK",
+  "license": "MIT",
+  "type": "module",
+  "author": "Forest Protocols Development Team",
+  "keywords": [
+    "forest",
+    "forest-protocols",
+    "cloud",
+    "web3",
+    "blockchain",
+    "sdk"
+  ],
+  "homepage": "https://github.com/Forest-Protocols/forest-protocols#readme",
+  "bugs": {
+    "url": "https://github.com/Forest-Protocols/forest-protocols/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Forest-Protocols/forest-protocols.git"
+  },
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "lint": "nx exec -- eslint",
+    "watch": "nx exec -- tsup --watch ./src",
+    "build": "nx exec -- tsup",
+    "clean": "rm -rf dist",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@xmtp/node-sdk": "^2.0.8",
+    "ansis": "^3.7.0",
+    "json-stable-stringify": "^1.3.0",
+    "multiformats": "^13.3.1",
+    "path-to-regexp": "^8.2.0",
+    "uuid": "^11.0.4",
+    "viem": "^2.27.2",
+    "zod": "^3.24.1",
+    "zod-validation-error": "^3.4.0"
+  },
+  "devDependencies": {
+    "vitest": "^3.0.9"
+  }
+}

@@ -14,6 +14,7 @@ interface IForestProtocol {
     error InvalidState();
     error LimitExceeded();
     error NotInitializing();
+    error NotWhitelisted();
     error ObjectActive();
     error ObjectNotActive();
     error OnlyOwnerAllowed();
@@ -36,7 +37,6 @@ interface IForestProtocol {
     );
     event OfferUnpaused(uint32 indexed id);
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
-    event RewardWithdrawn(uint256 indexed agreementId, uint256 amount, address indexed addr);
 
     function closeAgreement(uint32 _agreementId) external;
     function enterAgreement(uint32 _offerId, uint256 _initialDeposit) external returns (uint32);
@@ -69,6 +69,7 @@ interface IForestProtocol {
         external
         view
         returns (bool isOwnerOfActiveRegistered);
+    function isActorWhitelisted(address _actorAddr) external view returns (bool);
     function isRegisteredActiveActor(ForestCommon.ActorType _actorType, address _addr)
         external
         view
@@ -88,6 +89,7 @@ interface IForestProtocol {
     function setMinCollateral(uint256 _minCollateral) external;
     function setOwner(address _ownerAddr) external;
     function setTermUpdateDelay(uint256 _termUpdateDelay) external;
+    function setWhitelistedActors(ForestCommon.ActorType _actorType, address[] memory _whitelistedActors) external;
     function topUpExistingAgreement(uint32 _agreementId, uint256 _amount) external;
     function transferOwnership(address newOwner) external view;
     function unpauseOffer(uint32 _offerId) external;

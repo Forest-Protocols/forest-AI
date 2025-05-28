@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.22;
 
+// forge script --chain 84532 script/DeployForestContracts.sol:DeployScript --rpc-url $BASE_SEPOLIA_RPC_URL --broadcast --verify --etherscan-api-key $BASE_SEPOLIA_API_KEY -vvvv
 // forge script --chain 11155420 script/DeployForestContracts.sol:DeployScript --rpc-url $OP_SEPOLIA_RPC_URL --broadcast --verify --etherscan-api-key $OP_SEPOLIA_API_KEY -vvvv --with-gas-price
 // forge script script/DeployForestContracts.sol:DeployScript --rpc-url 127.0.0.1:8545 --broadcast
 
@@ -42,22 +43,21 @@ contract DeployScript is Script {
             privKey = vm.envUint("LOCAL_PRIV_KEY");
             keyAddr = vm.addr(privKey);
         } else if (runOn == 1) {
-            // 1 - op sepolia
-            privKey = vm.envUint("OP_SEPOLIA_PRIV_KEY");
+            // 1 - base sepolia
+            privKey = vm.envUint("BASE_SEPOLIA_PRIV_KEY");
             keyAddr = vm.addr(privKey);
-            usdcTokenAddr = vm.envAddress("OP_SEPOLIA_MOCKED_USDC_TOKEN_ADDRESS");
         } else if (runOn == 2) {
-            // 2 - op mainnet
-            privKey = vm.envUint("OP_MAINNET_PRIV_KEY");
+            // 2 - base mainnet
+            privKey = vm.envUint("BASE_MAINNET_PRIV_KEY");
             keyAddr = vm.addr(privKey);
-            usdcTokenAddr = vm.envAddress("OP_MAINNET_USDC_TOKEN_ADDRESS");
+            usdcTokenAddr = vm.envAddress("BASE_MAINNET_USDC_TOKEN_ADDRESS");
         } else {
             revert("Invalid runOn value");
         }
 
         vm.startBroadcast(privKey);
 
-        if (runOn == 0) {
+        if (runOn == 0 || runOn == 1) {
             usdcToken = new MockedUsdcToken(keyAddr);
             usdcTokenAddr = address(usdcToken);
         }

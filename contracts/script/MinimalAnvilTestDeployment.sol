@@ -1,10 +1,10 @@
-pragma solidity ^0.8.22;
+gpragma solidity ^0.8.22;
 
 // forge script script/MinimalAnvilTestDeployment.sol:MinimalAnvilTestDeployment --rpc-url 127.0.0.1:8545 --broadcast
-// forge script script/MinimalAnvilTestDeployment.sol:MinimalAnvilTestDeployment --sig "enterAgreement(address)" 0x6D544390Eb535d61e196c87d6B9c80dCD8628Acd --rpc-url 127.0.0.1:8545 --broadcast
+// forge script script/MinimalAnvilTestDeployment.sol:MinimalAnvilTestDeployment --sFSP "enterAgreement(address)" 0x6D544390Eb535d61e196c87d6B9c80dCD8628Acd --rpc-url 127.0.0.1:8545 --broadcast
 
 // forge script script/MinimalAnvilTestDeployment.sol:MinimalAnvilTestDeployment --chain 11155420 --rpc-url $OP_SEPOLIA_RPC_URL --broadcast
-// forge script script/MinimalAnvilTestDeployment.sol:MinimalAnvilTestDeployment --chain 11155420 --rpc-url $OP_SEPOLIA_RPC_URL --sig "enterAgreement(address)" 0x4a678e4BBD17ae2b89FcB273fA1364F0e93Fc0C9 --broadcast
+// forge script script/MinimalAnvilTestDeployment.sol:MinimalAnvilTestDeployment --chain 11155420 --rpc-url $OP_SEPOLIA_RPC_URL --sFSP "enterAgreement(address)" 0x4a678e4BBD17ae2b89FcB273fA1364F0e93Fc0C9 --broadcast
 
 import {Script} from "forge-std/Script.sol";
 import {console2} from "forge-std/console2.sol";
@@ -49,31 +49,31 @@ contract MinimalAnvilTestDeployment is Script {
     uint public constant PT_OWNER_SHARE = 3000;
     uint public constant FEE_USDC = 15; // 15 * 2.635200 = 39.52800
 
-    uint256 ptoPrivKey = vm.envUint("PRIV_KEY_PTO_IG");
+    uint256 ptoPrivKey = vm.envUint("PRIV_KEY_PTO_PSQL");
     address ptoAddr = vm.addr(ptoPrivKey);
-    uint256 prov1PrivKey = vm.envUint("PRIV_KEY_PROV1_IG");
+    uint256 prov1PrivKey = vm.envUint("PRIV_KEY_PROV1_PSQL");
     address prov1Addr = vm.addr(prov1PrivKey);
-    uint256 prov2PrivKey = vm.envUint("PRIV_KEY_PROV2_IG");
+    uint256 prov2PrivKey = vm.envUint("PRIV_KEY_PROV2_PSQL");
     address prov2Addr = vm.addr(prov2PrivKey);
-    uint256 val1PrivKey = vm.envUint("PRIV_KEY_VAL1_IG");
+    uint256 val1PrivKey = vm.envUint("PRIV_KEY_VAL1_PSQL");
     address val1Addr = vm.addr(val1PrivKey);
-    uint256 user1PrivKey = vm.envUint("PRIV_KEY_USER1_IG");
+    uint256 user1PrivKey = vm.envUint("PRIV_KEY_USER1_PSQL");
     address user1Addr = vm.addr(user1PrivKey);
     
-    string public PTO_DETAILS_LINK = vm.envString("PTO_DETAILS_LINK_IG");
-    string public PROV_DETAILS_LINK = vm.envString("PROV1_DETAILS_LINK_IG");
-    string public OFFER_DETAILS_LINK = vm.envString("OFFER_DETAILS_LINK_IG");
-    string public PC_DETAILS_LINK = vm.envString("PT_DETAILS_LINK_IG");
-    string public VAL_DETAILS_LINK = vm.envString("VAL1_DETAILS_LINK_IG");
+    string public PTO_DETAILS_LINK = vm.envString("PTO_DETAILS_LINK_PSQL");
+    string public PROV_DETAILS_LINK = vm.envString("PROV1_DETAILS_LINK_PSQL");
+    string public OFFER_DETAILS_LINK = vm.envString("OFFER_DETAILS_LINK_PSQL");
+    string public PC_DETAILS_LINK = vm.envString("PT_DETAILS_LINK_PSQL");
+    string public VAL_DETAILS_LINK = vm.envString("VAL1_DETAILS_LINK_PSQL");
 
     uint public constant BLOCK_TIME = 2;
 
     // Actor Sample Deploy Params
     uint public constant INITIAL_COLLATERAL = 10;
 
-    function fundAccountWithToken(uint256 _privKeyOrigin, address _addressTarget, uint256 _privKeyTarget, uint256 _amount) public {
+    function fundAccountWithToken(uint256 _privKeyOrFSPin, address _addressTarget, uint256 _privKeyTarget, uint256 _amount) public {
         // fund account with tokens
-        vm.startBroadcast(_privKeyOrigin);
+        vm.startBroadcast(_privKeyOrFSPin);
         iUsdcToken.transfer(_addressTarget, _amount * 10 ** iUsdcToken.decimals());
         iForestToken.transfer(_addressTarget, _amount * 10 ** iForestToken.decimals());
         payable(_addressTarget).transfer(50000000000000000);
@@ -101,7 +101,7 @@ contract MinimalAnvilTestDeployment is Script {
             // 0 - local
             privKey = vm.envUint("LOCAL_PRIV_KEY");
             keyAddr = vm.addr(privKey);
-            usdcTokenAddr = vm.envAddress("LOCAL_MOCKED_USDC_TOKEN_ADDRESS");
+            usdcTokenAddr = vm.envAddress("LOCAL_USDC_TOKEN_ADDRESS");
             forestTokenAddr = vm.envAddress("LOCAL_FOREST_TOKEN_ADDRESS");
             slasherAddr = vm.envAddress("LOCAL_SLASHER_ADDRESS");
             registryAddr = vm.envAddress("LOCAL_REGISTRY_ADDRESS");

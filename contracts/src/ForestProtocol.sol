@@ -48,12 +48,6 @@ contract ForestProtocol is OwnableUpgradeable {
 
     event BalanceTopup(uint agreementId, uint amount, address addr);
 
-    event RewardWithdrawn(
-        uint indexed agreementId,
-        uint amount,
-        address indexed addr
-    );
-
     event BalanceWithdrawn(
         uint indexed agreementId,
         uint amount,
@@ -63,6 +57,15 @@ contract ForestProtocol is OwnableUpgradeable {
     // event ProtocolParamUpdated(
     //     string indexed paramName
     // );
+
+    /***********************************|
+    |               Structs             |
+    |__________________________________*/
+
+    // struct ActorWhitelistEntry {
+    //     ForestCommon.ActorType actorType;
+    //     uint8 version;
+    // }
 
     /***********************************|
     |         Protocol Params          |
@@ -81,6 +84,8 @@ contract ForestProtocol is OwnableUpgradeable {
         uint ptoShare; // Protocol Owner's share of rewards, 0 - 10000
         string detailsLink; // Hash of the Protocol details file
         // TODO: add a maxSlashAmount 
+        //mapping(address => ActorWhitelistEntry) whitelistedActors;
+        mapping(address => uint8) whitelistedActors;
     }
 
     /***********************************|
@@ -107,6 +112,13 @@ contract ForestProtocol is OwnableUpgradeable {
     IForestRegistry registry; // Registry contract
     IForestSlasher slasher; // Slasher contract
     IERC20Metadata usdcToken; // USDC token contract
+    // whitelist related variables
+    //uint8 providerWhitelistVersion;
+    //uint8 validatorWhitelistVersion;
+    uint8 userWhitelistVersion;
+    //uint8 providerWhitelistCount;
+    //uint8 validatorWhitelistCount;
+    uint8 userWhitelistCount;
     
     /***********************************|
     |            Constructor            |
@@ -160,8 +172,11 @@ contract ForestProtocol is OwnableUpgradeable {
     /// @param initialCollateral Amount of collateral to stake
     function registerActor(ForestCommon.ActorType _actorType, uint initialCollateral) public { // whenNotPaused
         // allow only Provider or Validator to register
-        if (_actorType == ForestCommon.ActorType.NONE || _actorType == ForestCommon.ActorType.PT_OWNER)
+        if (_actorType != ForestCommon.ActorType.PROVIDER && _actorType != ForestCommon.ActorType.VALIDATOR)
             revert ForestCommon.ActorWrongType();
+        // check against the whitelist
+        // if (!isActorWhitelisted(_actorType, _msgSender()))
+        //     revert ForestCommon.NotWhitelisted();
         // check if Actor of the requested type is already registered in Registry
         if (!registry.isRegisteredActiveActor(_actorType, _msgSender()))
             revert ForestCommon.ActorNotRegistered();
@@ -300,6 +315,10 @@ contract ForestProtocol is OwnableUpgradeable {
         // make sure the offer is not paused
         if (chosenOffer.status != ForestCommon.Status.ACTIVE)
             revert ForestCommon.ObjectNotActive();
+        // check if the user is whitelisted
+        // if (!isActorWhitelisted(ForestCommon.ActorType.USER, _msgSender()) && !isActorWhitelisted(ForestCommon.ActorType.VALIDATOR, _msgSender()))
+        if (!isActorWhitelisted(_msgSender())) 
+            revert ForestCommon.NotWhitelisted();
 
         uint _minimumFee = 2 * 2635200 * chosenOffer.fee;
         uint networkRevenueShareFee = _initialDeposit * registry.getRevenueShare() / ForestCommon.HUNDRED_PERCENT_POINTS;
@@ -451,7 +470,7 @@ contract ForestProtocol is OwnableUpgradeable {
             rewardAmount
         );
 
-        emit RewardWithdrawn(
+        emit BalanceWithdrawn(
             _agreementId,
             rewardAmount,
             providerBillingAddr
@@ -635,6 +654,48 @@ contract ForestProtocol is OwnableUpgradeable {
         //emit ProtocolParamUpdated("detailsLink");
     }
 
+    /// @notice Sets the whitelisted actors for the protocol, no checks are made on the actors' registration status
+    /// @dev Can be called only by the Owner of the Protocol
+    /// @param _actorType Type of actor to whitelist
+    /// @param _whitelistedActors Array of addresses to whitelist
+    // function setWhitelistedActors(ForestCommon.ActorType _actorType, address[] memory _whitelistedActors) external onlyOwner {
+    //     // TODO: what to do with registered providers and validators as well as users with active agreements who got in on the previous whitelist?
+    //     uint8 versionNum;
+
+    //     if (_actorType == ForestCommon.ActorType.USER) {
+    //         versionNum = ++userWhitelistVersion;
+    //         userWhitelistCount = uint8(_whitelistedActors.length);
+    //     } 
+    //     else if (_actorType == ForestCommon.ActorType.VALIDATOR) {
+    //         versionNum = ++validatorWhitelistVersion;
+    //         validatorWhitelistCount = uint8(_whitelistedActors.length);
+    //     } else if (_actorType == ForestCommon.ActorType.PROVIDER) {
+    //         versionNum = ++providerWhitelistVersion;
+    //         providerWhitelistCount = uint8(_whitelistedActors.length);
+    //     } else 
+    //         revert ForestCommon.InvalidParam();
+
+    //     for (uint i = 0; i < _whitelistedActors.length; i++) {
+    //         settings.whitelistedActors[_whitelistedActors[i]] = ActorWhitelistEntry({
+    //             actorType: _actorType,
+    //             version: versionNum
+    //         });
+    //     }
+    // }
+
+    // In this minimal user-only whitelist, remmeber to whitelist your validators as users for them to be able to buy service from you
+    function setWhitelistedActors(ForestCommon.ActorType _actorType, address[] memory _whitelistedActors) external onlyOwner {
+        // TODO: what to do with registered providers and validators as well as users with active agreements who got in on the previous whitelist?
+        if (_actorType != ForestCommon.ActorType.USER) 
+            revert ForestCommon.InvalidParam();
+        
+        userWhitelistVersion = userWhitelistVersion+1;
+        userWhitelistCount = uint8(_whitelistedActors.length);
+
+        for (uint i = 0; i < _whitelistedActors.length; i++)
+            settings.whitelistedActors[_whitelistedActors[i]] = userWhitelistVersion;
+    }
+    
     /***********************************|
     |         Getter Functions          |
     |__________________________________*/
@@ -778,5 +839,46 @@ contract ForestProtocol is OwnableUpgradeable {
     /// @return actorTvs Total Value Serviced for the given Actor
     function getActorTvs(address _actorAddr) public view returns (uint256) {
         return actorTvs[_actorAddr];
+    }
+
+    // function isActorWhitelisted(ForestCommon.ActorType _actorType, address _actorAddr) public view returns (bool) {
+    //     uint8 versionNum;
+    //     uint8 whitelistedActorsCount;
+
+    //     if (_actorType == ForestCommon.ActorType.USER) {
+    //         versionNum = userWhitelistVersion;
+    //         whitelistedActorsCount = userWhitelistCount;
+    //     }
+    //     else if (_actorType == ForestCommon.ActorType.VALIDATOR) {
+    //         versionNum = validatorWhitelistVersion;
+    //         whitelistedActorsCount = validatorWhitelistCount;
+    //     }
+    //     else if (_actorType == ForestCommon.ActorType.PROVIDER) {
+    //         versionNum = providerWhitelistVersion;
+    //         whitelistedActorsCount = providerWhitelistCount;
+    //     }
+    //     else
+    //         return false;
+
+    //     if (whitelistedActorsCount != 0) {
+    //         ActorWhitelistEntry memory entry = settings.whitelistedActors[_actorAddr];
+    //         if (entry.actorType == _actorType && entry.version == versionNum)
+    //             return true;
+    //         else
+    //             return false;
+    //     }
+
+    //     return true;
+    // }
+
+    function isActorWhitelisted(address _actorAddr) public view returns (bool) {
+        if (userWhitelistCount != 0) {
+            if (settings.whitelistedActors[_actorAddr] == userWhitelistVersion)
+                return true;
+            else
+                return false;
+        }
+
+        return true;
     }
 }

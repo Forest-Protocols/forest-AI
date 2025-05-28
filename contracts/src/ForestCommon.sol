@@ -20,7 +20,8 @@ library ForestCommon {
         NONE,
         PROVIDER,
         VALIDATOR,
-        PT_OWNER
+        PT_OWNER,
+        USER
     }
 
     /***********************************|
@@ -74,7 +75,9 @@ library ForestCommon {
     /// @dev Thrown when sender is not the Actor's Owner or when sender is not the Owner of the agreement
     error OnlyOwnerAllowed();               
     /// @dev Thrown when sender is not a registered Owner or Operator of the specified Actor
-    error OnlyOwnerOrOperatorAllowed();                  
+    error OnlyOwnerOrOperatorAllowed();       
+    /// @dev Thrown when sender is not whitelisted for the operation
+    error NotWhitelisted();
 
     // Actor Management
     /// @dev Thrown when attempting to access an unregistered Actor

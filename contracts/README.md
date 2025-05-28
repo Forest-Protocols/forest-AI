@@ -83,3 +83,35 @@ v0.45 (private purchases via user whitelist, changed events for emissions)
 - [dev env] ForestSlasher contract: 0x86d45E437238c8aCAD8C37e7D6A4f86C3335d34b: [explorer link](https://sepolia.basescan.org/address/0x86d45E437238c8aCAD8C37e7D6A4f86C3335d34b)
 - [dev env] ForestToken contract: 0x7d9A7D5F382E71AaCab227D96B9cd95218E36f30: [explorer link](https://sepolia.basescan.org/address/0x7d9A7D5F382E71AaCab227D96B9cd95218E36f30)
 - [dev env] MockedUsdcToken contracts: 0xC80ca08851aE3F9d947eb78E1E2d810556AF1303: [explorer link](https://sepolia.basescan.org/address/0xC80ca08851aE3F9d947eb78E1E2d810556AF1303)
+
+### Optimism Sepolia
+
+[previous]
+v0.44 (bug fixes, optimisations for easier SDK interactions)
+- [dev env] ForestRegistry contract: 0x2dF5969aE1eACAbE5e911F49Eb07f9Ce900942dB: [explorer link](https://sepolia-optimism.etherscan.io/address/0x2dF5969aE1eACAbE5e911F49Eb07f9Ce900942dB)
+- [dev env] ForestSlasher contract: 0xE5baE709081755Dc97aDd9c40ab4bFF505eC0D2c: [explorer link](https://sepolia-optimism.etherscan.io/address/0xE5baE709081755Dc97aDd9c40ab4bFF505eC0D2c)
+- [dev env] ForestToken contract: 0xF52A100Ae7ddB4aC9d6dB508C9DF9c7613CAe06E: [explorer link](https://sepolia-optimism.etherscan.io/address/0xF52A100Ae7ddB4aC9d6dB508C9DF9c7613CAe06E)
+- [dev env] MockedUsdcToken contracts: 0x8A278cc8f4c0c8A93B322b5461153fAcf4121112: [explorer link](https://sepolia-optimism.etherscan.io/address/0x8A278cc8f4c0c8A93B322b5461153fAcf4121112)
+
+v0.43 (makes Slasher epoch & reveal window changeable for testing + optimisations)
+- [dev env] ForestRegistry contract: 0xfd57c88098550f2929c1200400Cf611Be207eBC4: [explorer link](https://sepolia-optimism.etherscan.io/address/0xfd57c88098550f2929c1200400Cf611Be207eBC4)
+- [dev env] ForestSlasher contract: 0xbC970527ac59E19DD12D4b4F69627e9eC354E848: [explorer link](https://sepolia-optimism.etherscan.io/address/0xbC970527ac59E19DD12D4b4F69627e9eC354E848)
+- [dev env] ForestToken contract: 0x3b494BcC7c9dE07610269eFE0305f2906845E2e7: [explorer link](https://sepolia-optimism.etherscan.io/address/0x3b494BcC7c9dE07610269eFE0305f2906845E2e7)
+
+v0.42 (unified errors + bitcoin-like emissions)
+
+- [dev env] ForestRegistry contract: 0x67047690DeAE36373aa29fE94C165C36f3Bc449f: [explorer link](https://sepolia-optimism.etherscan.io/address/0x67047690DeAE36373aa29fE94C165C36f3Bc449f)
+- [dev env] ForestSlasher contract: 0x387dCCFB1d0F2d15832970b6580cA56B6597Dd78: [explorer link](https://sepolia-optimism.etherscan.io/address/0x387dCCFB1d0F2d15832970b6580cA56B6597Dd78)
+- [dev env] ForestToken contract: 0xe9402ac2a4DB99Ee6a9BbAf3B2B2aA2EB1E9090E: [explorer link](https://sepolia-optimism.etherscan.io/address/0xe9402ac2a4DB99Ee6a9BbAf3B2B2aA2EB1E9090E)
+
+v0.41 (fixes + added emissions)
+
+- [dev env] ForestRegistry contract: 0x768328FbEf9820b3b9908577aF4A49058ADe0f22: [explorer link](https://sepolia-optimism.etherscan.io/address/0x768328FbEf9820b3b9908577aF4A49058ADe0f22)
+- [dev env] ForestSlasher contract: 0x92C3Ed245BBEA5f13cf19b4B58B0801aFe2E64d1: [explorer link](https://sepolia-optimism.etherscan.io/address/0x92C3Ed245BBEA5f13cf19b4B58B0801aFe2E64d1)
+- [dev env] ForestToken contract: 0xe2e1ade600433a4b932df966e5ea3cbc38f6b47d: [explorer link](https://sepolia-optimism.etherscan.io/address/0xe2e1ade600433a4b932df966e5ea3cbc38f6b47d)
+
+v0.4 
+
+- [dev env] ForestRegistry contract: 0x9c3d09b00601dc93a64cb25a9b845c33c8a4cccc: [explorer link](https://sepolia-optimism.etherscan.io/address/0x9c3d09b00601dc93a64cb25a9b845c33c8a4cccc)
+- [dev env] ForestSlasher contract: 0x1d1897463f1af22814dd479ba8e8fddce3cfe8ad: [explorer link](https://sepolia-optimism.etherscan.io/address/0x1d1897463f1af22814dd479ba8e8fddce3cfe8ad)
+- [dev env] ForestToken contract: 0xd791d2b1f77d7156e9ec419e3545460a1d2e220c: [explorer link](https://sepolia-optimism.etherscan.io/address/0xd791d2b1f77d7156e9ec419e3545460a1d2e220c)
