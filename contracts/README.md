@@ -80,7 +80,7 @@ Steps:
 [current] 
 v0.45 (private purchases via user whitelist, changed events for emissions)
 - [dev env] ForestRegistry contract: 0x2F1c43d20E8A99DE2fb4e3375aDd29fbD1e5Eff0: [explorer link](https://sepolia.basescan.org/address/0x2F1c43d20E8A99DE2fb4e3375aDd29fbD1e5Eff0)
-- [dev env] ForestSlasher contract: 0x86d45E437238c8aCAD8C37e7D6A4f86C3335d34b: [explorer link](https://sepolia.basescan.org/address/0x86d45E437238c8aCAD8C37e7D6A4f86C3335d34b)
+- [dev env] ForestSlasher contract: 0x55d2db9e358a0e3094fa0e7811edf545ebb4f156: [explorer link](https://sepolia.basescan.org/address/0x55d2db9e358a0e3094fa0e7811edf545ebb4f156)
 - [dev env] ForestToken contract: 0x7d9A7D5F382E71AaCab227D96B9cd95218E36f30: [explorer link](https://sepolia.basescan.org/address/0x7d9A7D5F382E71AaCab227D96B9cd95218E36f30)
 - [dev env] MockedUsdcToken contracts: 0xC80ca08851aE3F9d947eb78E1E2d810556AF1303: [explorer link](https://sepolia.basescan.org/address/0xC80ca08851aE3F9d947eb78E1E2d810556AF1303)
 
