@@ -32,38 +32,31 @@ To ensure long-term economic viability the network treasury earns a commission o
 ## Token flow 
 ```mermaid
 flowchart TD
-  %% Customer Service Flow
-  A[Customer]
-  %% Fee Payment Flow (separate branch)
-  A -->| Network fee from purchase| G[Network Treasury]
-  A -->| Aggregate fee statistics | F[Root Contract]
-  A -->| Purchase AI Service| B[Provider]
+    A["Customer"] -- Network fee from ai service purchase --> G["Network treasury"]
+    A -- Aggregate fee statistics --> F["Root contract"]
+    A -- Purchase ai service --> B["Provider"]
+    G -- Token buy back --> U["Dex"]
+    G -- Token burn --> N["Null address"]
+    B -- Token stake --> C["Protocol"]
+    B -- Registration fee --> C
+    D["Validator"] -- Token stake --> C
+    D -- Registration fee --> C
+    F -- Token reward based on share of global sales fees --> C
+    C -- Registraion fees --> G
+    D -- Scoring or vote to slash --> B
+    C -- Token reward based on performance score --> B
+    C -- Fixed token reward --> D
 
- 
-  G -->| Token Buy Back| U[ DEX]
-  G -->| Burn| N[ Null Address]
-
- 
-  %% Protocol Ecosystem Registration
-  B -- "Stake" --> C[Protocol]
-  D[Validator]
-  D -- "Stake" --> C
-   %% Token Emission Distribution Flow
-  F -->|Token reward based on share of global sales fees | C
- 
-
-  %% Performance Feedback Loop
-  D -->| Scoring or vote to slash | B
-
- 
-  C --> | Token reward based on performance score | B
-  C --> | Fixed Token reward | D
-
- 
-
-  %% Annotations
-  classDef actor fill:#f9f,stroke:#333,stroke-width:2px;
-  class A,B,D,E actor;
+     A:::actor
+     B:::actor
+     D:::actor
+    classDef actor fill:#f9f,stroke:#333,stroke-width:2px
+    linkStyle 0 stroke:#00C853,fill:none
+    linkStyle 3 stroke:#2962FF,fill:none
+    linkStyle 4 stroke:#2962FF,fill:none
+    linkStyle 5 stroke:#2962FF
+    linkStyle 7 stroke:#2962FF,fill:none
+    linkStyle 10 stroke:#00C853,fill:none
 ```
 
 >**Providers** must stake the token as collateral to each protocol they want to compete in and hence get rewards from
