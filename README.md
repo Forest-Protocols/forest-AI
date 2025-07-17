@@ -34,18 +34,17 @@ To ensure **long-term economic viability** the network treasury **earns a commis
 
 #  Protocols
 
-
-| Name | Goal | Address | Explorer |
-|-|-|-|-|
-| Generic LLM | AI Model: General Purpose LLM (Text-to-Text) | 0x263dE5ea24867C3aCFdd6D578d8f11b70Ca81756 | [link](https://sepolia.basescan.org/address/0x263dE5ea24867C3aCFdd6D578d8f11b70Ca81756) |
-| Machine Translation | AI Model: Language-to-Language | 0xb3F7152Af0C1f7f791097C6E8C0AE7FD82e7d0fe | [link](https://sepolia.basescan.org/address/0xb3F7152Af0C1f7f791097C6E8C0AE7FD82e7d0fe) |
-| Imaginify | AI Model: Text-to-Image | 0x2FaebF878887B57f6faA82c7D0289654FBeE5457 | [link](https://sepolia.basescan.org/address/0x2FaebF878887B57f6faA82c7D0289654FBeE5457) |
-| VectorNest | AI Infra: Vector Storage | 0x7dDe884e8e0aD5883BD786801084A9ed1E650731 | [link](https://sepolia.basescan.org/address/0x7dDe884e8e0aD5883BD786801084A9ed1E650731) |
-| Ball Predict | AI Model: Football Fixture-to-Score | 0x592483982A67336A742947fC06E36f6d54051AC9 | [link](https://sepolia.basescan.org/address/0x592483982A67336A742947fC06E36f6d54051AC9) |
-| AI Compute | AI Infra: High Performance GPU Rentals | 0x85eeb56E7ca7E70b15AC0DcA6Bb915A558C6bAb4 | [link](https://sepolia.basescan.org/address/0x85eeb56E7ca7E70b15AC0DcA6Bb915A558C6bAb4) |
-| Event Predict | AI Model: Event-to-Outcome | 0xc1492B16C11CE580026c53B9F240aB082598CD8b | [link](https://sepolia.basescan.org/address/0xc1492B16C11CE580026c53B9F240aB082598CD8b) |
-| IPFS Storage | Cloud Infra: IPFS Pinning Serices | 0x4C4Ab078Bd871Da161ccC8Ac8603A981183F545b | [link](https://sepolia.basescan.org/address/0x4C4Ab078Bd871Da161ccC8Ac8603A981183F545b) |
-| Medical Q&A | AI Model: Medicine Fine-tuned LLM (Text-to-Text) | 0xFf24e1259450D84727FB401C8fc036ce80Ac4721 | [link](https://sepolia.basescan.org/address/0xFf24e1259450D84727FB401C8fc036ce80Ac4721) |
+| Name | Goal | Address | Registration | Provider Code | Validator Code |
+|-|-|-|-|-|-|
+| Generic LLM | AI Model: General Purpose LLM (Text-to-Text) | [0x263dE5ea24867C3aCFdd6D578d8f11b70Ca81756](https://sepolia.basescan.org/address/0x263dE5ea24867C3aCFdd6D578d8f11b70Ca81756) |  ✅ | ✅ | ✅ |
+| Machine Translation | AI Model: Language-to-Language | [0xb3F7152Af0C1f7f791097C6E8C0AE7FD82e7d0fe](https://sepolia.basescan.org/address/0xb3F7152Af0C1f7f791097C6E8C0AE7FD82e7d0fe) | ✅ | ✅ | 🛠️ |
+| Imaginify | AI Model: Text-to-Image | [0x2FaebF878887B57f6faA82c7D0289654FBeE5457](https://sepolia.basescan.org/address/0x2FaebF878887B57f6faA82c7D0289654FBeE5457)  | ✅ | ✅ | 🛠️ |
+| Ball Predict | AI Model: Football Fixture-to-Score | [0x592483982A67336A742947fC06E36f6d54051AC9](https://sepolia.basescan.org/address/0x592483982A67336A742947fC06E36f6d54051AC9) | ✅ | ✅ | ✅ | 
+| VectorNest | AI Infra: Vector Storage | [0x7dDe884e8e0aD5883BD786801084A9ed1E650731](https://sepolia.basescan.org/address/0x7dDe884e8e0aD5883BD786801084A9ed1E650731) | ✅ | ✅ | 🛠️ | 
+| AI Compute | AI Infra: High Performance GPU Rentals | [0x85eeb56E7ca7E70b15AC0DcA6Bb915A558C6bAb4](https://sepolia.basescan.org/address/0x85eeb56E7ca7E70b15AC0DcA6Bb915A558C6bAb4) | ✅ | ✅ | 🛠️ |
+| Event Predict | AI Model: Event-to-Outcome | [0xc1492B16C11CE580026c53B9F240aB082598CD8b](https://sepolia.basescan.org/address/0xc1492B16C11CE580026c53B9F240aB082598CD8b) | ✅ | ✅ | 🛠️ |
+| IPFS Storage | Cloud Infra: IPFS Pinning Serices | [0x4C4Ab078Bd871Da161ccC8Ac8603A981183F545b](https://sepolia.basescan.org/address/0x4C4Ab078Bd871Da161ccC8Ac8603A981183F545b) | ✅ | ✅ | 🛠️ |
+| Medical Q&A | AI Model: Medicine Fine-tuned LLM (Text-to-Text) | [0xFf24e1259450D84727FB401C8fc036ce80Ac4721](https://sepolia.basescan.org/address/0xFf24e1259450D84727FB401C8fc036ce80Ac4721) | ✅ | ✅ | ✅ |
 
 **More in the works.**
 
