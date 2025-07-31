@@ -36,15 +36,15 @@ To ensure **long-term economic viability** the network treasury **earns a commis
 
 | Name | Goal | Address | Registration | Provider Code | Validator Code |
 |-|-|-|-|-|-|
-| Generic LLM | AI Model: General Purpose LLM (Text-to-Text) | [0x2Cf...c03AF](https://sepolia.basescan.org/address/0x2Cf3A88A17FA5c5601de77B44F19a02E572c03AF) [prev](https://sepolia.basescan.org/address/0x263dE5ea24867C3aCFdd6D578d8f11b70Ca81756) |  ✅ | ✅ | ✅ |
-| Machine Translation | AI Model: Language-to-Language |[0x4f8...66993](https://sepolia.basescan.org/address/0x4f896BcB3a364e083E6f7b34771a13A8F6e66993) [prev](https://sepolia.basescan.org/address/0xb3F7152Af0C1f7f791097C6E8C0AE7FD82e7d0fe) | ✅ | ✅ | 🛠️ |
-| Imaginify | AI Model: Text-to-Image | [0x8aD...9Ed94](https://sepolia.basescan.org/address/0x8aD79320cCF0E6420ffd4371035590E48a99Ed94) [prev](https://sepolia.basescan.org/address/0x2FaebF878887B57f6faA82c7D0289654FBeE5457) | ✅ | ✅ | 🛠️ |
-| Ball Predict | AI Model: Football Fixture-to-Score | [0x2c21...69e73](https://sepolia.basescan.org/address/0x2c21F0c457088814a3696Cd7B238Cb18b2e69e73) [prev](https://sepolia.basescan.org/address/0x592483982A67336A742947fC06E36f6d54051AC9) | ✅ | ✅ | ✅ | 
-| VectorNest | AI Infra: Vector Storage | [0x7dD...50731](https://sepolia.basescan.org/address/0x7dDe884e8e0aD5883BD786801084A9ed1E650731) [prev](https://sepolia.basescan.org/address/0x7dDe884e8e0aD5883BD786801084A9ed1E650731) | ✅ | ✅ | 🛠️ | 
-| AI Compute | AI Infra: High Performance GPU Rentals | [0x07D...90EDa](https://sepolia.basescan.org/address/0x07DEB3D7CE332F3cC1fc1e57805b3333aB390EDa) [prev](https://sepolia.basescan.org/address/0x85eeb56E7ca7E70b15AC0DcA6Bb915A558C6bAb4) | ✅ | ✅ | 🛠️ |
-| Event Predict | AI Model: Event-to-Outcome | [0xC99...dbb08](https://sepolia.basescan.org/address/0xc1492B16C11CE580026c53B9F240aB082598CD8b) [prev](https://sepolia.basescan.org/address/0xc1492B16C11CE580026c53B9F240aB082598CD8b) | ✅ | ✅ | 🛠️ |
-| IPFS Storage | Cloud Infra: IPFS Pinning Serices | [0x26a...02419](https://sepolia.basescan.org/address/0x26a9801866501AC86E118AC9e401f53e97a02419) [prev](https://sepolia.basescan.org/address/0x4C4Ab078Bd871Da161ccC8Ac8603A981183F545b) | ✅ | ✅ | 🛠️ |
-| Medical Q&A | AI Model: Medicine Fine-tuned LLM (Text-to-Text) | [0x701...0092f](https://sepolia.basescan.org/address/0x7011A90bDB621FFD75cbF97c59423636ebC0092f) [prev](https://sepolia.basescan.org/address/0xFf24e1259450D84727FB401C8fc036ce80Ac4721) | ✅ | ✅ | ✅ |
+| Generic LLM | AI Model: General Purpose LLM (Text-to-Text) | [0x2Cf...c03AF](https://sepolia.basescan.org/address/0x2Cf3A88A17FA5c5601de77B44F19a02E572c03AF), [prev](https://sepolia.basescan.org/address/0x263dE5ea24867C3aCFdd6D578d8f11b70Ca81756) |  ✅ | ✅ | ✅ |
+| Machine Translation | AI Model: Language-to-Language |[0x4f8...66993](https://sepolia.basescan.org/address/0x4f896BcB3a364e083E6f7b34771a13A8F6e66993), [prev](https://sepolia.basescan.org/address/0xb3F7152Af0C1f7f791097C6E8C0AE7FD82e7d0fe) | ✅ | ✅ | 🛠️ |
+| Imaginify | AI Model: Text-to-Image | [0x8aD...9Ed94](https://sepolia.basescan.org/address/0x8aD79320cCF0E6420ffd4371035590E48a99Ed94), [prev](https://sepolia.basescan.org/address/0x2FaebF878887B57f6faA82c7D0289654FBeE5457) | ✅ | ✅ | 🛠️ |
+| Ball Predict | AI Model: Football Fixture-to-Score | [0x2c21...69e73](https://sepolia.basescan.org/address/0x2c21F0c457088814a3696Cd7B238Cb18b2e69e73), [prev](https://sepolia.basescan.org/address/0x592483982A67336A742947fC06E36f6d54051AC9) | ✅ | ✅ | ✅ | 
+| VectorNest | AI Infra: Vector Storage | [0x7dD...50731](https://sepolia.basescan.org/address/0x7dDe884e8e0aD5883BD786801084A9ed1E650731), [prev](https://sepolia.basescan.org/address/0x7dDe884e8e0aD5883BD786801084A9ed1E650731) | ✅ | ✅ | 🛠️ | 
+| AI Compute | AI Infra: High Performance GPU Rentals | [0x07D...90EDa](https://sepolia.basescan.org/address/0x07DEB3D7CE332F3cC1fc1e57805b3333aB390EDa), [prev](https://sepolia.basescan.org/address/0x85eeb56E7ca7E70b15AC0DcA6Bb915A558C6bAb4) | ✅ | ✅ | 🛠️ |
+| Event Predict | AI Model: Event-to-Outcome | [0xC99...dbb08](https://sepolia.basescan.org/address/0xC99ca65749826AD284270A70DaB19cDFB2Adbb08), [prev](https://sepolia.basescan.org/address/0xc1492B16C11CE580026c53B9F240aB082598CD8b) | ✅ | ✅ | 🛠️ |
+| IPFS Storage | Cloud Infra: IPFS Pinning Serices | [0x26a...02419](https://sepolia.basescan.org/address/0x26a9801866501AC86E118AC9e401f53e97a02419), [prev](https://sepolia.basescan.org/address/0x4C4Ab078Bd871Da161ccC8Ac8603A981183F545b) | ✅ | ✅ | 🛠️ |
+| Medical Q&A | AI Model: Medicine Fine-tuned LLM (Text-to-Text) | [0x701...0092f](https://sepolia.basescan.org/address/0x7011A90bDB621FFD75cbF97c59423636ebC0092f), [prev](https://sepolia.basescan.org/address/0xFf24e1259450D84727FB401C8fc036ce80Ac4721) | ✅ | ✅ | ✅ |
 
 **More in the works.**
 
