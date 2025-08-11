@@ -153,10 +153,10 @@ forest network set [options]
 ```
 
 **Options:**
-- `-a, --account <file or private key>` - Private key of the caller's wallet, *if missing taken from config*
+- `-a, --account <file or private key>` - Private key of the caller's wallet, *if you omit this option, the private key is taken from config*
 - `--in-pt-register-fee <amount>` - Updates the Actor registration fee in a Protocol
 - `--actor-register-fee <amount>` - Updates the Actor registration fee in the Network
-- `--burn-ratio <percentage>` - Updates the percentage of the burn ratio
+- `--burn-ratio <percentage>` - Updates the burn ratio of FOREST fees that are burned on transfer to Treasury
 - `--max-pt <count>` - Updates the maximum Protocol count
 - `--pt-register-fee <amount>` - Updates the Protocol registration fee in the Network
 - `--revenue-share <percentage>` - Updates the revenue share
@@ -176,7 +176,7 @@ forest network pause -a <private-key>
 ```
 
 **Options:**
-- `-a, --account <file or private key>` - Private key of the caller's wallet, *if missing taken from config*
+- `-a, --account <file or private key>` - Private key of the caller's wallet, *if you omit this option, the private key is taken from config*
 
 #### `forest network unpause` (Admin)
 
@@ -187,7 +187,7 @@ forest network unpause -a <private-key>
 ```
 
 **Options:**
-- `-a, --account <file or private key>` - Private key of the caller's wallet, *if missing taken from config*
+- `-a, --account <file or private key>` - Private key of the caller's wallet, *if you omit this option, the private key is taken from config*
 
 #### `forest network close-epoch` (All)
 
@@ -198,7 +198,7 @@ forest network close-epoch -a <private-key>
 ```
 
 **Options:**
-- `-a, --account <file or private key>` - Private key of the caller's wallet, *if missing taken from config*
+- `-a, --account <file or private key>` - Private key of the caller's wallet, *if you omit this option, the private key is taken from config*
 
 #### `forest network emissions` (All)
 
@@ -283,7 +283,7 @@ forest get protocol [addresses...]
 **Aliases:** `pt`, `protocols`
 
 **Arguments:**
-- `[addresses...]` - Smart contract addresses of the Protocols. If not given shows all of them.
+- `[addresses...]` - Smart contract addresses of the Protocols. If not given shows data for all available Protocols.
 
 **Options:**
 - `-d, --details` - Reads additional details from the Providers/Validators in the Protocols (default: true)
@@ -361,7 +361,7 @@ forest provider register-offer [options]
 ```
 
 **Required Options:**
-- `-a, --account <file or private key>` - Private key of the caller's wallet, *if missing taken from config*
+- `-a, --account <file or private key>` - Private key of the caller's wallet, *if you omit this option, the private key is taken from config*
 - `-p, --protocol <address>` - Protocol address
 - `--details <file>` - Detailed information about the Offer
 - `--fee <amount>` - Non-exponent per second price of the offer. 1 unit is approximately 2.60 USDC per month
@@ -386,7 +386,7 @@ forest provider pause-offer -a <private-key> -p <protocol-address> -o <offer-id>
 ```
 
 **Options:**
-- `-a, --account <file or private key>` - Private key of the caller's wallet, *if missing taken from config*
+- `-a, --account <file or private key>` - Private key of the caller's wallet, *if you omit this option, the private key is taken from config*
 - `-p, --protocol <address>` - Protocol address
 - `-o, --offer <number>` - Offer ID
 
@@ -399,7 +399,7 @@ forest provider unpause-offer -a <private-key> -p <protocol-address> -o <offer-i
 ```
 
 **Options:**
-- `-a, --account <file or private key>` - Private key of the caller's wallet, *if missing taken from config*
+- `-a, --account <file or private key>` - Private key of the caller's wallet, *if you omit this option, the private key is taken from config*
 - `-p, --protocol <address>` - Protocol address
 - `-o, --offer <number>` - Offer ID
 
@@ -412,7 +412,7 @@ forest provider close-offer -a <private-key> -p <protocol-address> -o <offer-id>
 ```
 
 **Options:**
-- `-a, --account <file or private key>` - Private key of the caller's wallet, *if missing taken from config*
+- `-a, --account <file or private key>` - Private key of the caller's wallet, *if you omit this option, the private key is taken from config*
 - `-p, --protocol <address>` - Protocol address
 - `-o, --offer <number>` - Offer ID
 
@@ -425,7 +425,7 @@ forest provider withdraw -a <private-key> -p <protocol-address> -o <offer-id>
 ```
 
 **Options:**
-- `-a, --account <file or private key>` - Private key of the caller's wallet, *if missing taken from config*
+- `-a, --account <file or private key>` - Private key of the caller's wallet, *if you omit this option, the private key is taken from config*
 - `-p, --protocol <address>` - Protocol address
 - `-o, --offer <number>` - Offer ID
 
@@ -438,7 +438,7 @@ forest provider register-in -a <private-key> -p <protocol-address>
 ```
 
 **Options:**
-- `-a, --account <file or private key>` - Private key of the caller's wallet, *if missing taken from config*
+- `-a, --account <file or private key>` - Private key of the caller's wallet, *if you omit this option, the private key is taken from config*
 - `-p, --protocol <address>` - Protocol address
 
 #### `forest provider update` (Provider)
@@ -450,7 +450,7 @@ forest provider update -a <private-key> -p <protocol-address>
 ```
 
 **Options:**
-- `-a, --account <file or private key>` - Private key of the caller's wallet, *if missing taken from config*
+- `-a, --account <file or private key>` - Private key of the caller's wallet, *if you omit this option, the private key is taken from config*
 - `-p, --protocol <address>` - Protocol address
 
 #### `forest provider topup-collateral` (Provider)
@@ -462,7 +462,7 @@ forest provider topup-collateral -a <private-key> -p <protocol-address>
 ```
 
 **Options:**
-- `-a, --account <file or private key>` - Private key of the caller's wallet, *if missing taken from config*
+- `-a, --account <file or private key>` - Private key of the caller's wallet, *if you omit this option, the private key is taken from config*
 - `-p, --protocol <address>` - Protocol address
 
 #### `forest provider withdraw-collateral` (Provider)
@@ -474,7 +474,7 @@ forest provider withdraw-collateral -a <private-key> -p <protocol-address>
 ```
 
 **Options:**
-- `-a, --account <file or private key>` - Private key of the caller's wallet, *if missing taken from config*
+- `-a, --account <file or private key>` - Private key of the caller's wallet, *if you omit this option, the private key is taken from config*
 - `-p, --protocol <address>` - Protocol address
 
 ### Agreement Commands
@@ -490,7 +490,7 @@ forest agreement enter [options]
 ```
 
 **Required Options:**
-- `-a, --account <file or private key>` - Private key of the caller's wallet, *if missing taken from config*
+- `-a, --account <file or private key>` - Private key of the caller's wallet, *if you omit this option, the private key is taken from config*
 - `-p, --protocol <address>` - Protocol address
 - `-o, --offer <number>` - Offer ID
 
@@ -517,7 +517,7 @@ forest agreement list [options]
 **Alias:** `ls`
 
 **Options:**
-- `-a, --account <file or private key>` - Private key of the caller's wallet, *if missing taken from config*
+- `-a, --account <file or private key>` - Private key of the caller's wallet, *if you omit this option, the private key is taken from config*
 - `-p, --protocol <address>` - Protocol address
 - `-c, --closed` - Lists closed agreements
 
@@ -535,7 +535,7 @@ forest agreement details -a <private-key> -p <protocol-address> -i <agreement-id
 ```
 
 **Options:**
-- `-a, --account <file or private key>` - Private key of the caller's wallet, *if missing taken from config*
+- `-a, --account <file or private key>` - Private key of the caller's wallet, *if you omit this option, the private key is taken from config*
 - `-p, --protocol <address>` - Protocol address
 - `-i, --agreement-id <number>` - Agreement ID
 
@@ -548,7 +548,7 @@ forest agreement close -a <private-key> -p <protocol-address> -i <agreement-id>
 ```
 
 **Options:**
-- `-a, --account <file or private key>` - Private key of the caller's wallet, *if missing taken from config*
+- `-a, --account <file or private key>` - Private key of the caller's wallet, *if you omit this option, the private key is taken from config*
 - `-p, --protocol <address>` - Protocol address
 - `-i, --agreement-id <number>` - Agreement ID
 
@@ -561,7 +561,7 @@ forest agreement topup -a <private-key> -p <protocol-address> -i <agreement-id>
 ```
 
 **Options:**
-- `-a, --account <file or private key>` - Private key of the caller's wallet, *if missing taken from config*
+- `-a, --account <file or private key>` - Private key of the caller's wallet, *if you omit this option, the private key is taken from config*
 - `-p, --protocol <address>` - Protocol address
 - `-i, --agreement-id <number>` - Agreement ID
 
@@ -574,7 +574,7 @@ forest agreement withdraw -a <private-key> -p <protocol-address> -i <agreement-i
 ```
 
 **Options:**
-- `-a, --account <file or private key>` - Private key of the caller's wallet, *if missing taken from config*
+- `-a, --account <file or private key>` - Private key of the caller's wallet, *if you omit this option, the private key is taken from config*
 - `-p, --protocol <address>` - Protocol address
 - `-i, --agreement-id <number>` - Agreement ID
 
@@ -611,7 +611,7 @@ forest wallet allowance [address]
 
 ### Token Commands
 
-Token commands allow you to manage Forest tokens.
+Token commands allow an administrator to manage ForestToken contract.
 
 #### `forest token pause` (Admin)
 
@@ -622,7 +622,7 @@ forest token pause -a <private-key>
 ```
 
 **Options:**
-- `-a, --account <file or private key>` - Private key of the caller's wallet, *if missing taken from config*
+- `-a, --account <file or private key>` - Private key of the caller's wallet, *if you omit this option, the private key is taken from config*
 
 #### `forest token unpause` (Admin)
 
@@ -633,7 +633,7 @@ forest token unpause -a <private-key>
 ```
 
 **Options:**
-- `-a, --account <file or private key>` - Private key of the caller's wallet, *if missing taken from config*
+- `-a, --account <file or private key>` - Private key of the caller's wallet, *if you omit this option, the private key is taken from config*
 
 ### Validator Commands
 
@@ -648,7 +648,7 @@ forest validator commit [options]
 ```
 
 **Required Options:**
-- `-a, --account <file or private key>` - Private key of the caller's wallet, *if missing taken from config*
+- `-a, --account <file or private key>` - Private key of the caller's wallet, *if you omit this option, the private key is taken from config*
 - `-p, --protocol <address>` - Protocol address
 - `--scores <JSON or file>` - JSON file containing Provider scores
 
@@ -672,7 +672,7 @@ forest validator reveal [options]
 ```
 
 **Required Options:**
-- `-a, --account <file or private key>` - Private key of the caller's wallet, *if missing taken from config*
+- `-a, --account <file or private key>` - Private key of the caller's wallet, *if you omit this option, the private key is taken from config*
 - `-p, --protocol <address>` - Protocol address
 - `--scores <JSON or file>` - JSON file containing Provider scores
 
@@ -685,7 +685,7 @@ forest validator register-in -a <private-key> -p <protocol-address>
 ```
 
 **Options:**
-- `-a, --account <file or private key>` - Private key of the caller's wallet, *if missing taken from config*
+- `-a, --account <file or private key>` - Private key of the caller's wallet, *if you omit this option, the private key is taken from config*
 - `-p, --protocol <address>` - Protocol address
 
 #### `forest validator update` (Validator)
@@ -697,7 +697,7 @@ forest validator update -a <private-key> -p <protocol-address>
 ```
 
 **Options:**
-- `-a, --account <file or private key>` - Private key of the caller's wallet, *if missing taken from config*
+- `-a, --account <file or private key>` - Private key of the caller's wallet, *if you omit this option, the private key is taken from config*
 - `-p, --protocol <address>` - Protocol address
 
 #### `forest validator topup-collateral` (Validator)
@@ -709,7 +709,7 @@ forest validator topup-collateral -a <private-key> -p <protocol-address>
 ```
 
 **Options:**
-- `-a, --account <file or private key>` - Private key of the caller's wallet, *if missing taken from config*
+- `-a, --account <file or private key>` - Private key of the caller's wallet, *if you omit this option, the private key is taken from config*
 - `-p, --protocol <address>` - Protocol address
 
 #### `forest validator withdraw-collateral` (Validator)
@@ -721,7 +721,7 @@ forest validator withdraw-collateral -a <private-key> -p <protocol-address>
 ```
 
 **Options:**
-- `-a, --account <file or private key>` - Private key of the caller's wallet, *if missing taken from config*
+- `-a, --account <file or private key>` - Private key of the caller's wallet, *if you omit this option, the private key is taken from config*
 - `-p, --protocol <address>` - Protocol address
 
 ### Register Commands
@@ -737,7 +737,7 @@ forest register provider -a <private-key>
 ```
 
 **Options:**
-- `-a, --account <file or private key>` - Private key of the caller's wallet, *if missing taken from config*
+- `-a, --account <file or private key>` - Private key of the caller's wallet, *if you omit this option, the private key is taken from config*
 
 #### `forest register validator` (All)
 
@@ -748,7 +748,7 @@ forest register validator -a <private-key>
 ```
 
 **Options:**
-- `-a, --account <file or private key>` - Private key of the caller's wallet, *if missing taken from config*
+- `-a, --account <file or private key>` - Private key of the caller's wallet, *if you omit this option, the private key is taken from config*
 
 #### `forest register pt-owner` (All)
 
@@ -759,11 +759,11 @@ forest register pt-owner -a <private-key>
 ```
 
 **Options:**
-- `-a, --account <file or private key>` - Private key of the caller's wallet, *if missing taken from config*
+- `-a, --account <file or private key>` - Private key of the caller's wallet, *if you omit this option, the private key is taken from config*
 
 ### Slasher Commands
 
-Slasher commands allow you to manage the slashing mechanism.
+Slasher commands allow the admin to manage the ForestSlasher contract.
 
 #### `forest slasher pause` (Admin)
 
@@ -774,7 +774,7 @@ forest slasher pause -a <private-key>
 ```
 
 **Options:**
-- `-a, --account <file or private key>` - Private key of the caller's wallet, *if missing taken from config*
+- `-a, --account <file or private key>` - Private key of the caller's wallet, *if you omit this option, the private key is taken from config*
 
 #### `forest slasher unpause` (Admin)
 
@@ -785,7 +785,7 @@ forest slasher unpause -a <private-key>
 ```
 
 **Options:**
-- `-a, --account <file or private key>` - Private key of the caller's wallet, *if missing taken from config*
+- `-a, --account <file or private key>` - Private key of the caller's wallet, *if you omit this option, the private key is taken from config*
 
 ### PT Owner Commands
 
@@ -800,7 +800,7 @@ forest pt-owner update -a <private-key> -p <protocol-address>
 ```
 
 **Options:**
-- `-a, --account <file or private key>` - Private key of the caller's wallet, *if missing taken from config*
+- `-a, --account <file or private key>` - Private key of the caller's wallet, *if you omit this option, the private key is taken from config*
 - `-p, --protocol <address>` - Protocol address
 
 ### API Commands
@@ -817,7 +817,7 @@ forest api import [options]
 
 ### Pipe Commands
 
-Pipe commands handle communication channels.
+Pipe commands handle communication channels. Use it to send queries to Providers and Validators.
 
 #### `forest pipe` (All)
 
@@ -852,7 +852,7 @@ Follow this step-by-step workflow to get started with the Forest Protocol:
 npm i @forest-protocols/cli@latest -g
 ```
 
-2. **Set up your account (prefunded test account):**
+2. **Set up your account:**
 ```bash
 forest config set account 0x69...368b
 ```
@@ -1046,4 +1046,4 @@ The CLI provides detailed error messages and validation. Common error scenarios:
 
 ## Support
 
-For additional support and documentation, visit the Forest Protocol documentation or contact the development team.
+For additional support and documentation, visit the Forest Protocol documentation [link](../README.md) or contact the development team on [Discord](https://discord.gg/HWm96wKzWV).

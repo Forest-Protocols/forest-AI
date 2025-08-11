@@ -213,7 +213,7 @@ Once audit log files are revealed, you can browse them on Peerbench in two ways:
 
 #### Direct Link
 
-In our workflow examples we had two links. Let's use one of the to see how a sample Audit File looks like:
+In our workflow examples we had two links. Let's use one of them to see how a sample Audit File looks like:
 - [cli] https://peerbench.ai/inspect/bagaaiera2lpa4qbvumzc3cv25xdkcalquxw7dwxceodqn443wxpcbpenrr5q
 - [stats webapp] https://www.peerbench.ai/inspect/bagaaiera3i6e5mjpk477yhjwz53ho7hjp3hoibylbpmcpnjpvkurr5vbgm5q
 
