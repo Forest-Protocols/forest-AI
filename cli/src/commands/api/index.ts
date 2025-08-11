@@ -3,12 +3,15 @@ import { OPTIONS } from "../common/options";
 import { checkValidationError } from "@/validation/error-handling";
 import { z } from "zod";
 import { accountFileOrKeySchema } from "@/validation/account";
-import { PipeResponseCode, sleep } from "@forest-protocols/sdk";
+import { PipeResponseCodes } from "@forest-protocols/sdk";
 import { Command } from "commander";
-import { createAccount, createXMTPPipe } from "@/utils";
+import { createAccount, createXMTPPipe, createHTTPPipe } from "@/utils";
 import { green, red, yellow } from "ansis";
 import { sm, OASSchema } from "@/config/spec";
-import { resolveToAddress, resolveToName } from "@/utils/address";
+import { resolveENSName, resolveToName } from "@/utils/address";
+import { config } from "@/config";
+import { indexerClient } from "@/client";
+import { Address } from "viem";
 
 export const apiCommand = program
   .command("api")
@@ -68,9 +71,15 @@ export async function loadAndParseAPISpecs() {
           `If it is given, will be used for XMTP communication. Otherwise uses a random generated account.`,
           OPTIONS.ACCOUNT.HANDLER
         )
-        .requiredOption(
+        .option(
+          OPTIONS.PIPE.FLAGS,
+          OPTIONS.PIPE.DESCRIPTION,
+          OPTIONS.PIPE.HANDLER
+        )
+        .option(OPTIONS.PIPE_ENDPOINT.FLAGS, OPTIONS.PIPE_ENDPOINT.DESCRIPTION)
+        .option(
           "--operator <address>",
-          "Address of the Operator which will process the API request"
+          "Address of the Operator if XMTP Pipe is used"
         );
 
       // For Provider endpoints we need to pass Provider ID, so in that
@@ -128,7 +137,8 @@ export async function loadAndParseAPISpecs() {
         const options = checkValidationError(
           z
             .object({
-              operatorAddress: z.string(),
+              operatorAddress: z.string().optional(),
+              endpoint: z.string().optional(),
               account: accountFileOrKeySchema.optional(),
               providerId: endpoint.isProviderEndpoint
                 ? providerIdSchema
@@ -138,19 +148,20 @@ export async function loadAndParseAPISpecs() {
               operatorAddress: rawOptions.operator,
               account: rawOptions[OPTIONS.ACCOUNT.OPTION_NAME],
               providerId: rawOptions.providerId,
+              endpoint: rawOptions[OPTIONS.PIPE_ENDPOINT.OPTION_NAME],
             })
         );
 
-        // Only try to resolve ENS name if the address is not a hex address
-        if (options.operatorAddress.includes(".")) {
-          const opAddr = await resolveToAddress(options.operatorAddress);
-          if (!opAddr) {
+        if (config.pipe.value === "xmtp") {
+          if (!options.operatorAddress) {
             throw new Error(
-              `Cannot resolve ENS name "${options.operatorAddress}"`
+              "Operator address is required when XMTP Pipe is used"
             );
           }
 
-          options.operatorAddress = opAddr;
+          options.operatorAddress = await resolveENSName(
+            options.operatorAddress!
+          );
         }
 
         // Parse body and params from the given options
@@ -179,29 +190,47 @@ export async function loadAndParseAPISpecs() {
         const resolvedBody = await resolveEnsNames(body);
         const resolvedParams = await resolveEnsNames(params);
 
-        spinner.start("Initializing XMTP");
+        spinner.start("Initializing Pipe");
         const accountKey = createAccount({ useDefault: true });
-        const pipe = await createXMTPPipe(accountKey);
+        const pipe =
+          config.pipe.value === "http"
+            ? await createHTTPPipe(accountKey)
+            : await createXMTPPipe(accountKey);
 
-        spinner.text = "Sending message";
-        await sleep(2000);
+        // We assume that all the Actors that have the same Operator address also
+        // have the same endpoint value. So we can simply pick one to get Operator endpoint
+        const operatorEndpoint = await indexerClient
+          .getActors({ operatorAddress: options.operatorAddress! as Address })
+          .then((res) => res.data[0].endpoint);
+        if (
+          config.pipe.value === "http" &&
+          !options.endpoint &&
+          !operatorEndpoint
+        ) {
+          throw new Error("Endpoint is required when HTTP Pipe is used");
+        }
 
         spinner.text = "Waiting response";
-        const res = await pipe.send(options.operatorAddress, {
-          method: endpoint.method,
-          path: endpoint.path,
-          body: resolvedBody,
-          params: resolvedParams,
-        });
+        const res = await pipe.send(
+          config.pipe.value === "http"
+            ? options.endpoint || operatorEndpoint
+            : options.operatorAddress!,
+          {
+            method: endpoint.method,
+            path: endpoint.path,
+            body: resolvedBody,
+            params: resolvedParams,
+          }
+        );
 
         switch (res.code) {
-          case PipeResponseCode.BAD_REQUEST:
-          case PipeResponseCode.INTERNAL_SERVER_ERROR:
-          case PipeResponseCode.NOT_AUTHORIZED:
-          case PipeResponseCode.NOT_FOUND:
+          case PipeResponseCodes.BAD_REQUEST:
+          case PipeResponseCodes.INTERNAL_SERVER_ERROR:
+          case PipeResponseCodes.NOT_AUTHORIZED:
+          case PipeResponseCodes.NOT_FOUND:
             spinner.fail(red.bold(`Response ${res.code}`));
             break;
-          case PipeResponseCode.OK:
+          case PipeResponseCodes.OK:
             spinner.succeed(green.bold(`Response ${res.code}`));
             break;
         }

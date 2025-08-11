@@ -1,9 +1,4 @@
-import {
-  ActorType,
-  actorTypeToString,
-  addressSchema,
-  DECIMALS,
-} from "@forest-protocols/sdk";
+import { ActorType, actorTypeToString, DECIMALS } from "@forest-protocols/sdk";
 import { Command } from "commander";
 import { OPTIONS } from "../options";
 import { z } from "zod";
@@ -19,7 +14,9 @@ import {
   createRegistryInstance,
   createSlasherInstance,
   createTokenInstance,
+  indexerClient,
 } from "@/client";
+import { resolveENSName } from "@/utils/address";
 
 export function createRegisterInPTCommand(
   parent: Command,
@@ -44,7 +41,7 @@ export function createRegisterInPTCommand(
         z
           .object({
             account: accountFileOrKeySchema,
-            ptAddress: addressSchema,
+            ptAddress: z.string(),
             collateral: z.coerce.number(),
           })
           .safeParse({
@@ -54,32 +51,33 @@ export function createRegisterInPTCommand(
           })
       );
 
+      const ptAddress = await resolveENSName(options.ptAddress);
       const client = createViemPublicClient();
       const account = privateKeyToAccount(options.account);
       const registry = createRegistryInstance(client, account);
       const token = createTokenInstance(client, account);
-      const pt = createProtocolInstance(client, options.ptAddress, account);
+      const pt = createProtocolInstance(client, ptAddress, account);
       const slasher = createSlasherInstance(client);
 
-      spinner.start("Checking account");
-      const actor = await registry.getActor(account.address);
+      spinner.start("Checking Actor");
+      const actor = await indexerClient.getActorByIdOrAddress(account.address);
 
-      if (!actor) {
-        throw new Error(
-          `Account ${account.address} is not registered in the Network`
-        );
-      }
-
-      if (actor.actorType !== actorType) {
+      if (actor.type !== actorType) {
         throw new Error(`Account is not a ${actorTypeToString(actorType)}`);
       }
 
       spinner.text = "Checking fees and collateral";
-      const [registryFee, ptFees, minCollateral] = await Promise.all([
-        registry.getActorRegistrationFeeInPT(),
-        pt.getRegistrationFees(),
-        pt.getMinCollateral(),
+      const [protocol, registryFee] = await Promise.all([
+        indexerClient.getProtocolByAddress(ptAddress),
+        indexerClient.getActorRegistrationFeeInProtocol(),
       ]);
+
+      const minCollateral = BigInt(protocol.minCollateral);
+      const ptFees = {
+        provider: BigInt(protocol.providerRegistrationFee),
+        validator: BigInt(protocol.validatorRegistrationFee),
+        offer: BigInt(protocol.offerRegistrationFee),
+      };
 
       const initialCollateral =
         BigInt(options.collateral) * BigInt(Math.pow(10, DECIMALS.FOREST));
@@ -94,6 +92,7 @@ export function createRegisterInPTCommand(
       }
 
       spinner.text = "Checking costs and allowance";
+
       const [balance, allowanceRegistry, allowanceSlasher] = await Promise.all([
         token.getBalance(account.address),
         token.getAllowance(account.address, registry.address),

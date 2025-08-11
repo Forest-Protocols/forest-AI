@@ -5,11 +5,12 @@ import { checkValidationError } from "@/validation/error-handling";
 import { OPTIONS } from "../common/options";
 import { accountFileOrKeySchema } from "@/validation/account";
 import { createViemPublicClient } from "@/utils";
-import { createProtocolInstance } from "@/client";
+import { createProtocolInstance, indexerClient } from "@/client";
 import { privateKeyToAccount } from "viem/accounts";
 import { spinner } from "@/program";
 import { green } from "ansis";
 import { parseUnits } from "viem";
+import { resolveENSName } from "@/utils/address";
 
 protocolCommand
   .command("set")
@@ -57,7 +58,7 @@ protocolCommand
     const options = checkValidationError(
       z
         .object({
-          ptAddress: addressSchema,
+          ptAddress: z.string(),
 
           detailsLink: z.string().optional(),
 
@@ -86,7 +87,9 @@ protocolCommand
 
     const account = privateKeyToAccount(options.account);
     const client = createViemPublicClient();
-    const pt = createProtocolInstance(client, options.ptAddress, account);
+    const ptAddress = await resolveENSName(options.ptAddress);
+    const protocol = await indexerClient.getProtocolByAddress(ptAddress);
+    const pt = createProtocolInstance(client, ptAddress, account);
 
     if (options.detailsLink) {
       spinner.start("Updating details link");
@@ -100,7 +103,10 @@ protocolCommand
 
       // If not both of them are given, we need to take the current value of the other one
       if (!options.maxProviders || !options.maxValidators) {
-        currentCounts = await pt.getMaxActors();
+        currentCounts = {
+          provider: protocol.maxProviderCount,
+          validator: protocol.maxValidatorCount,
+        };
       }
 
       await pt.setMaxActors({
@@ -133,7 +139,11 @@ protocolCommand
         !options.offerRegFee ||
         !options.validatorRegFee
       ) {
-        currentFees = await pt.getRegistrationFees();
+        currentFees = {
+          provider: BigInt(protocol.providerRegistrationFee),
+          validator: BigInt(protocol.validatorRegistrationFee),
+          offer: BigInt(protocol.offerRegistrationFee),
+        };
       }
 
       await pt.setRegistrationFees({
@@ -147,7 +157,7 @@ protocolCommand
 
     if (options.owner) {
       spinner.start("Updating owner");
-      await pt.setOwner(options.owner);
+      await pt.setOwner(await resolveENSName(options.owner));
 
       spinner.succeed(green("Owner updated"));
     }
@@ -167,7 +177,9 @@ protocolCommand
       }
 
       if (
-        options.sharePtOwner + options.shareProvider + options.shareValidator !=
+        options.sharePtOwner +
+          options.shareProvider +
+          options.shareValidator !==
         100
       ) {
         throw new Error(`Sum of the emission shares must be up to 100`);

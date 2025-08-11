@@ -8,9 +8,10 @@ import { privateKeyToAccount } from "viem/accounts";
 import { green } from "ansis";
 import { spinner } from "@/program";
 import { createViemPublicClient } from "@/utils";
-import { addressSchema, SlasherABI } from "@forest-protocols/sdk";
+import { SlasherABI } from "@forest-protocols/sdk";
 import { jsonOrFileSchema } from "@/validation/json-file";
 import { createSlasherInstance } from "@/client";
+import { resolveENSName } from "@/utils/address";
 
 validatorCommand
   .command("reveal")
@@ -34,9 +35,9 @@ validatorCommand
     const options = checkValidationError(
       z
         .object({
-          ptAddress: addressSchema,
+          ptAddress: z.string(),
           account: accountFileOrKeySchema,
-          validatorAddress: addressSchema.optional(),
+          validatorAddress: z.string().optional(),
           hash: z
             .string()
             .nonempty()
@@ -79,8 +80,10 @@ validatorCommand
     spinner.start("Revealing the results");
     await slasher.revealResult(
       hash,
-      options.validatorAddress || account.address,
-      options.ptAddress,
+      options.validatorAddress
+        ? await resolveENSName(options.validatorAddress)
+        : account.address,
+      await resolveENSName(options.ptAddress),
       options.scoreDefinitions
     );
 

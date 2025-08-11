@@ -3,13 +3,14 @@ import { checkValidationError } from "@/validation/error-handling";
 import { z } from "zod";
 import { accountFileOrKeySchema } from "@/validation/account";
 import { privateKeyToAccount } from "viem/accounts";
-import { addressSchema, DECIMALS } from "@forest-protocols/sdk";
+import { DECIMALS } from "@forest-protocols/sdk";
 import { parseUnits } from "viem";
 import { createViemPublicClient } from "@/utils";
 import { OPTIONS } from "../common/options";
 import { createProtocolInstance } from "@/client";
 import { spinner } from "@/program";
 import { green } from "ansis";
+import { resolveENSName } from "@/utils/address";
 
 agreementCommand
   .command("withdraw")
@@ -26,7 +27,7 @@ agreementCommand
     const options = checkValidationError(
       z
         .object({
-          ptAddress: addressSchema,
+          ptAddress: z.string(),
           agreementId: z.coerce.number(),
           account: accountFileOrKeySchema,
           amount: z.coerce.number(),
@@ -39,16 +40,16 @@ agreementCommand
         })
     );
 
-    const { ptAddress, account, amount, agreementId } = options;
+    const ptAddress = await resolveENSName(options.ptAddress);
+    const { account, amount, agreementId } = options;
     const parsedAmount = parseUnits(amount.toString(), DECIMALS.USDC);
     const acc = privateKeyToAccount(account);
 
     const client = createViemPublicClient();
-    spinner.start(`Withdrawing`);
+    spinner.start(`Withdrawing ${amount} USDC from Agreement ${agreementId}`);
 
     const pt = createProtocolInstance(client, ptAddress, acc);
-
     await pt.withdrawUserBalance(agreementId, parsedAmount);
 
-    spinner.succeed(green("Deposit withdrawal is done."));
+    spinner.succeed(green("Done."));
   });

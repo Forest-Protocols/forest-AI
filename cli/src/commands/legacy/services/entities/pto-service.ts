@@ -169,11 +169,9 @@ class ProtocolOwnerService extends ActorService {
     } = data;
     const isNotAvailable = name === "* N/A";
     console.log(green(`Epoch Number: ${lastEmittedEpochBlockNum}`));
-    console.log(
-      green(`Total Emissions: ${totalTokensEmissionPerEpoch} FOREST`)
-    );
+    console.log(green(`Max Emissions: ${totalTokensEmissionPerEpoch} FOREST`));
     console.log(green(`Protocol Emissions: ${protocolEmission} FOREST`));
-    console.log(green(`Protocol Owner Share: ${shares.protocolOwner} %`));
+    console.log(green(`Max Protocol Owner Share: ${shares.protocolOwner} %`));
 
     const table = new AsciiTable3(title).setHeading(...headings);
 

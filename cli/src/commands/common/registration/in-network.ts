@@ -1,7 +1,6 @@
 import { spinner } from "@/program";
 import {
   ActorType,
-  addressSchema,
   generateCID,
   actorTypeToString,
   DECIMALS,
@@ -14,14 +13,15 @@ import { privateKeyToAccount } from "viem/accounts";
 import { green } from "ansis";
 import { accountFileOrKeySchema } from "@/validation/account";
 import { checkValidationError } from "@/validation/error-handling";
-import {
-  checkAndAskAllowance,
-  createViemPublicClient,
-  truncateAddress,
-} from "@/utils";
+import { checkAndAskAllowance, createViemPublicClient } from "@/utils";
 import { OPTIONS } from "../options";
 import { fileSchema } from "@/validation/file";
-import { createRegistryInstance, createTokenInstance } from "@/client";
+import {
+  createRegistryInstance,
+  createTokenInstance,
+  indexerClient,
+} from "@/client";
+import { formatAddress, resolveENSName } from "@/utils/address";
 
 export function createRegisterActorCommand(cmd: Command, actorType: ActorType) {
   return cmd
@@ -38,21 +38,27 @@ export function createRegisterActorCommand(cmd: Command, actorType: ActorType) {
       "--operator <address>",
       "Operator address to use in XMTP communication. Uses Actor's account address by default."
     )
+    .option(
+      "-E, --endpoint <base url>",
+      "The endpoint of the Operator for Pipe communication"
+    )
     .requiredOption("--details <file>", "Detailed information about the Actor.")
     .action(async (rawOptions: any) => {
       const options = checkValidationError(
         z
           .object({
             details: fileSchema,
-            billing: addressSchema.optional(),
-            operator: addressSchema.optional(),
+            billing: z.string().optional(),
+            operator: z.string().optional(),
             account: accountFileOrKeySchema,
+            endpoint: z.string().optional(),
           })
           .safeParse({
             details: rawOptions.details,
             billing: rawOptions.billing,
             operator: rawOptions.operator,
             account: rawOptions[OPTIONS.ACCOUNT.OPTION_NAME],
+            endpoint: rawOptions.endpoint,
           })
       );
 
@@ -66,22 +72,29 @@ export function createRegisterActorCommand(cmd: Command, actorType: ActorType) {
       const registry = createRegistryInstance(client, account);
       const token = createTokenInstance(client, account);
 
-      spinner.start("Checking account");
-      const actor = await registry.getActor(account.address);
+      spinner.start("Checking Actor");
+      const [actor, operatorAddress, billingAddress] = await Promise.all([
+        indexerClient
+          .getActorByIdOrAddress(account.address)
+          // TODO: Indexer client should return undefined if the Actor is not found and throw error only if something went wrong (e.g network issue)
+          .catch(() => undefined),
+        options.operator ? resolveENSName(options.operator) : undefined,
+        options.billing ? resolveENSName(options.billing) : undefined,
+      ]);
 
       if (actor) {
         throw new Error(
-          `The account ${await truncateAddress(
+          `The account ${formatAddress(
             account.address
           )} is already registered in the Network as a ${actorTypeToString(
-            actor.actorType
+            actor.type
           )}. ID: ${actor.id}`
         );
       }
 
       spinner.text = "Checking fees, balance and allowance";
       const [registrationFee, balance, allowance] = await Promise.all([
-        registry.getActorRegistrationFee(),
+        indexerClient.getActorRegistrationFeeInNetwork(),
         token.getBalance(account.address),
         token.getAllowance(account.address, registry.address),
       ]);
@@ -117,8 +130,9 @@ export function createRegisterActorCommand(cmd: Command, actorType: ActorType) {
       const actorId = await registry.registerActor(
         actorType,
         cid.toString(),
-        options.billing,
-        options.operator
+        billingAddress,
+        operatorAddress,
+        options.endpoint
       );
 
       spinner.succeed(

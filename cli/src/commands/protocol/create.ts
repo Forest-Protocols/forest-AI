@@ -19,7 +19,11 @@ import {
   createViemPublicClient,
   validateIfJSON,
 } from "@/utils";
-import { createRegistryInstance, createTokenInstance } from "@/client";
+import {
+  createRegistryInstance,
+  createTokenInstance,
+  indexerClient,
+} from "@/client";
 
 protocolCommand
   .command("create")
@@ -112,20 +116,17 @@ protocolCommand
     const token = createTokenInstance(client, account);
 
     spinner.start("Checking account");
-    const actor = await registry.getActor(account.address);
-    if (!actor) {
-      throw new Error(
-        `Account ${account.address} is not registered in the Network`
-      );
-    }
+    const actor = await indexerClient.getActorByIdOrAddress(account.address);
 
-    if (actor.actorType != ActorType.ProtocolOwner) {
+    if (actor.type != ActorType.ProtocolOwner) {
       throw new Error(`Account is not a Protocol Owner`);
     }
 
     spinner.text = "Checking fees, balance and allowance";
     const [ptRegFee, allowance, balance] = await Promise.all([
-      registry.getPTRegistrationFee(),
+      indexerClient
+        .getRegistryInfo()
+        .then((info) => info.protocolRegistrationFee),
       token.getAllowance(account.address, registry.address),
       token.getBalance(account.address),
     ]);

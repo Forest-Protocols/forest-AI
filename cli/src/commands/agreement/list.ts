@@ -2,15 +2,20 @@ import { agreementCommand } from ".";
 import { OPTIONS } from "../common/options";
 import { checkValidationError } from "@/validation/error-handling";
 import { z } from "zod";
-import { addressSchema, DECIMALS, Status } from "@forest-protocols/sdk";
+import { DECIMALS, IndexerAgreement, Status } from "@forest-protocols/sdk";
 import { accountFileOrKeySchema } from "@/validation/account";
 import { privateKeyToAccount } from "viem/accounts";
 import { spinner } from "@/program";
-import { createViemPublicClient, truncateAddress } from "@/utils";
 import { formatUnits } from "viem";
-import { createProtocolInstance } from "@/client";
+import { indexerClient } from "@/client";
 import { blue, cyanBright, green, magentaBright, yellow } from "ansis";
-import dayjs from "dayjs";
+import { DateTime } from "luxon";
+import { resolveENSName, resolveToName } from "@/utils/address";
+
+type ExtendedAgreement = IndexerAgreement & {
+  ensProviderAddress?: Promise<string | undefined>;
+  ensUserAddress?: Promise<string | undefined>;
+};
 
 agreementCommand
   .command("list")
@@ -27,7 +32,7 @@ agreementCommand
     const options = checkValidationError(
       z
         .object({
-          ptAddress: addressSchema,
+          ptAddress: z.string(),
           account: accountFileOrKeySchema,
           closed: z.boolean().default(false),
         })
@@ -37,48 +42,63 @@ agreementCommand
           closed: rawOptions.closed,
         })
     );
-    const account = privateKeyToAccount(options.account);
-    const client = createViemPublicClient();
-    const pt = createProtocolInstance(client, options.ptAddress, account);
+
+    const ptAddress = await resolveENSName(options.ptAddress);
 
     spinner.start("Checking agreements");
-    const rawAgreements = await pt.getAllUserAgreements(account.address);
-    let agreements = await Promise.all(
-      rawAgreements.map(async (rawAgreement) => ({
-        ...rawAgreement,
-        remainingBalance: await pt.getRemainingAgreementBalance(
-          rawAgreement.id
-        ),
-        offer: await pt.getOffer(rawAgreement.offerId),
-      }))
-    );
-    spinner.stop();
-
-    if (options.closed !== true) {
-      agreements = agreements.filter(
-        (agreement) => agreement.status === Status.Active
+    const account = privateKeyToAccount(options.account);
+    const agreements: ExtendedAgreement[] = await indexerClient
+      .getAgreements({
+        protocolAddress: ptAddress,
+        userAddress: account.address,
+        status: options.closed ? Status.NotActive : Status.Active,
+        limit: 100,
+        autoPaginate: true,
+      })
+      .then((res) =>
+        res.data.map((agreement) => ({
+          ...agreement,
+          ensProviderAddress: resolveToName(agreement.providerAddress),
+          ensUserAddress: resolveToName(agreement.userAddress),
+        }))
       );
-    }
 
-    // Sort to make active agreements first
-    agreements.sort((a, b) =>
-      a.status === b.status ? 0 : a.status == Status.Active ? -1 : 1
+    // Wait for all ENS addresses to be resolved
+    spinner.text = "Resolving ENS addresses";
+    await Promise.all(
+      agreements.map((agreement) =>
+        Promise.all([agreement.ensProviderAddress, agreement.ensUserAddress])
+      )
     );
 
-    const dateFormat = "DD MMMM YYYY HH:mm";
+    spinner.stop();
+    console.log();
+
+    const dateFormat = "DD HH:mm:ss";
     for (let i = 0; i < agreements.length; i++) {
       const agreement = agreements[i];
 
-      console.log(`\n----- Agreement - ${agreement.id} -----`);
+      console.log(`~ Agreement ${agreement.id} ~`);
+
+      const [ensProviderAddress, ensUserAddress] = await Promise.all([
+        agreement.ensProviderAddress,
+        agreement.ensUserAddress,
+      ]);
 
       const lines = [
         [blue("Offer ID"), agreement.offerId],
         [
           yellow("Provider Address"),
-          await truncateAddress(agreement.offer.ownerAddr),
+          ensProviderAddress
+            ? `${ensProviderAddress} (${agreement.providerAddress})`
+            : agreement.providerAddress,
         ],
-        [yellow("Owner Address"), await truncateAddress(account.address)],
-
+        [
+          yellow("Owner Address"),
+          ensUserAddress
+            ? `${ensUserAddress} (${agreement.userAddress})`
+            : agreement.userAddress,
+        ],
         [
           cyanBright("Status"),
           {
@@ -89,22 +109,23 @@ agreementCommand
         ],
         [
           green("Remaining Balance"),
-          `$${formatUnits(agreement.remainingBalance, DECIMALS.USDC)}`,
+          `$${formatUnits(BigInt(agreement.balance), DECIMALS.USDC)}`,
         ],
         [
           magentaBright("Entered At"),
-          dayjs.unix(Number(agreement.startTs)).format(dateFormat),
+          DateTime.fromISO(agreement.startTs).toFormat(dateFormat),
         ],
         [
           magentaBright("Closed At"),
-          agreement.endTs == 0n
-            ? "-"
-            : dayjs.unix(Number(agreement.endTs)).format(dateFormat),
+          agreement.endTs === null
+            ? "Not yet"
+            : DateTime.fromISO(agreement.endTs).toFormat(dateFormat),
         ],
       ];
 
       for (const line of lines) {
         console.log(`${line[0]}: ${line[1]}`);
       }
+      console.log();
     }
   });

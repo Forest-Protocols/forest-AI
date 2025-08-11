@@ -2,16 +2,17 @@ import { agreementCommand } from ".";
 import { OPTIONS } from "../common/options";
 import { checkValidationError } from "@/validation/error-handling";
 import { z } from "zod";
-import { addressSchema, DECIMALS } from "@forest-protocols/sdk";
+import { DECIMALS, Status } from "@forest-protocols/sdk";
 import { accountFileOrKeySchema } from "@/validation/account";
 import { privateKeyToAccount } from "viem/accounts";
 import { program, spinner } from "@/program";
 import { green, red } from "ansis";
 import { checkAndAskAllowance, createViemPublicClient } from "@/utils";
-import { erc20Abi, formatUnits, getContract, parseUnits } from "viem";
+import { Address, erc20Abi, formatUnits, getContract, parseUnits } from "viem";
 import { config } from "@/config";
 import { confirm } from "@inquirer/prompts";
-import { createProtocolInstance } from "@/client";
+import { createProtocolInstance, indexerClient } from "@/client";
+import { resolveENSName } from "@/utils/address";
 
 agreementCommand
   .command("enter")
@@ -33,7 +34,7 @@ agreementCommand
     const options = checkValidationError(
       z
         .object({
-          ptAddress: addressSchema,
+          ptAddress: z.string(),
           offerId: z.coerce.number(),
           account: accountFileOrKeySchema,
           deposit: z.coerce.number().optional(),
@@ -46,23 +47,38 @@ agreementCommand
         })
     );
 
+    const ptAddress = await resolveENSName(options.ptAddress);
     const account = privateKeyToAccount(options.account);
     const client = createViemPublicClient();
-    const pt = createProtocolInstance(client, options.ptAddress, account);
+    const pt = createProtocolInstance(client, ptAddress, account);
     const usdc = getContract({
       abi: erc20Abi,
       address: config.usdcAddress.value,
       client,
     });
 
-    spinner.start("Checking Offer");
-    const offer = await pt.getOffer(options.offerId);
+    spinner.start("Getting Offer");
+    const offer = (
+      await indexerClient.getOffers({
+        // TODO: This lowercase conversion has to be done on the indexer side. The issue is only exist in get offers endpoint
+        protocolAddress: ptAddress.toLowerCase() as Address,
+        offerId: options.offerId,
+        status: Status.Active,
+      })
+    ).data[0];
+
+    if (!offer) {
+      throw new Error(
+        `Offer ${options.offerId} not found in the given Protocol`
+      );
+    }
 
     // If the initial deposit is not given, use two months of fee by default.
+    const fee = BigInt(offer.fee);
     const initialDeposit =
       options.deposit !== undefined
         ? parseUnits(options.deposit.toString(), DECIMALS.USDC)
-        : offer.fee * 2n * 2635200n;
+        : fee * 2n * 2635200n;
 
     spinner.stop();
 

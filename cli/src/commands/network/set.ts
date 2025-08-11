@@ -10,6 +10,7 @@ import { createRegistryInstance } from "@/client";
 import { checkValidationError } from "@/validation/error-handling";
 import { spinner } from "@/program";
 import { green } from "ansis";
+import { resolveENSName } from "@/utils/address";
 
 networkCommand
   .command("set")
@@ -110,7 +111,7 @@ networkCommand
 
     if (treasury) {
       spinner.start("Updating treasury address");
-      await registry.setTreasuryAddress(treasury);
+      await registry.setTreasuryAddress(await resolveENSName(treasury));
       spinner.succeed(green("Treasury address is updated"));
     }
 

@@ -15,11 +15,16 @@ import {
 import { createViemPublicClient, createXMTPPipe } from "@/utils";
 import { spinner } from "@/program";
 import { green, red, yellow } from "ansis";
+import { config } from "@/config";
 
 import { AsciiTable3 } from "ascii-table3";
-import { ActorTableData, ExtendedActor } from "@/commands/network/types";
+import {
+  ActorTableData,
+  ExtendedActor,
+  GranularScoresTableData,
+} from "@/commands/network/types";
 import { tokenomicsService } from "../network/tokenomics.service";
-import { createProtocolInstance } from "@/client";
+import { createProtocolInstance, createRegistryInstance } from "@/client";
 import { Address, formatUnits } from "viem";
 
 export class ActorService {
@@ -159,16 +164,16 @@ export class ActorService {
 
         return name;
       } catch {
-        spinner.fail(
-          red(
-            `${actor.role} (${await truncateAddress(
-              actor.ownerAddr!
-            )}) details could not be retrieved from ${await truncateAddress(
-              actor.operatorAddr
-            )}`
-          )
-        );
-        spinner.start();
+        // spinner.fail(
+        //   red(
+        //     `${actor.role} (${await truncateAddress(
+        //       actor.ownerAddr!
+        //     )}) details could not be retrieved from ${await truncateAddress(
+        //       actor.operatorAddr
+        //     )}`
+        //   )
+        // );
+        // spinner.start();
       }
     } catch {
       spinner.fail(
@@ -193,14 +198,12 @@ export class ActorService {
     const isNotAvailable = actors.some((e) => e.name === "* N/A");
 
     console.log(green(`Epoch Number: ${lastEmittedEpochBlockNum}`));
-    console.log(
-      green(`Total Emissions: ${totalTokensEmissionPerEpoch} FOREST`)
-    );
+    console.log(green(`Max Emissions: ${totalTokensEmissionPerEpoch} FOREST`));
     console.log(green(`Protocol Emissions: ${protocolEmission} FOREST`));
-    console.log(green(`Protocol Owner Share: ${shares.protocolOwner} %`));
+    console.log(green(`Max Protocol Owner Share: ${shares.protocolOwner} %`));
 
-    console.log(green(`Protocol Providers Share: ${shares.provider} %`));
-    console.log(green(`Protocol Validators Share: ${shares.validator} %`));
+    console.log(green(`Max Providers Share: ${shares.provider} %`));
+    console.log(green(`Max Validators Share: ${shares.validator} %`));
 
     const table = new AsciiTable3(title).setHeading(...headings);
 
@@ -222,6 +225,55 @@ export class ActorService {
       console.log(yellow("* Name couldn't be fetched from the Protocol"));
     }
   }
+  async getActorWithGranularScores(
+    actorAddressOrId: Address | number,
+    protocolAddr: Address,
+    lastEmittedEpochBlockNum: number
+  ) {
+    try {
+      // TODO: Get data on Protocol Emissions, Provider Emissions, Provider Rank (wait for the API to be ready)
+      const registry = createRegistryInstance(this.client);
+      const actor = await registry.getActor(actorAddressOrId);
+      if (!actor) {
+        throw new Error(
+          `Actor with address ${actorAddressOrId} not found in the Network`
+        );
+      }
+
+      const isProvider = actor.actorType === 1;
+      const isValidator = actor.actorType === 2;
+
+      if (!isProvider && !isValidator) {
+        throw new Error(
+          `Actor with address ${actorAddressOrId} is neither a provider nor a validator`
+        );
+      }
+
+      const endpoint = isProvider
+        ? `${config.indexerAPI.value}/api/granular-scores/provider/${actor.id}/${lastEmittedEpochBlockNum}/${protocolAddr}`
+        : `${config.indexerAPI.value}/api/granular-scores/validator/${actor.id}/${lastEmittedEpochBlockNum}/${protocolAddr}`;
+
+      const response = await fetch(endpoint);
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch granular scores: ${response.statusText}`
+        );
+      }
+
+      const scores = (await response.json()) as any[];
+      return {
+        isProvider,
+        data: scores.map((score) => ({
+          ...score,
+          actorId: score.validatorId || score.providerId,
+        })),
+      } as GranularScoresTableData;
+    } catch (error) {
+      throw new Error(`Failed to fetch granular scores: ${error}`);
+    }
+  }
+
   async fetchProtocolOwnerDetails(
     pipe: XMTPv3Pipe,
     protocolOwner: ProtocolOwner,
@@ -285,6 +337,45 @@ export class ActorService {
         )
       );
       spinner.start();
+    }
+  }
+  showGranularScoresTableData(
+    title: string,
+    headings: string[],
+    data: GranularScoresTableData,
+    lastEmittedEpochBlockNum: number,
+    totalTokensEmissionPerEpoch: number
+  ) {
+    console.log(green(`Epoch Number: ${lastEmittedEpochBlockNum}`));
+    console.log(green(`Max Emissions: ${totalTokensEmissionPerEpoch} FOREST`));
+
+    const table = new AsciiTable3(title).setHeading(...headings);
+
+    for (const score of data.data) {
+      table.addRowMatrix([
+        [
+          score.agreementId,
+          score.actorId,
+          score.revealTxHash,
+          `https://peerbench.ai/inspect/${score.detailsLink}`,
+          score.score,
+        ],
+      ]);
+    }
+
+    if (data.data.length === 0) {
+      console.log(
+        yellow.bold("No data indexed for this Epoch, please try again later")
+      );
+    } else {
+      table.sortColumnDesc(5); // Sort by score
+      console.log(table.toString());
+
+      console.log(
+        green.bold(
+          `Note: If the CID link is not clickable on your terminal, please copy the address and paste it in your browser to inspect the data`
+        )
+      );
     }
   }
 }

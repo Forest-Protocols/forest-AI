@@ -4,12 +4,13 @@ import { checkValidationError } from "@/validation/error-handling";
 import { z } from "zod";
 import { accountFileOrKeySchema } from "@/validation/account";
 import { privateKeyToAccount } from "viem/accounts";
-import { addressSchema, DECIMALS } from "@forest-protocols/sdk";
+import { DECIMALS } from "@forest-protocols/sdk";
 import { checkAndAskAllowance, createViemPublicClient } from "@/utils";
 import { parseUnits } from "viem";
 import { createSlasherInstance, createTokenInstance } from "@/client";
 import { spinner } from "@/program";
 import { green } from "ansis";
+import { resolveENSName } from "@/utils/address";
 
 export function createTopUpCollateralCommand(parent: Command) {
   return parent
@@ -32,7 +33,7 @@ export function createTopUpCollateralCommand(parent: Command) {
         z
           .object({
             account: accountFileOrKeySchema,
-            ptAddress: addressSchema,
+            ptAddress: z.string(),
             amount: z.coerce.number(),
           })
           .safeParse({
@@ -42,7 +43,8 @@ export function createTopUpCollateralCommand(parent: Command) {
           })
       );
 
-      const { ptAddress, account, amount } = options;
+      const ptAddress = await resolveENSName(options.ptAddress);
+      const { account, amount } = options;
       const parsedAmount = parseUnits(amount.toString(), DECIMALS.FOREST);
 
       const acc = privateKeyToAccount(account);

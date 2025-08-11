@@ -1,6 +1,6 @@
 {
   "name": "@forest-protocols/cli",
-  "version": "3.6.3",
+  "version": "4.3.2",
   "description": "CLI tool to interact with Forest Protocols",
   "keywords": [
     "forest",
@@ -39,21 +39,27 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@forest-protocols/sdk": "2.7.0",
+    "@forest-protocols/sdk": "3.2.0",
     "@inquirer/prompts": "^7.2.3",
     "ajv-draft-04": "^1.0.0",
     "ansis": "^3.9.0",
     "ascii-table3": "^0.9.0",
-    "commander": "^13.1.0",
-    "dayjs": "^1.11.13",
+    "commander": "^14.0.0",
+    "console-table-printer": "^2.14.6",
+    "csv": "^6.4.1",
+    "decimal.js": "^10.6.0",
+    "luxon": "^3.7.1",
     "multiformats": "^13.3.1",
     "nanospinner": "^1.2.2",
     "oas": "^25.3.0",
     "oas-normalize": "^12.1.0",
     "ora": "^8.1.1",
     "table": "^6.9.0",
-    "viem": "^2.22.12",
+    "viem": "^2.30.6",
     "zod": "^3.24.1",
     "zod-validation-error": "^3.4.0"
+  },
+  "devDependencies": {
+    "@types/luxon": "^3.6.2"
   }
 }

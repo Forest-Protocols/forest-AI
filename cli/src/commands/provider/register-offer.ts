@@ -2,7 +2,6 @@ import { z } from "zod";
 import { providerCommand } from ".";
 import {
   ActorType,
-  addressSchema,
   DECIMALS,
   generateCID,
   OfferDetailsSchema,
@@ -24,7 +23,9 @@ import {
   createProtocolInstance,
   createRegistryInstance,
   createTokenInstance,
+  indexerClient,
 } from "@/client";
+import { resolveENSName } from "@/utils/address";
 
 providerCommand
   .command("register-offer")
@@ -45,7 +46,7 @@ providerCommand
     const options = checkValidationError(
       z
         .object({
-          ptAddress: addressSchema,
+          ptAddress: z.string(),
           account: accountFileOrKeySchema,
           fee: z.coerce.bigint().positive(),
           stock: z.coerce.number().positive(),
@@ -62,33 +63,40 @@ providerCommand
     const account = privateKeyToAccount(options.account);
     const registry = createRegistryInstance(client, account);
     const token = createTokenInstance(client, account);
-    const pt = createProtocolInstance(client, options.ptAddress, account);
+    const ptAddress = await resolveENSName(options.ptAddress);
+    const pt = createProtocolInstance(client, ptAddress, account);
 
     // Validate Offer details if it is a JSON file, otherwise skip validation
     validateIfJSON(options.details, OfferDetailsSchema);
 
     spinner.start("Checking account");
-    const provider = await registry.getActor(account.address);
-    if (!provider) {
-      throw new Error(
-        `Account ${account.address} is not registered in the Network`
-      );
-    }
+    const provider = await indexerClient.getActorByIdOrAddress(account.address);
 
-    if (provider.actorType != ActorType.Provider) {
+    if (provider.type != ActorType.Provider) {
       throw new Error(`Actor is not a Provider`);
     }
 
-    const providerIds = await pt.getAllProviderIds();
+    const providerIds = await indexerClient
+      .getProtocolActors(ptAddress)
+      .then((actors) =>
+        actors
+          .filter((actor) => actor.actorType === ActorType.Provider)
+          .map((actor) => actor.actorId)
+      );
     const providerId = providerIds.find((id) => id == provider.id);
     if (!providerId) {
       throw new Error(`Provider is not registered in this Protocol`);
     }
 
     spinner.text = "Checking fees";
+    const protocol = await indexerClient.getProtocolByAddress(ptAddress);
     const [registryOfferRegistrationFee, pcFees] = await Promise.all([
-      registry.getOfferRegistrationFeeInPT(),
-      pt.getRegistrationFees(),
+      indexerClient.getRegistryInfo().then((info) => info.offerRegistrationFee),
+      Promise.resolve({
+        provider: BigInt(protocol.providerRegistrationFee),
+        validator: BigInt(protocol.validatorRegistrationFee),
+        offer: BigInt(protocol.offerRegistrationFee),
+      }),
     ]);
 
     spinner.text = "Checking balance and allowance";

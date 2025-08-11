@@ -1,5 +1,4 @@
 import { createProtocolInstance } from "@/client";
-import { spinner } from "@/program";
 import { createXMTPPipe, truncateAddress } from "@/utils";
 import {
   DECIMALS,
@@ -12,7 +11,7 @@ import {
   ProviderDetails,
   XMTPv3Pipe,
 } from "@forest-protocols/sdk";
-import { green, red, yellow } from "ansis";
+import { green, yellow } from "ansis";
 import { AsciiTable3 } from "ascii-table3";
 import { Address, formatUnits } from "viem";
 import { tokenomicsService } from "../network/tokenomics.service";
@@ -162,26 +161,26 @@ class ProviderService extends ActorService {
 
         return name;
       } catch {
-        spinner.fail(
-          red(
-            `Provider (${await truncateAddress(
-              provider.ownerAddr!
-            )}) details could not be retrieved from ${await truncateAddress(
-              provider.operatorAddr
-            )}`
-          )
-        );
-        spinner.start();
+        // spinner.fail(
+        //   red(
+        //     `Provider (${await truncateAddress(
+        //       provider.ownerAddr!
+        //     )}) details could not be retrieved from ${await truncateAddress(
+        //       provider.operatorAddr
+        //     )}`
+        //   )
+        // );
+        // spinner.start();
       }
     } catch {
-      spinner.fail(
-        red(
-          `Provider (${await truncateAddress(
-            provider.ownerAddr!
-          )}) details could not be retrieved`
-        )
-      );
-      spinner.start();
+      // spinner.fail(
+      //   red(
+      //     `Provider (${await truncateAddress(
+      //       provider.ownerAddr!
+      //     )}) details could not be retrieved`
+      //   )
+      // );
+      // spinner.start();
     }
   }
   showProvidersTableOutput(
@@ -195,11 +194,9 @@ class ProviderService extends ActorService {
     const isNotAvailable = providers.some((e) => e.name === "* N/A");
 
     console.log(green(`Epoch Number: ${lastEmittedEpochBlockNum}`));
-    console.log(
-      green(`Total Emissions: ${totalTokensEmissionPerEpoch} FOREST`)
-    );
+    console.log(green(`Max Emissions: ${totalTokensEmissionPerEpoch} FOREST`));
     console.log(green(`Protocol Emissions: ${protocolEmission} FOREST`));
-    console.log(green(`Protocol Providers Share: ${shares.provider} %`));
+    console.log(green(`Max Providers Share: ${shares.provider} %`));
 
     const table = new AsciiTable3(title).setHeading(...headings);
 

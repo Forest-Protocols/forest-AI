@@ -4,9 +4,10 @@ import { Address } from "viem";
 export type EmissionsOptions = {
   protocol: string;
   pto: boolean;
-  provider: boolean;
-  validator: boolean;
+  providers: boolean;
+  validators: boolean;
   save: string;
+  granularData: string;
 };
 
 export type ProtocolTableData = {
@@ -53,6 +54,17 @@ export type ProtocolOwnerTableData = {
     name: string;
     tokensEmitted: string;
   };
+};
+
+export type GranularScoresTableData = {
+  isProvider: boolean;
+  data: {
+    agreementId: string;
+    actorId: string;
+    revealTxHash: string;
+    detailsLink: string;
+    score: string;
+  }[];
 };
 
 export type ActorTableData = {

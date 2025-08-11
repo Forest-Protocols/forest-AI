@@ -2,13 +2,14 @@ import { walletCommand } from ".";
 import { blue, green, magentaBright } from "ansis";
 import { checkValidationError } from "@/validation/error-handling";
 import { z } from "zod";
-import { addressSchema, DECIMALS } from "@forest-protocols/sdk";
+import { DECIMALS } from "@forest-protocols/sdk";
 import { createViemPublicClient } from "@/utils";
 import { erc20Abi, formatEther, formatUnits, getContract } from "viem";
 import { config } from "@/config";
 import { createTokenInstance } from "@/client";
 import { spinner } from "@/program";
 import { privateKeyToAccount } from "viem/accounts";
+import { resolveENSName } from "@/utils/address";
 
 walletCommand
   .command("balance")
@@ -23,7 +24,7 @@ walletCommand
     const args = checkValidationError(
       z
         .object({
-          address: addressSchema.optional(),
+          address: z.string().optional(),
         })
         .safeParse({ address })
     );
@@ -47,9 +48,10 @@ walletCommand
       args.address = account.address;
     }
 
-    const forestBalance = await token.getBalance(args.address, true);
-    const ethBalance = await client.getBalance({ address: args.address });
-    const usdcBalance = await usdc.read.balanceOf([args.address]);
+    const resolvedAddress = await resolveENSName(args.address);
+    const forestBalance = await token.getBalance(resolvedAddress, true);
+    const ethBalance = await client.getBalance({ address: resolvedAddress });
+    const usdcBalance = await usdc.read.balanceOf([resolvedAddress]);
 
     spinner.stop();
     console.log(`Account has:`);

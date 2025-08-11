@@ -1,5 +1,6 @@
 import {
   ForestPublicClientType,
+  IndexerClient,
   Protocol,
   Registry,
   Slasher,
@@ -54,3 +55,7 @@ export function createTokenInstance(
     address: config.tokenAddress.value,
   });
 }
+
+export const indexerClient = new IndexerClient({
+  baseURL: config.indexerAPI.value,
+});

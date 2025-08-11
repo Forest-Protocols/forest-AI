@@ -1,5 +1,6 @@
 import {
   forestChainToViemChain,
+  HTTPPipe,
   httpTransport,
   truncateAddress as sdkTruncateAddress,
   XMTPv3Pipe,
@@ -56,7 +57,21 @@ export async function createXMTPPipe(pk?: Hex) {
     encryptionKey: account.address,
     dbPath: join(ConfigPath.xmtpDirPath, `db-${account.address}.db`),
   });
-  await pipe.init(config.chain.value == "optimism" ? "production" : "dev");
+  await pipe.init(config.env.value);
+
+  return pipe;
+}
+
+/**
+ * Creates an HTTP Pipe with a private key or a random account.
+ */
+export async function createHTTPPipe(pk?: Hex) {
+  if (pk === undefined) {
+    pk = loadDefaultAccount();
+  }
+
+  const pipe = new HTTPPipe(pk);
+  await pipe.init();
 
   return pipe;
 }
@@ -137,7 +152,7 @@ export function createViemPublicClient() {
  * @param explain Reason for the allowance.
  */
 export async function checkAndAskAllowance(
-  allowance: bigint,
+  allowance: bigint | bigint[],
   amount: bigint,
   spender: Address,
   setAllowance: (spender: Address, amount: bigint) => Promise<any>,
@@ -146,7 +161,16 @@ export async function checkAndAskAllowance(
   spenderName?: string,
   explain?: string
 ) {
-  if (allowance < amount) {
+  let isAllowanceNotEnough = false;
+  if (Array.isArray(allowance)) {
+    // If any of the given allowances is not enough
+    isAllowanceNotEnough = allowance.some((a) => a < amount);
+  } else {
+    // We have a single allowance so just check that
+    isAllowanceNotEnough = allowance < amount;
+  }
+
+  if (isAllowanceNotEnough) {
     spenderName = green.bold(spenderName || spender);
     explain = italic(explain ? `(${explain})` : "");
     const isSpinning = spinner.isSpinning;
@@ -157,7 +181,10 @@ export async function checkAndAskAllowance(
         `Your account's spending allowance of ${blue.bold(
           unit
         )} token for ${spenderName} ${explain} is insufficient (current ${blue.bold(
-          `${formatUnits(allowance, decimals)} ${unit}`
+          `${formatUnits(
+            Array.isArray(allowance) ? allowance[0] : allowance,
+            decimals
+          )} ${unit}`
         )}).`
       )
     );
@@ -177,7 +204,7 @@ export async function checkAndAskAllowance(
       }
     }
 
-    spinner.start("Allowance TX is being sent to the blockchain");
+    spinner.start("Allowance TX is sending to the blockchain");
     await setAllowance(spender, amount);
     await new Promise((res) => setTimeout(res, 5000));
     spinner.succeed(green("Allowance has been set successfully"));

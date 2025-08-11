@@ -37,14 +37,8 @@ class ProtocolService {
   async getProtocolsWithDetails() {
     const pts = await this.registry.getAllProtocols();
     const logs = await tokenomicsService.getProtocolsLogsOnRewardsMintedEvent();
-    const totalRevenue = logs.reduce((acc, log) => {
-      return (
-        acc +
-        Number(
-          formatUnits(log.args.revenueAtEpochClose as bigint, DECIMALS.USDC)
-        ) *
-          Number(MONTH_IN_SECONDS)
-      );
+    const totalEmissions = logs.reduce((acc, log) => {
+      return acc + Number(log.args.totalTokensEmitted as bigint);
     }, 0);
 
     const pipe = await createXMTPPipe();
@@ -63,15 +57,16 @@ class ProtocolService {
           tokenomicsService.getProtocolRevenueConvertedToUSDC(
             log.args.revenueAtEpochClose as bigint
           ) * Number(MONTH_IN_SECONDS);
-        const protocolTokensShare =
-          (protocolRevenueInUSDC / totalRevenue) * 100;
         const address = (await truncateAddress(protocolAddress)) || "* N/A";
         const tokensEmitted =
           Number(
             formatUnits(log.args.totalTokensEmitted as bigint, DECIMALS.FOREST)
-          ).toFixed() || "* N/A";
+          ).toFixed(2) || "* N/A";
         const percentageOfTheTokensEmission =
-          protocolTokensShare.toFixed(2) || "* N/A";
+          (
+            (Number(tokensEmitted) / (totalEmissions / 10 ** DECIMALS.FOREST)) *
+            100
+          ).toFixed(2) || "* N/A";
         const revenue = protocolRevenueInUSDC.toFixed(2) || "* N/A";
 
         return {
@@ -161,9 +156,7 @@ class ProtocolService {
     totalTokensEmissionPerEpoch: number
   ) {
     console.log(green(`Epoch Number: ${lastEpochBlockNumber}`));
-    console.log(
-      green(`Total Emissions: ${totalTokensEmissionPerEpoch} FOREST`)
-    );
+    console.log(green(`Max Emissions: ${totalTokensEmissionPerEpoch} FOREST`));
     const isNotAvailable = data.some((e) => e.name === "* N/A");
     const table = new AsciiTable3(title).setHeading(...headings);
 

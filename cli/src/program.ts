@@ -2,6 +2,7 @@ import { Command } from "commander";
 import ora from "ora";
 import { VERSION } from "./version";
 import { config } from "./config";
+import { red } from "ansis";
 
 export const spinner = ora({
   discardStdin: false,
@@ -22,8 +23,17 @@ program.configureHelp({
       usage.push(parent.name());
     }
     usage.reverse();
+    if (usage.length === 0) {
+      return `${cmd.name()} ${cmd.usage()}`;
+    }
+
     return `${usage.join(" ")} ${cmd.name()} ${cmd.usage()}`;
   },
+});
+
+program.configureOutput({
+  // Output in red color for errors
+  outputError: (str, write) => write(red(str)),
 });
 
 program

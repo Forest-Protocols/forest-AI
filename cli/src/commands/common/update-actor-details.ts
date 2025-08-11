@@ -2,7 +2,6 @@ import {
   ActorDetailsSchema,
   ActorType,
   actorTypeToString,
-  addressSchema,
   generateCID,
 } from "@forest-protocols/sdk";
 import { Command } from "commander";
@@ -12,10 +11,11 @@ import { z } from "zod";
 import { accountFileOrKeySchema } from "@/validation/account";
 import { privateKeyToAccount } from "viem/accounts";
 import { fileSchema } from "@/validation/file";
-import { createViemPublicClient, truncateAddress } from "@/utils";
+import { createViemPublicClient } from "@/utils";
 import { spinner } from "@/program";
 import { green } from "ansis";
-import { createRegistryInstance } from "@/client";
+import { createRegistryInstance, indexerClient } from "@/client";
+import { formatAddress, resolveENSName } from "@/utils/address";
 
 export function createUpdateDetailsCommand(
   parent: Command,
@@ -40,21 +40,27 @@ export function createUpdateDetailsCommand(
     )
     .option(
       "--operator <address>",
-      "Operator address to use in XMTP communication. Uses Actor's account address by default."
+      "Operator address that responsible for the running the daemon software. Uses Actor's account address by default."
+    )
+    .option(
+      "--endpoint <endpoint>",
+      "Endpoint to use in HTTP Pipe communication. Empty by default"
     )
     .action(async (rawOptions: any) => {
       const options = checkValidationError(
         z
           .object({
             details: fileSchema.optional(),
-            billing: addressSchema.optional(),
-            operator: addressSchema.optional(),
+            billing: z.string().optional(),
+            operator: z.string().optional(),
+            endpoint: z.string().optional(),
             account: accountFileOrKeySchema,
           })
           .safeParse({
             details: rawOptions.details,
             billing: rawOptions.billing,
             operator: rawOptions.operator,
+            endpoint: rawOptions.endpoint,
             account: rawOptions[OPTIONS.ACCOUNT.OPTION_NAME],
           })
       );
@@ -70,7 +76,7 @@ export function createUpdateDetailsCommand(
       const registry = createRegistryInstance(client, account);
 
       spinner.start("Getting current properties");
-      const actor = await registry.getActor(account.address);
+      const actor = await indexerClient.getActorByIdOrAddress(account.address);
 
       if (!actor) {
         throw new Error(`${actorTypeString} is not registered in the Network`);
@@ -81,24 +87,29 @@ export function createUpdateDetailsCommand(
       const detailsLink = options.details
         ? (await generateCID(options.details)).toString()
         : actor.detailsLink;
-      const operator = options.operator || actor.operatorAddr;
-      const billing = options.billing || actor.billingAddr;
+      const [operator, billing] = await Promise.all([
+        options.operator
+          ? resolveENSName(options.operator)
+          : actor.operatorAddress,
+        options.billing
+          ? resolveENSName(options.billing)
+          : actor.billingAddress,
+      ]);
 
       await registry.updateActorDetails(
         actorType,
         detailsLink,
         operator,
-        billing
+        billing,
+        options.endpoint || actor.endpoint
       );
       spinner.succeed(green("Done"));
 
       console.log(
-        green.bold(
-          `${actorTypeString} ${await truncateAddress(actor.ownerAddr)}`
-        )
+        green.bold(`${actorTypeString} ${formatAddress(actor.ownerAddress)}`)
       );
       console.log(green.bold(`CID       : ${detailsLink}`));
-      console.log(green.bold(`Operator  : ${await truncateAddress(operator)}`));
-      console.log(green.bold(`Billing   : ${await truncateAddress(billing)}`));
+      console.log(green.bold(`Operator  : ${formatAddress(operator)}`));
+      console.log(green.bold(`Billing   : ${formatAddress(billing)}`));
     });
 }

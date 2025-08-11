@@ -11,8 +11,8 @@ import {
 import { base, mainnet } from "viem/chains";
 import { normalize } from "viem/ens";
 import { L2ResolverAbi } from "@/abi/l2resolver";
-import { ADDRESS_ZERO, sleep } from "@forest-protocols/sdk";
-import { program } from "@/program";
+import { ADDRESS_ZERO, CallLimiter } from "@forest-protocols/sdk";
+import { program, spinner } from "@/program";
 import { truncateAddress as sdkTruncateAddress } from "@forest-protocols/sdk";
 
 export const BASENAME_L2_RESOLVER_ADDRESS =
@@ -26,6 +26,9 @@ const resolverClient = createPublicClient({
 export const addressNameResolutions: Record<string, string> = {};
 export const nameAddressResolutions: Record<string, string> = {};
 
+/**
+ * Shortens the given address to 4 characters if the global flag is set
+ */
 export function formatAddress(address: Address | string) {
   if (program.opts().shortAddress) {
     return sdkTruncateAddress(address as Address);
@@ -71,6 +74,7 @@ export async function resolveToAddress(
 export async function resolveToName(
   address: string
 ): Promise<string | undefined> {
+  // Use cached value if we already have it
   if (addressNameResolutions[address]) {
     return addressNameResolutions[address] as Address;
   }
@@ -149,30 +153,49 @@ export async function getBasename(
   }
 }
 
-const rateLimit = {
-  maxRequests: 5,
-  timeWindow: 2000,
-  timestamps: [] as number[],
-};
+/**
+ * Resolves the given ENS name to an address if it is not in plain address format.
+ * Throws an error if the ENS name couldn't be resolved.
+ */
+export async function resolveENSName(
+  address: string,
+  options: { useSpinner?: boolean } = { useSpinner: true }
+) {
+  if (
+    (!address.startsWith("0x") || address.includes(".")) &&
+    !/[:]/.test(address) // Those characters are not allowed in ENS names
+  ) {
+    const wasSpinnerRunning = spinner.isSpinning;
+    const spinnerText = spinner.text;
 
-// Helper function to wait for local rate limit
-async function waitForRateLimit() {
-  const now = Date.now();
-  rateLimit.timestamps = rateLimit.timestamps.filter(
-    (ts) => now - ts < rateLimit.timeWindow
-  );
+    if (options.useSpinner) {
+      spinner.start(`Resolving ENS Name (${address})`);
+    }
+    const addr = await resolveToAddress(address);
 
-  if (rateLimit.timestamps.length >= rateLimit.maxRequests) {
-    const oldestTimestamp = rateLimit.timestamps[0];
-    const waitTime = rateLimit.timeWindow - (now - oldestTimestamp);
-    await sleep(waitTime);
-    return waitForRateLimit();
+    if (!addr) {
+      throw new Error(`ENS name ${address} couldn't be resolved`);
+    }
+
+    address = addr;
+
+    if (options.useSpinner) {
+      if (!wasSpinnerRunning) {
+        spinner.stop();
+      }
+      spinner.text = spinnerText;
+    }
   }
 
-  rateLimit.timestamps.push(now);
+  return address as Address;
 }
 
+// Create a call limiter instance for ENS name resolution RPC requests
+const rpcCallLimiter = new CallLimiter({
+  maxCalls: 10,
+  timeWindow: 2000,
+});
+
 async function rpcRequest<T>(fn: () => Promise<T>): Promise<T> {
-  await waitForRateLimit();
-  return await fn();
+  return await rpcCallLimiter.execute(fn);
 }

@@ -1,47 +1,30 @@
 import {
-  addressSchema,
+  ActorType,
   DECIMALS,
-  ForestPublicClientType,
-  generateCID,
-  PipeError,
-  PipeMethod,
-  PipeResponseCode,
-  Protocol,
-  ProtocolDetails,
-  ProtocolDetailsSchema,
-  ProtocolInfo,
-  Registry,
-  XMTPv3Pipe,
+  IndexerProtocol,
+  IndexerProtocolActor,
+  IndexerProtocolOfferParam,
 } from "@forest-protocols/sdk";
 import { formatUnits } from "viem";
 import { Address } from "viem";
-import { blue, magentaBright, red, yellow } from "ansis";
+import { blue, cyan, green, magentaBright, red, yellow } from "ansis";
 import { getCommand } from ".";
 import { z } from "zod";
-import {
-  createXMTPPipe,
-  createViemPublicClient,
-  truncateAddress,
-  validateIfJSON,
-} from "@/utils";
 import { spinner } from "@/program";
 import { checkValidationError } from "@/validation/error-handling";
-import { createProtocolInstance, createRegistryInstance } from "@/client";
-import { resolveToName } from "@/utils/address";
+import { formatAddress, resolveENSName, resolveToName } from "@/utils/address";
+import { indexerClient } from "@/client";
 
-type PTWithInfo = {
-  info: ProtocolInfo;
-  client: Protocol;
-  cid?: string;
-  details?: ProtocolDetails | string;
-  revenue?: bigint;
-};
-type ProtocolOptions = {
-  details: boolean;
-  compact: boolean;
+type ExtendedProtocol = IndexerProtocol & {
+  actors: (IndexerProtocolActor & {
+    ensAddress?: Promise<string | undefined>;
+  })[];
+  offerParams?: IndexerProtocolOfferParam[];
+  ensAddress?: Promise<string | undefined>;
+  ensOwnerAddress?: Promise<string | undefined>;
 };
 
-const getPTCommand = getCommand
+getCommand
   .command("protocol")
   .aliases(["pt", "protocols"])
   .description("Shows the Protocols that have been registered in the Network")
@@ -50,180 +33,91 @@ const getPTCommand = getCommand
     "Smart contract addresses of the Protocols. If not given shows all of them."
   )
   .option(
-    "--details",
-    "Reads additional details from the Providers/Validators in the Protocols"
+    "-d, --details",
+    "Reads additional details from the Providers/Validators in the Protocols",
+    true
   )
   .option(
     "-c, --compact",
     "Limits the detail text outputs to 200 characters to save space in the screen."
   )
-  .action(async (rawAddresses: string[], options: ProtocolOptions) => {
-    const addresses = checkValidationError(
-      z.array(addressSchema).safeParse(rawAddresses)
-    );
+  .action(
+    async (
+      rawAddresses: string[],
+      options: { details: boolean; compact: boolean }
+    ) => {
+      let addresses = checkValidationError(
+        z.array(z.string()).safeParse(rawAddresses)
+      );
 
-    const client = createViemPublicClient();
-    const registry = createRegistryInstance(client);
+      spinner.start();
 
-    spinner.start("Reading blockchain data");
-    let pts = await fetchProtocols(client, registry, addresses);
+      if (addresses.length > 0) {
+        // Resolve arguments from ENS names to addresses if they are not plain addresses
+        addresses = await Promise.all(
+          addresses.map((address) => resolveENSName(address))
+        );
+      }
 
-    if (options.details) {
-      spinner.start(`Reading details from Actors in the Protocols`);
-      const pipe = await createXMTPPipe();
+      spinner.text = "Fetching Protocols from the Indexer";
 
-      pts = await Promise.all(
-        pts.map(async (pt) => {
-          const res = await fetchDetails(pipe, pt);
+      let protocols: ExtendedProtocol[] = [];
 
-          return {
-            ...pt,
-            details: res?.details,
-            cid: res?.cid,
-          };
+      if (addresses.length === 0) {
+        protocols = await indexerClient
+          .getProtocols({
+            limit: 100,
+            autoPaginate: true,
+          })
+          .then((res) => compileAndFetchProtocolData(res.data));
+      } else {
+        protocols = await compileAndFetchProtocolData(addresses as Address[]);
+      }
+
+      // Wait until all ENS names are resolved
+      spinner.text = "Resolving ENS names";
+      await Promise.all(
+        protocols.map(async (pt) => {
+          await pt.ensAddress;
+          await pt.ensOwnerAddress;
+          await Promise.all(pt.actors.map((actor) => actor.ensAddress));
         })
       );
-    }
 
-    spinner.stop();
-    for (let i = 0; i < pts.length; i++) {
-      await printProtocolInformation(pts[i]);
-
-      if (i != pts.length - 1) {
+      spinner.stop();
+      for (const pt of protocols) {
+        await printProtocolInformation(pt, options);
         console.log("-".repeat(15));
+        console.log();
       }
     }
-  });
+  );
 
-async function fetchProtocols(
-  client: ForestPublicClientType,
-  registry: Registry,
-  addresses?: Address[]
+async function compileAndFetchProtocolData(
+  addresses: (Address | IndexerProtocol)[]
 ) {
-  let protocols: PTWithInfo[] = [];
-  if (!addresses || addresses.length == 0) {
-    const clients = await registry.getAllProtocols();
-    protocols = await Promise.all(
-      clients.map(async (protocol) => {
-        const info = await protocol.getInfo();
-        await Promise.all([
-          resolveToName(info.ownerAddress),
-          resolveToName(info.contractAddress),
-        ]);
-        return {
-          client: protocol,
-          info,
-          revenue: await protocol.getAgreementsValue(),
-        };
-      })
-    );
-  } else {
-    const infos = await Promise.all(
-      addresses.map(async (address) => {
-        const info = await registry.getProtocolInfo(address);
-        if (!info) {
-          spinner.fail(
-            red(`Protocol ${await truncateAddress(address)} not found`)
-          );
-          spinner.start();
-          return;
-        }
-
-        await Promise.all([
-          resolveToName(info.ownerAddress),
-          resolveToName(info.contractAddress),
-        ]);
-        const protocol = createProtocolInstance(client, address);
-        return {
-          client: protocol,
-          info,
-          revenue: await protocol.getAgreementsValue(),
-        };
-      })
-    );
-
-    for (const info of infos) {
-      if (!info) {
-        continue;
-      }
-      protocols.push(info);
-    }
-  }
-
-  return protocols;
-}
-
-async function fetchDetails(pipe: XMTPv3Pipe, pt: PTWithInfo) {
-  try {
-    const providers = await pt.client.getAllProviders();
-
-    if (providers.length == 0) {
-      spinner.warn(
-        yellow(
-          `Protocol ${await truncateAddress(
-            pt.client.address!
-          )} doesn't have any registered Actors yet`
+  return Promise.all(
+    addresses.map(async (addrOrPt) => ({
+      ...(typeof addrOrPt === "string"
+        ? await indexerClient.getProtocolByAddress(addrOrPt)
+        : addrOrPt),
+      ensAddress:
+        typeof addrOrPt === "string"
+          ? resolveToName(addrOrPt)
+          : resolveToName(addrOrPt.address),
+      actors: (
+        await indexerClient.getProtocolActors(
+          typeof addrOrPt === "string" ? addrOrPt : addrOrPt.address
         )
-      );
-      spinner.start();
-      return;
-    }
-
-    const operatorAddresses = [
-      ...new Set(providers.map((prov) => prov.operatorAddr)),
-    ];
-
-    for (let i = 0; i < operatorAddresses.length; i++) {
-      const operatorAddress = operatorAddresses[i];
-      try {
-        const res = await pipe.send(operatorAddress, {
-          method: PipeMethod.GET,
-          path: "/details",
-          timeout: 10 * 1000,
-          body: [pt.info.detailsLink],
-        });
-
-        if (res.code != PipeResponseCode.OK) {
-          throw new PipeError(res.code, res.body);
-        }
-
-        const [detailFile] = res.body;
-
-        return {
-          cid: (await generateCID(detailFile)).toString(),
-
-          details: validateIfJSON(
-            detailFile,
-            // TODO: Validate with that schema?
-            ProtocolDetailsSchema,
-            true
-          ),
-        };
-      } catch {
-        // TODO: Implement better warning message
-        /*   spinner.fail(
-          red(
-            `Protocol (${await truncateAddress(
-              pt.client.address!
-            )}) details could not be retrieved from ${await truncateAddress(
-              operatorAddress
-            )}${i != operatorAddresses.length - 1 ? ", trying next one" : ""}`
-          )
-        );
-        spinner.start(); */
-      }
-    }
-  } catch {
-    // TODO: Implement better warning message
-    /*     spinner.fail(
-      red(
-        `Protocol (${await truncateAddress(
-          pt.client.address!
-        )}) details could not be retrieved`
-      )
-    );
-    spinner.start(); */
-  }
+      ).map((actor) => ({
+        ...actor,
+        ensAddress: resolveToName(actor.operatorAddress),
+      })),
+      offerParams: await indexerClient.getProtocolOfferParams(
+        typeof addrOrPt === "string" ? addrOrPt : addrOrPt.address
+      ),
+    }))
+  );
 }
 
 function blockCountToTime(blockCount: bigint) {
@@ -249,97 +143,120 @@ function blockCountToTime(blockCount: bigint) {
   }
 }
 
-async function printProtocolInformation(pt: PTWithInfo) {
+async function printProtocolInformation(
+  pt: ExtendedProtocol,
+  { compact }: { compact: boolean }
+) {
+  const ensProtocolAddress = await pt.ensAddress;
+  const ensOwnerAddress = await pt.ensOwnerAddress;
+
   const lines: any[][] = [
-    [blue("Protocol Address"), await truncateAddress(pt.client.address!)],
-    [blue("Owner Address"), await truncateAddress(pt.info.ownerAddress)],
+    [red("CID"), pt.detailsLink],
+    [
+      blue("Protocol Address"),
+      ensProtocolAddress
+        ? `${ensProtocolAddress} (${formatAddress(pt.address)})`
+        : formatAddress(pt.address),
+    ],
+    [
+      blue("Owner Address"),
+      ensOwnerAddress
+        ? `${ensOwnerAddress} (${formatAddress(pt.ownerAddress)})`
+        : formatAddress(pt.ownerAddress),
+    ],
     [
       blue("Term Update Delay"),
-      `${pt.info.termUpdateDelay} Blocks (~ ${blockCountToTime(
-        pt.info.termUpdateDelay
+      `${pt.termUpdateDelay} Blocks (~ ${blockCountToTime(
+        BigInt(pt.termUpdateDelay)
       )})`,
     ],
-    [
-      blue("Agreement Count"),
-      pt.info.agreementCount <= 0n
-        ? "Not registered yet"
-        : pt.info.agreementCount.toString(),
-    ],
+    [blue("Total Agreement Count"), pt.totalAgreementCount.toString()],
+    [blue("Active Agreement Count"), pt.activeAgreementCount.toString()],
     [blue("Registered Actor Count")],
-    [blue("  Provider  "), pt.info.providerIds.length || "Not Registered Yet"],
-    [blue("  Validator "), pt.info.validatorIds.length || "Not Registered Yet"],
+    [
+      blue("  Provider  "),
+      pt.actors?.filter((a) => a.actorType === 1).length ||
+        "Not Registered Yet",
+    ],
+    [
+      blue("  Validator "),
+      pt.actors?.filter((a) => a.actorType === 2).length ||
+        "Not Registered Yet",
+    ],
   ];
 
-  if (pt.details) {
-    if (typeof pt.details === "string") {
-      // Make the detail text shorter if specified
-      let detailText = pt.details;
-      if (getPTCommand.opts().compact) {
-        detailText =
-          detailText.substring(0, 200).trimEnd() +
-          (pt.details.length > 200 ? "..." : "");
-      }
-
-      const linesOfText = detailText.split("\n");
-
-      // Place spaces to each line
-      for (let i = 0; i < linesOfText.length; i++) {
-        linesOfText[i] = `  ${linesOfText[i]}`;
-      }
-
-      lines.push([magentaBright("Details"), `\n${linesOfText.join("\n")}`]);
-    } else {
-      lines.push([magentaBright("Name"), pt.details.name]);
-
-      if (pt.details.softwareStack) {
-        lines.push([magentaBright("Software Stack"), pt.details.softwareStack]);
-      }
-      if (pt.details.version) {
-        lines.push([magentaBright("Version"), pt.details.version]);
-      }
-
-      // TODO: Print offer params
+  if (pt.rawDetails) {
+    // Shorten the raw details if specified
+    let detailText = pt.rawDetails;
+    if (compact) {
+      detailText =
+        detailText.substring(0, 200).trimEnd() +
+        (pt.rawDetails.length > 200 ? "..." : "");
     }
+
+    const linesOfText = detailText.split("\n");
+
+    // Indent each line
+    for (let i = 0; i < linesOfText.length; i++) {
+      linesOfText[i] = `  ${linesOfText[i]}`;
+    }
+
+    lines.push([magentaBright("Details"), `\n${linesOfText.join("\n")}`]);
+  }
+
+  if (pt.description) {
+    lines.push([magentaBright("Description"), pt.description]);
+  }
+
+  if (pt.name) {
+    lines.push([magentaBright("Name"), pt.name]);
+  }
+
+  if (pt.softwareStack) {
+    lines.push([magentaBright("Software Stack"), pt.softwareStack]);
+  }
+
+  if (pt.version) {
+    lines.push([magentaBright("Version"), pt.version]);
   }
 
   lines.push([
     yellow("Monthly Revenue"),
-    `$${formatUnits((pt?.revenue || 0n) * 2635200n, DECIMALS.USDC)}`,
+    `$${formatUnits(BigInt(pt.monthlyRevenue), DECIMALS.USDC)}`,
   ]);
   lines.push(
     [yellow("Registration Fees")],
     [
       yellow("  Provider  "),
       `${formatUnits(
-        pt.info.registrationFees.provider,
+        BigInt(pt.providerRegistrationFee),
         DECIMALS.FOREST
       )} FOREST`,
     ],
     [
       yellow("  Validator "),
       `${formatUnits(
-        pt.info.registrationFees.validator,
+        BigInt(pt.validatorRegistrationFee),
         DECIMALS.FOREST
       )} FOREST`,
     ],
     [
       yellow("  Offer     "),
-      `${formatUnits(pt.info.registrationFees.offer, DECIMALS.FOREST)} FOREST`,
+      `${formatUnits(BigInt(pt.offerRegistrationFee), DECIMALS.FOREST)} FOREST`,
     ],
 
     [yellow("Emission Shares"), undefined],
-    [yellow("  Provider  "), `${pt.info.emissionShares.provider / 100}%`],
-    [yellow("  Validator "), `${pt.info.emissionShares.validator / 100}%`],
-    [yellow("  PT Owner  "), `${pt.info.emissionShares.pcOwner / 100}%`],
+    [yellow("  Provider  "), `${pt.providerEmissionShare / 100}%`],
+    [yellow("  Validator "), `${pt.validatorEmissionShare / 100}%`],
+    [yellow("  PT Owner  "), `${pt.ptOwnerEmissionShare / 100}%`],
 
     [yellow("Maximum Actor Count"), undefined],
-    [yellow("  Provider  "), `${pt.info.maxActorCount.provider}`],
-    [yellow("  Validator "), `${pt.info.maxActorCount.validator}`],
+    [yellow("  Provider  "), `${pt.maxProviderCount}`],
+    [yellow("  Validator "), `${pt.maxValidatorCount}`],
     [
       yellow("Min. Collateral Amount"),
-      `${formatUnits(pt.info.minCollateral, DECIMALS.FOREST)} FOREST`,
-    ],
-    [red("CID"), pt.info.detailsLink]
+      `${formatUnits(BigInt(pt.minCollateral), DECIMALS.FOREST)} FOREST`,
+    ]
   );
 
   for (const line of lines) {
@@ -350,11 +267,36 @@ async function printProtocolInformation(pt: PTWithInfo) {
     console.log(`${line[0]}:`, line[1]);
   }
 
-  if (pt.details && pt.cid != pt.info.detailsLink) {
-    console.error(
-      yellow.bold(
-        `\nWARNING: CID of the details file is different than the one committed on-chain.`
-      )
-    );
+  // Print offer parameters if available
+  if (pt.offerParams && pt.offerParams.length > 0) {
+    console.log(yellow("Offer Parameters:"));
+    for (const param of pt.offerParams) {
+      console.log(
+        `  ${green(param.name)}: ${param.unit} (Priority: ${param.priority})`
+      );
+    }
+  }
+
+  // Print registered Actors
+  if (pt.actors.length > 0) {
+    console.log(yellow("Registered Actors:"));
+    for (const actor of pt.actors) {
+      // Since registered actors array also includes the Protocol Owner, we need to skip it.
+      if (actor.actorType === ActorType.ProtocolOwner) continue;
+
+      const actorType = cyan(actor.actorType === 1 ? "Provider" : "Validator");
+      const ensAddress = await actor.ensAddress;
+
+      console.log(
+        `  ${actorType}: ${
+          ensAddress
+            ? `${ensAddress} (${formatAddress(actor.ownerAddress)})`
+            : formatAddress(actor.ownerAddress)
+        } (Collateral: ${formatUnits(
+          BigInt(actor.collateral),
+          DECIMALS.FOREST
+        )} FOREST)`
+      );
+    }
   }
 }

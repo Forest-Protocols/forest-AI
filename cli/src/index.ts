@@ -26,6 +26,7 @@ import "./commands/network/pause";
 import "./commands/network/set";
 import "./commands/network/close-epoch";
 import "./commands/network/emissions";
+import "./commands/legacy/network/emissions";
 
 import "./commands/provider";
 import "./commands/provider/register-in";

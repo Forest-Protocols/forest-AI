@@ -26,4 +26,15 @@ export const OPTIONS = {
     DESCRIPTION: "Offer ID",
     OPTION_NAME: "offer",
   },
+  PIPE: {
+    FLAGS: "-P, --pipe <type>",
+    DESCRIPTION: "The type of the Pipe to be used; xmtp or http",
+    OPTION_NAME: "pipe",
+    HANDLER: (value: string) => config.pipe.load(value, "option"),
+  },
+  PIPE_ENDPOINT: {
+    FLAGS: "-E, --endpoint <base url>",
+    DESCRIPTION: "The endpoint of the Operator if HTTP Pipe is used",
+    OPTION_NAME: "endpoint",
+  },
 };

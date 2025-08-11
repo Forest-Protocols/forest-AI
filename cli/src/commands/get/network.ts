@@ -1,10 +1,11 @@
 import { getCommand } from ".";
-import { DECIMALS } from "@forest-protocols/sdk";
+import { ActorType, DECIMALS } from "@forest-protocols/sdk";
 import { formatUnits } from "viem";
 import { blue, red, green, cyanBright } from "ansis";
 import { spinner } from "@/program";
-import { createViemPublicClient, truncateAddress } from "@/utils";
-import { createRegistryInstance } from "@/client";
+import { createViemPublicClient } from "@/utils";
+import { createRegistryInstance, indexerClient } from "@/client";
+import { formatAddress } from "@/utils/address";
 
 getCommand
   .command("network")
@@ -15,43 +16,43 @@ getCommand
 
     const client = createViemPublicClient();
     const registry = createRegistryInstance(client);
-    const registryInfo = await registry.getRegistryInfo();
+
+    const [registryInfo, protocols, actors, providers, validators] =
+      await Promise.all([
+        indexerClient.getRegistryInfo(),
+        indexerClient.getProtocols({ limit: 1 }), // We are only interested in the total count field so no need to fetch data
+        indexerClient.getActors({ limit: 1 }), // We are only interested in the total count field so no need to fetch data
+        indexerClient.getActors({ limit: 1, type: ActorType.Provider }), // We are only interested in the total count field so no need to fetch data
+        indexerClient.getActors({ limit: 1, type: ActorType.Validator }), // We are only interested in the total count field so no need to fetch data
+      ]);
+
     const lines = [
-      [cyanBright("Registry Address"), await truncateAddress(registry.address)],
+      [cyanBright("Registry Address"), formatAddress(registry.address)],
       [
         cyanBright("Treasury Address"),
-        await truncateAddress(registryInfo.treasuryAddress),
+        formatAddress(registryInfo.treasuryAddress),
       ],
       [
         cyanBright("Forest Token Address"),
-        await truncateAddress(registryInfo.forestTokenAddress),
+        formatAddress(registryInfo.forestTokenAddress),
       ],
       [
         cyanBright("Forest Slasher Address"),
-        await truncateAddress(registryInfo.slasherAddress),
+        formatAddress(registryInfo.slasherAddress),
       ],
-      [
-        cyanBright("USDC Address"),
-        await truncateAddress(registryInfo.usdcAddress),
-      ],
+      [cyanBright("USDC Address"), formatAddress(registryInfo.usdcAddress)],
       [green("Burn Ratio"), `${registryInfo.burnRatio / 100n}%`],
       [green("Revenue Share"), `${registryInfo.revenueShare / 100n}%`],
-      [blue("Max Protocol Count"), registryInfo.maxPCCount.toString()],
-      [blue("Total Actors Count"), registryInfo.totalActorCount.toString()],
-      [blue("Total Protocol Count"), registryInfo.totalPCCount.toString()],
-      [
-        blue("Total Providers Count"),
-        registryInfo.totalProvidersCount.toString(),
-      ],
-      [
-        blue("Total Validators Count"),
-        registryInfo.totalValidatorsCount.toString(),
-      ],
+      [blue("Max Protocol Count"), registryInfo.maxProtocolCount.toString()],
+      [blue("Total Actors Count"), actors.pagination.total.toString()],
+      [blue("Total Protocol Count"), protocols.pagination.total.toString()],
+      [blue("Total Providers Count"), providers.pagination.total.toString()],
+      [blue("Total Validators Count"), validators.pagination.total.toString()],
       [
         blue("Total Protocol Owners Count"),
         (
-          registryInfo.totalActorCount -
-          (registryInfo.totalProvidersCount + registryInfo.totalValidatorsCount)
+          actors.pagination.total -
+          (providers.pagination.total + validators.pagination.total)
         ).toString(),
       ],
       [
@@ -64,21 +65,21 @@ getCommand
       [
         red("New Protocol Registration Fee"),
         `${formatUnits(
-          registryInfo.pcRegistrationFee,
+          registryInfo.protocolRegistrationFee,
           DECIMALS.FOREST
         )} FOREST`,
       ],
       [
         red("In Protocol Actor Registration Fee"),
         `${formatUnits(
-          registryInfo.actorPCRegistrationFee,
+          registryInfo.actorRegistrationFeeInProtocol,
           DECIMALS.FOREST
         )} FOREST`,
       ],
       [
         red("In Protocol Offer Registration Fee"),
         `${formatUnits(
-          registryInfo.offerPCRegistrationFee,
+          registryInfo.offerRegistrationFee,
           DECIMALS.FOREST
         )} FOREST`,
       ],

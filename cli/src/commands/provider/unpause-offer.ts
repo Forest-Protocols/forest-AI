@@ -1,6 +1,5 @@
 import { checkValidationError } from "@/validation/error-handling";
 import { z } from "zod";
-import { addressSchema } from "@forest-protocols/sdk";
 import { accountFileOrKeySchema } from "@/validation/account";
 import { privateKeyToAccount } from "viem/accounts";
 import { spinner } from "@/program";
@@ -9,6 +8,7 @@ import { providerCommand } from ".";
 import { createViemPublicClient } from "@/utils";
 import { createProtocolInstance } from "@/client";
 import { OPTIONS } from "../common/options";
+import { resolveENSName } from "@/utils/address";
 
 providerCommand
   .command("unpause-offer")
@@ -24,7 +24,7 @@ providerCommand
     const options = checkValidationError(
       z
         .object({
-          ptAddress: addressSchema,
+          ptAddress: z.string(),
           offerId: z.coerce.number(),
           account: accountFileOrKeySchema,
         })
@@ -37,7 +37,11 @@ providerCommand
 
     const account = privateKeyToAccount(options.account);
     const client = createViemPublicClient();
-    const pt = createProtocolInstance(client, options.ptAddress, account);
+    const pt = createProtocolInstance(
+      client,
+      await resolveENSName(options.ptAddress),
+      account
+    );
 
     spinner.start("Unpausing the Offer");
     await pt.unpauseOffer(options.offerId);

@@ -2,7 +2,7 @@ import { agreementCommand } from ".";
 import { OPTIONS } from "../common/options";
 import { checkValidationError } from "@/validation/error-handling";
 import { z } from "zod";
-import { addressSchema, DECIMALS, Status } from "@forest-protocols/sdk";
+import { DECIMALS, Status } from "@forest-protocols/sdk";
 import { accountFileOrKeySchema } from "@/validation/account";
 import { privateKeyToAccount } from "viem/accounts";
 import { spinner } from "@/program";
@@ -10,7 +10,8 @@ import { green } from "ansis";
 import { checkAndAskAllowance, createViemPublicClient } from "@/utils";
 import { erc20Abi, formatUnits, getContract, parseUnits } from "viem";
 import { config } from "@/config";
-import { createProtocolInstance } from "@/client";
+import { createProtocolInstance, indexerClient } from "@/client";
+import { resolveENSName } from "@/utils/address";
 
 agreementCommand
   .command("topup")
@@ -27,7 +28,7 @@ agreementCommand
     const options = checkValidationError(
       z
         .object({
-          ptAddress: addressSchema,
+          ptAddress: z.string(),
           agreementId: z.coerce.number(),
           account: accountFileOrKeySchema,
           deposit: z.coerce.number(),
@@ -40,9 +41,10 @@ agreementCommand
         })
     );
 
+    const ptAddress = await resolveENSName(options.ptAddress);
     const account = privateKeyToAccount(options.account);
     const client = createViemPublicClient();
-    const pt = createProtocolInstance(client, options.ptAddress, account);
+    const pt = createProtocolInstance(client, ptAddress, account);
     const usdc = getContract({
       abi: erc20Abi,
       address: config.usdcAddress.value,
@@ -50,10 +52,17 @@ agreementCommand
     });
 
     spinner.start("Checking Agreement");
-    const agreement = await pt.getAgreement(options.agreementId);
+    const agreement = (
+      await indexerClient.getAgreements({
+        id: options.agreementId,
+        protocolAddress: ptAddress,
+        userAddress: account.address,
+        status: Status.Active,
+      })
+    ).data[0];
 
-    if (agreement.status !== Status.Active) {
-      throw new Error(`Agreement ${agreement.id} is not active`);
+    if (!agreement) {
+      throw new Error(`Agreement ${options.agreementId} not found`);
     }
 
     spinner.text = "Checking balance and allowance";

@@ -4,24 +4,20 @@ import { blue, green, yellow } from "ansis";
 import { OPTIONS } from "../common/options";
 import { checkValidationError } from "@/validation/error-handling";
 import { z } from "zod";
-import {
-  addressSchema,
-  Agreement,
-  DECIMALS,
-  Status,
-} from "@forest-protocols/sdk";
+import { DECIMALS, IndexerAgreement, Status } from "@forest-protocols/sdk";
 import { accountFileOrKeySchema } from "@/validation/account";
 import { privateKeyToAccount } from "viem/accounts";
 import { createViemPublicClient } from "@/utils";
 import { confirm } from "@inquirer/prompts";
-import { formatUnits } from "viem";
-import { createProtocolInstance } from "@/client";
-import dayjs from "dayjs";
+import { Address, formatUnits } from "viem";
+import { createProtocolInstance, indexerClient } from "@/client";
+import { DateTime } from "luxon";
+import { resolveENSName } from "@/utils/address";
 
 providerCommand
   .command("withdraw")
   .description(
-    "Withdraws the earned amount of fee (in USDC) from (or all) an agreement(s)"
+    "Withdraws the earned amount of fee (in USDC) from one or all of the agreements"
   )
   .option(
     OPTIONS.ACCOUNT.FLAGS,
@@ -37,7 +33,7 @@ providerCommand
     const options = checkValidationError(
       z
         .object({
-          ptAddress: addressSchema,
+          ptAddress: z.string(),
           agreementId: z.coerce.number().optional(),
           account: accountFileOrKeySchema,
         })
@@ -50,23 +46,37 @@ providerCommand
 
     const account = privateKeyToAccount(options.account);
     const publicClient = createViemPublicClient();
-    const pt = createProtocolInstance(publicClient, options.ptAddress, account);
+    const ptAddress = await resolveENSName(options.ptAddress);
+    const pt = createProtocolInstance(publicClient, ptAddress, account);
 
-    let agreements: Agreement[] = [];
+    let agreements: IndexerAgreement[] = [];
 
-    spinner.start("Checking Agreements");
+    spinner.start("Getting Agreements");
 
     if (options.agreementId === undefined) {
-      agreements = await pt.getAllProviderAgreements(account.address);
+      agreements = await indexerClient
+        .getAgreements({
+          providerAddress: account.address.toLowerCase() as Address,
+          protocolAddress: ptAddress.toLowerCase() as Address,
+          limit: 100,
+          status: Status.Active,
+          autoPaginate: true,
+        })
+        .then((res) => res.data);
     } else {
-      agreements.push(await pt.getAgreement(options.agreementId));
+      agreements = await indexerClient
+        .getAgreements({
+          id: options.agreementId,
+          protocolAddress: ptAddress.toLowerCase() as Address,
+          providerAddress: account.address.toLowerCase() as Address,
+          status: Status.Active,
+        })
+        .then((res) => res.data);
     }
-    agreements = agreements.filter(
-      (agreement) => agreement.status === Status.Active
-    );
 
     spinner.text = "Checking available fees";
     const fees = await Promise.all(
+      // TODO: Can we manage this value via indexer?
       agreements.map((agreement) => pt.getReward(agreement.id))
     );
     const totalFee = fees.reduce((acc, val) => acc + val, 0n);
@@ -88,7 +98,7 @@ providerCommand
         } is ${formatUnits(
           totalFee,
           DECIMALS.USDC
-        )} USDC as of ${dayjs().format("DD MMMM YYYY")}`
+        )} USDC as of ${DateTime.now().toFormat("DD MMMM YYYY")}`
       )
     );
 

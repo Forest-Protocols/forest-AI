@@ -1,70 +1,34 @@
-import { createRegistryInstance } from "@/client";
+import { indexerClient } from "@/client";
 import { spinner } from "@/program";
-import { createViemPublicClient, createXMTPPipe } from "@/utils";
-import {
-  formatAddress,
-  resolveToAddress,
-  resolveToName,
-} from "@/utils/address";
+import { formatAddress, resolveENSName, resolveToName } from "@/utils/address";
 import { checkValidationError } from "@/validation/error-handling";
 import {
-  Actor,
-  ActorDetails,
-  ActorDetailsSchema,
   ActorType,
   actorTypeToString,
   AddressSchema,
-  generateCID,
+  IndexerActor,
   MaybePromise,
-  PipeError,
-  PipeMethod,
-  PipeResponseCode,
-  Registry,
   statusToString,
-  tryReadJson,
-  XMTPv3Pipe,
 } from "@forest-protocols/sdk";
-import { blue, green, red, yellow } from "ansis";
+import { blue, green, magenta, yellow } from "ansis";
 import { Command } from "commander";
-import dayjs from "dayjs";
-import { Address } from "viem";
+import { DateTime } from "luxon";
 import { z } from "zod";
 
-export type ActorWithDetails = Actor & {
-  details?: ActorDetails & { cid: string };
+export type ExtendedActor = IndexerActor & {
+  additionalLogs?: MaybePromise<string | undefined>;
   ensOwnerAddress?: Promise<string | undefined>;
   ensOperatorAddress?: Promise<string | undefined>;
   ensBillingAddress?: Promise<string | undefined>;
 };
-export type FetchAllActorsHandler = (registry: Registry) => Promise<Actor[]>;
-export type FetchMoreActorInfoHandler<
-  T extends Record<string, any> = Record<string, any>
-> = (
-  registry: Registry,
-  actor: ActorWithDetails
-) => Promise<ActorWithDetails & T>;
-export type PrintHandler<T> = (
-  actor: ActorWithDetails & T
-) => MaybePromise<void>;
-export type WhereToFetchDetailsFromHandler<T> = (
-  registry: Registry,
-  pipe: XMTPv3Pipe,
-  actor: ActorWithDetails & T
-) => MaybePromise<Address>;
 
-export async function createGetActorCommand<
-  T extends Record<string, any> = Record<string, any>
->(
+export async function createGetActorCommand(
   parent: Command,
   params: {
     command: string;
     aliases: string[];
     actorType: ActorType;
-
-    fetchAllActors: FetchAllActorsHandler;
-    fetchMoreActorInfo?: FetchMoreActorInfoHandler<T>;
-    whereToFetchDetailsFrom?: WhereToFetchDetailsFromHandler<T>;
-    printHandler?: PrintHandler<T>;
+    additionalLogs: (actor: ExtendedActor) => MaybePromise<string>;
   }
 ) {
   const actorType = actorTypeToString(params.actorType);
@@ -72,12 +36,12 @@ export async function createGetActorCommand<
   return parent
     .command(params.command)
     .aliases(params.aliases)
-    .description(`Gets one or more ${actorType} information`)
-    .argument("[addresses...]", `Owner wallet address of the ${actorType}s`)
-    .option(
-      "--details, -d",
-      `Reads additional details over XMTP from the ${actorType}`
+    .description(`Gets one or more ${actorType}(s) information`)
+    .argument(
+      "[address or id...]",
+      `Owner wallet address or IDs of the ${actorType}s`
     )
+    .allowUnknownOption(true) // To make it backward compatible since `-d` is not supported anymore
     .action(
       async (rawAddresses: string[], rawOptions: { details: boolean }) => {
         const options = checkValidationError(
@@ -88,241 +52,159 @@ export async function createGetActorCommand<
             })
             .safeParse({ ...rawOptions, addresses: rawAddresses })
         );
-        const client = createViemPublicClient();
-        const registry = createRegistryInstance(client);
+        spinner.start("Fetching data from the Indexer");
+        let actors: ExtendedActor[] = [];
 
-        spinner.start("Fetching data from blockchain");
-
-        // Fetch the Actors
-        let actors: ActorWithDetails[];
         if (options.addresses.length === 0) {
-          actors = await params.fetchAllActors(registry);
+          actors = await indexerClient
+            .getActors({
+              limit: 100,
+              type: params.actorType,
+              autoPaginate: true,
+            })
+            .then((res) =>
+              res.data.map((actor) => ({
+                ...actor,
+                // Queue the ENS name resolution and additional log generation for each Actor
+                additionalLogs: params.additionalLogs?.(actor),
+                ensOwnerAddress: resolveToName(actor.ownerAddress),
+                ensOperatorAddress: resolveToName(actor.operatorAddress),
+                ensBillingAddress: resolveToName(actor.billingAddress),
+              }))
+            );
         } else {
-          actors = await getActorsByAddresses(
-            registry,
-            actorType,
-            await resolveAddresses(options.addresses)
-          );
-        }
-
-        // If the function is provided, call it on each
-        // Actor to fetch more information
-        if (params.fetchMoreActorInfo) {
+          // Process each of the given addresses
           actors = await Promise.all(
-            actors.map((actor) => params.fetchMoreActorInfo!(registry, actor))
+            options.addresses.map(async (address) => {
+              const isAddressValidation = AddressSchema.safeParse(address);
+              const id = parseInt(address);
+              let actor: ExtendedActor;
+
+              if (isAddressValidation.success) {
+                // The given "thing" is an address
+                actor = await indexerClient.getActorByIdOrAddress(
+                  isAddressValidation.data
+                );
+              } else if (!isNaN(id)) {
+                // The given "thing" is an ID
+                actor = await indexerClient.getActorByIdOrAddress(id);
+              } else {
+                // The given "thing" is an ENS name, resolve it to an address
+                actor = await indexerClient.getActorByIdOrAddress(
+                  await resolveENSName(address)
+                );
+              }
+
+              // If the implementation wants to log more information,
+              // call that function to generate those logs and store them in the Actor
+              actor.additionalLogs = await params.additionalLogs?.(actor);
+              actor.ensOwnerAddress = resolveToName(actor.ownerAddress);
+              actor.ensOperatorAddress = resolveToName(actor.operatorAddress);
+              actor.ensBillingAddress = resolveToName(actor.billingAddress);
+
+              return actor;
+            })
           );
         }
 
-        // Make ENS resolution calls
-        actors = actors.map((actor) => ({
-          ...actor,
-          ensOwnerAddress: resolveToName(actor.ownerAddr),
-          ensOperatorAddress: resolveToName(actor.operatorAddr),
-          ensBillingAddress: resolveToName(actor.billingAddr),
-        }));
-
-        // Fetch the details if the option is provided
-        if (options.details) {
-          spinner.start(`Fetching details from ${actorType}s`);
-          const pipe = await createXMTPPipe();
-          actors = await Promise.all(
-            actors.map(async (actor) => ({
-              ...actor,
-              details: await fetchDetails(
-                registry,
-                pipe,
-                actor,
-                params.whereToFetchDetailsFrom
-              ),
-            }))
-          );
-        }
-
-        // Wait until the ENS names are resolved
+        // Wait until all the async calls are resolved
         spinner.text = "Resolving ENS names";
         await Promise.all(
-          actors.map(async (actor) => {
-            await actor.ensOwnerAddress;
-            await actor.ensOperatorAddress;
-            await actor.ensBillingAddress;
-          })
+          actors.map((actor) =>
+            Promise.all([
+              actor.additionalLogs,
+              actor.ensOwnerAddress,
+              actor.ensOperatorAddress,
+              actor.ensBillingAddress,
+            ])
+          )
         );
 
         // Print them out
         spinner.stop();
         for (const actor of actors) {
-          await printActorInformation(
-            options.details,
-            actor as ActorWithDetails & T,
-            params.printHandler
-          );
+          await printActorInformation(actor);
           console.log("-".repeat(15));
+          console.log();
         }
       }
     );
 }
 
 /**
- * Checks and resolves the given addresses if they are ENS names
+ * Common additional logs function for Provider and Validator Actors
  */
-async function resolveAddresses(addresses: string[]) {
-  const addressResolutions: Promise<Address | undefined>[] = [];
-  for (const addr of addresses) {
-    if (addr.includes(".")) {
-      addressResolutions.push(resolveToAddress(addr));
-    } else {
-      const validation = AddressSchema.safeParse(addr);
-      if (validation.error) {
-        throw new Error(`Invalid address: ${addr}`);
-      }
-      addressResolutions.push(Promise.resolve(validation.data));
-    }
-  }
+export async function providerAndValidatorAdditionalLogs(actor: ExtendedActor) {
+  let output = "";
+  if (actor.registeredProtocols.length > 0) {
+    output += "\nRegistered in the following Protocols:\n";
+    output += magenta.bold(
+      (
+        await Promise.all(
+          actor.registeredProtocols.map(async (protocol) => {
+            // Resolve each of the registered Protocol addresses to ENS names if possible
+            const ensName = await resolveToName(protocol.address);
 
-  const resolvedAddresses = await Promise.all(addressResolutions);
-  return resolvedAddresses.filter((addr) => addr !== undefined);
-}
-
-/**
- * Fetches all the actors and checks their existence in the Network
- */
-async function getActorsByAddresses(
-  registry: Registry,
-  actorType: string,
-  addresses: Address[]
-) {
-  const actors: Actor[] = [];
-  const fetchActorResults = await Promise.all(
-    addresses.map(async (address) => ({
-      address,
-      actor: await registry.getActor(address),
-    }))
-  );
-
-  for (const result of fetchActorResults) {
-    if (result.actor === undefined) {
-      spinner.fail(
-        red(
-          `${actorType} ${formatAddress(
-            result.address
-          )} is not registered in the Network`
+            if (protocol.name) {
+              return `${protocol.name} (${
+                ensName ? `${ensName}, ` : ""
+              }${formatAddress(protocol.address)})`;
+            }
+            return protocol.address;
+          })
         )
-      );
-      spinner.start();
-    } else {
-      actors.push(result.actor);
-    }
-  }
-
-  return actors;
-}
-
-/**
- * Fetches the details from Actor over XMTP
- */
-async function fetchDetails<T>(
-  registry: Registry,
-  pipe: XMTPv3Pipe,
-  actor: Actor,
-  handler?: WhereToFetchDetailsFromHandler<T>
-) {
-  try {
-    let operatorAddress = actor.operatorAddr;
-
-    if (handler) {
-      operatorAddress = await handler(
-        registry,
-        pipe,
-        actor as ActorWithDetails & T
-      );
-    }
-
-    const res = await pipe.send(operatorAddress, {
-      method: PipeMethod.GET,
-      path: "/details",
-      timeout: 10 * 1000,
-      body: [actor.detailsLink],
-    });
-
-    if (res.code != PipeResponseCode.OK) {
-      throw new PipeError(res.code, res.body);
-    }
-
-    const [detailFileContent] = res.body;
-    const validation = ActorDetailsSchema.safeParse(
-      tryReadJson(detailFileContent)
+      ).join(", ")
     );
-
-    if (validation.error) {
-      // const actorType = actorTypeToString(actor.actorType);
-      // spinner.warn(
-      //   yellow(
-      //     `Details of ${actorType} ${formatAddress(
-      //       actor.ownerAddr
-      //     )} is not in a valid format`
-      //   )
-      // );
-      // spinner.start();
-      return;
-    }
-
-    return {
-      ...validation.data,
-      cid: (await generateCID(detailFileContent)).toString(),
-    };
-  } catch {
-    // spinner.fail(red(``));
-    // spinner.start();
   }
+  return output;
 }
 
-async function printActorInformation<T extends Record<string, any>>(
-  detailsOption: boolean,
-  actor: ActorWithDetails & T,
-  handler?: PrintHandler<T>
-) {
+async function printActorInformation(actor: ExtendedActor) {
   const lines: [string, any][] = [];
-
-  if (detailsOption && actor.details === undefined) {
-    lines.push([
-      yellow.bold("WARNING: Details couldn't be fetched"),
-      undefined,
-    ]);
-  }
 
   lines.push([blue("ID"), actor.id]);
 
-  if (actor.details?.name) {
-    lines.push([blue("Name"), actor.details?.name]);
+  if (actor.name) {
+    lines.push([blue("Name"), actor.name]);
   }
 
-  lines.push([blue("Type"), actorTypeToString(actor.actorType)]);
+  lines.push([blue("Type"), actorTypeToString(actor.type)]);
   lines.push([blue("Status"), statusToString(actor.status)]);
 
-  if (actor.details?.homepage) {
-    lines.push([blue("Homepage"), actor.details.homepage]);
+  if (actor.homepage) {
+    lines.push([blue("Homepage"), actor.homepage]);
   }
-  if (actor.details?.description) {
-    lines.push([blue("Description"), actor.details.description]);
+  if (actor.description) {
+    lines.push([blue("Description"), actor.description]);
   }
 
+  const ensOwnerAddress = await actor.ensOwnerAddress;
+  const ensBillingAddress = await actor.ensBillingAddress;
+  const ensOperatorAddress = await actor.ensOperatorAddress;
+
+  // Include the ENS names if they are available alongside the addresses
   lines.push([
     yellow("Owner Address"),
-    (await actor.ensOwnerAddress) || formatAddress(actor.ownerAddr),
+    ensOwnerAddress
+      ? `${ensOwnerAddress} (${formatAddress(actor.ownerAddress)})`
+      : formatAddress(actor.ownerAddress),
   ]);
   lines.push([
     yellow("Billing Address"),
-    (await actor.ensBillingAddress) || formatAddress(actor.billingAddr),
+    ensBillingAddress
+      ? `${ensBillingAddress} (${formatAddress(actor.billingAddress)})`
+      : formatAddress(actor.billingAddress),
   ]);
   lines.push([
     yellow("Operator Address"),
-    (await actor.ensOperatorAddress) || formatAddress(actor.operatorAddr),
+    ensOperatorAddress
+      ? `${ensOperatorAddress} (${formatAddress(actor.operatorAddress)})`
+      : formatAddress(actor.operatorAddress),
   ]);
 
-  const registrationDate = dayjs.unix(Number(actor.registrationTs));
   lines.push([
     green("Registered at (Network level)"),
-    registrationDate.format("DD MMMM YYYY"),
+    DateTime.fromJSDate(new Date(actor.registeredAt)).toFormat("DD"),
   ]);
 
   lines.push([green.bold("CID"), actor.detailsLink]);
@@ -335,13 +217,17 @@ async function printActorInformation<T extends Record<string, any>>(
     }
   }
 
-  await handler?.(actor);
-
-  if (actor.details && actor.details.cid != actor.detailsLink) {
-    console.error(
-      yellow.bold(
-        `\nWARNING: CID of the details file is different than the one committed on-chain.`
-      )
-    );
+  const additionalLogs = await actor.additionalLogs;
+  if (additionalLogs) {
+    console.log(additionalLogs);
   }
+
+  // TODO: Indexer should include a field that indicates whether the indexed details and CID that are committed on-chain are the same.
+  // if (actor.details && actor.details.cid != actor.detailsLink) {
+  //   console.error(
+  //     yellow.bold(
+  //       `\nWARNING: CID of the details file is different than the one committed on-chain.`
+  //     )
+  //   );
+  // }
 }

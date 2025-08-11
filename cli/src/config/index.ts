@@ -45,17 +45,28 @@ export const rpcHost = new Config({
   name: "rpcHost",
   envName: "FOREST_RPC_HOST",
   schema: z.string(),
-  defaultValue: "127.0.0.1:8545",
+  defaultValue: "https://base-sepolia-rpc.publicnode.com",
   value: loadedConfig.rpcHost,
+});
+
+export const indexerAPI = new Config({
+  name: "indexerAPI",
+  envName: "FOREST_INDEXER_API",
+  schema: z.string(),
+  defaultValue: "https://indexer.forestai.io",
+  value: loadedConfig.indexerAPI,
 });
 
 export const chain = new Config<ForestChain>({
   name: "chain",
   envName: "FOREST_CHAIN",
-  schema: z.enum(["anvil", "optimism", "optimism-sepolia", "base", "base-sepolia"], {
-    message: `Should be one of: "anvil", "optimism", "optimism-sepolia", "base", "base-sepolia`,
-  }),
-  defaultValue: "anvil",
+  schema: z.enum(
+    ["anvil", "optimism", "optimism-sepolia", "base", "base-sepolia"],
+    {
+      message: `Should be one of: "anvil", "optimism", "optimism-sepolia", "base", "base-sepolia`,
+    }
+  ),
+  defaultValue: "base-sepolia",
   value: loadedConfig.chain,
 });
 
@@ -63,7 +74,7 @@ export const rateLimit = new Config<number>({
   name: "rateLimit",
   envName: "FOREST_RATE_LIMIT",
   schema: z.coerce.number().int(),
-  defaultValue: 25,
+  defaultValue: 10,
   value: loadedConfig.rateLimit,
 });
 setGlobalRateLimit(rateLimit.value);
@@ -72,7 +83,7 @@ export const rateLimitTimeWindow = new Config<number>({
   name: "rateLimitTimeWindow",
   envName: "FOREST_RATE_LIMIT_TIME_WINDOW",
   schema: z.coerce.number().int(),
-  defaultValue: 1000, // 1 second
+  defaultValue: 2000, // 2 seconds
   value: loadedConfig.rateLimitTimeWindow,
 });
 setGlobalRateLimitTimeWindow(rateLimitTimeWindow.value);
@@ -143,6 +154,22 @@ export const usdcAddress = new Config<Address>({
   value: loadedConfig.usdcAddress,
 });
 
+export const env = new Config<"production" | "dev">({
+  name: "env",
+  envName: "FOREST_ENV",
+  schema: z.enum(["production", "dev"]),
+  defaultValue: "production",
+  value: loadedConfig.env,
+});
+
+export const pipe = new Config<"xmtp" | "http">({
+  name: "pipe",
+  envName: "FOREST_PIPE",
+  schema: z.enum(["xmtp", "http"]),
+  defaultValue: "http",
+  value: loadedConfig.pipe,
+});
+
 /**
  * Saves the given name/value pair as a config to the config file
  */
@@ -166,6 +193,7 @@ export function saveConfig(name: string, value?: unknown) {
 
 export const config = {
   rpcHost,
+  indexerAPI,
   chain,
   rateLimit,
   rateLimitTimeWindow,
@@ -174,4 +202,6 @@ export const config = {
   slasherAddress,
   tokenAddress,
   usdcAddress,
+  env,
+  pipe,
 };

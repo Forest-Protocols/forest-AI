@@ -8,7 +8,7 @@ import {
   Validator,
   XMTPv3Pipe,
 } from "@forest-protocols/sdk";
-import { createXMTPPipe, truncateAddress } from "@/utils";
+import { createXMTPPipe } from "@/utils";
 import { ActorService } from "./base-actor-service";
 import { Address, formatUnits } from "viem";
 import { tokenomicsService } from "../network/tokenomics.service";
@@ -19,8 +19,7 @@ import {
   ValidatorWithTokensEmitted,
 } from "@/commands/network/types";
 import { slasherService } from "./slasher.service";
-import { spinner } from "@/program";
-import { green, red, yellow } from "ansis";
+import { green, yellow } from "ansis";
 import { AsciiTable3 } from "ascii-table3";
 
 class ValidatorService extends ActorService {
@@ -140,26 +139,26 @@ class ValidatorService extends ActorService {
 
         return name;
       } catch {
-        spinner.fail(
-          red(
-            `Validator (${await truncateAddress(
-              validator.ownerAddr!
-            )}) details could not be retrieved from ${await truncateAddress(
-              validator.operatorAddr
-            )}`
-          )
-        );
-        spinner.start();
+        // spinner.fail(
+        //   red(
+        //     `Validator (${await truncateAddress(
+        //       validator.ownerAddr!
+        //     )}) details could not be retrieved from ${await truncateAddress(
+        //       validator.operatorAddr
+        //     )}`
+        //   )
+        // );
+        // spinner.start();
       }
     } catch {
-      spinner.fail(
-        red(
-          `Validator (${await truncateAddress(
-            validator.ownerAddr!
-          )}) details could not be retrieved`
-        )
-      );
-      spinner.start();
+      // spinner.fail(
+      //   red(
+      //     `Validator (${await truncateAddress(
+      //       validator.ownerAddr!
+      //     )}) details could not be retrieved`
+      //   )
+      // );
+      // spinner.start();
     }
   }
   showValidatorsTableData(
@@ -173,11 +172,9 @@ class ValidatorService extends ActorService {
     const isNotAvailable = validators.some((e) => e.name === "* N/A");
 
     console.log(green(`Epoch Number: ${lastEmittedEpochBlockNum}`));
-    console.log(
-      green(`Total Emissions: ${totalTokensEmissionPerEpoch} FOREST`)
-    );
+    console.log(green(`Max Emissions: ${totalTokensEmissionPerEpoch} FOREST`));
     console.log(green(`Protocol Emissions: ${protocolEmission} FOREST`));
-    console.log(green(`Protocol Validators Share: ${shares.validator} %`));
+    console.log(green(`Max Validators Share: ${shares.validator} %`));
 
     const table = new AsciiTable3(title).setHeading(...headings);
 
