@@ -1,6 +1,6 @@
-# ForestAI Quickstart Guide
+# 🌲 ForestAI Quickstart Guide
 
-Welcome to the ForestAI ecosystem! This guide will walk you through common workflows using both the Forest CLI and web applications to help you get started quickly.
+Welcome to the ForestAI ecosystem! 🚀 This guide will walk you through common workflows using both the Forest CLI and web applications to help you get started quickly.
 
 ## Table of Contents
 
@@ -66,7 +66,7 @@ forest config get
 > [!NOTE]
 > The tutorial below consists of a couple of workflows that can be viewed separately or as a whole. That's why the numbering continues from one workflow to the other.
 
-## Workflow 1: Browse and Choose AI Chat Services (Generic LLM Protocol)
+## Workflow 1: Browse and Choose AI Chat Services (Generic LLM Protocol) 🤖
 
 This data can be explored using both the CLI tool and the [https://stats.forestai.io](https://stats.forestai.io) webapp.
 
@@ -178,20 +178,26 @@ For instance `promptlayer` had a higher score last epoch (which we previously sa
 
 We see a list of evaluations recently performed on this Provider. There are three status boxes. Let's pick an evaluation that is fully-revealed (i.e. has the right-hand side green box highlighted). For those that are fully revealed we have links to audit files. In this example it's an evaluation that was completed with a score of `18` and the link to Peerbench points to this audit file: https://www.peerbench.ai/inspect/bagaaiera3i6e5mjpk477yhjwz53ho7hjp3hoibylbpmcpnjpvkurr5vbgm5q. More explanations in the Peerbench workflow.
 
-## Workflow 2: View Peerbench Audit Logs
+## Workflow 2: View Peerbench Audit Logs 📊
 As mentioned before, if you want to dig deep and explore the details of a validation (i.e. the audit log), the data is available on Peerbench. 
 
 ### Why Aren't All Validation Details Public by Default?
 
-Since we don't want our benchmarks to get incorporated into training sets of AI models, we use a controlled revelation process for validation data.
+Public datasets are great but many of the AI model providers don't play fair and incorporate the public testsets into their training data. In this way they score high on the benchmarks but in reality these models don't generalize well. Since we want our benchmarks to be resilient to that and not get incorporated into training sets of AI models, we use a controlled revelation process for validation data. This ensures resilience against crooked providers and accoutability for the decentralized validators at the same time.
 
 ### The Three-Step Validation Publishing Process
 
 The process of publishing validations follows three distinct phases:
 
-1. **Commit Phase**: Validators commit to both a score and an audit log (cryptographically sealed). In [https://stats.forestai.io](https://stats.forestai.io) completion of this phase is visualised with the left-side box being highlighted in yellow.
-2. **Score Reveal**: Validators reveal the actual scores (mandatory for all validations). In [https://stats.forestai.io](https://stats.forestai.io) completion of this phase is visualised with the middle box being highlighted in green.
-3. **Audit Log Reveal**: Detailed test data is revealed (happens via random sampling). In [https://stats.forestai.io](https://stats.forestai.io) completion of this phase is visualised with the right-side box being highlighted in green.
+1. **Commit**: Validators commit to both a score and an audit log (cryptographically sealed). 
+2. **Score Reveal (aka Partial Reveal)**: Validators reveal the actual scores (mandatory for all validations).
+3. **Audit Log Reveal (aka Full Reveal)**: Detailed test data is revealed (happens via random sampling).
+
+On [https://stats.forestai.io](https://stats.forestai.io) you can see this in `Status` column in `Recent Evaluations` tables found in a couple of places. **Commit Phase** is visualised with the left-side box being highlighted in yellow. **Score Reveal** is visualised with the middle box being highlighted in green. **Audit Log Reveal** is visualised with the right-side box being highlighted in green.
+
+<img src="./img/screenshots/stats-drand-reveal.png" alt="List of Tests in an Audit File" width="750">
+
+*Screenshot: Sample Evaluation at distinct publication phases*
 
 > [!NOTE]
 > **Why the multi-step process?** The commit phase ensures that validators cannot change their assessment after seeing other results. The random sampling for audit log reveals protects our test data while still providing transparency.
@@ -207,7 +213,7 @@ Once audit log files are revealed, you can browse them on Peerbench in two ways:
 
 #### Direct Link
 
-In our example we had two links:
+In our workflow examples we had two links. Let's use one of the to see how a sample Audit File looks like:
 - [cli] https://peerbench.ai/inspect/bagaaiera2lpa4qbvumzc3cv25xdkcalquxw7dwxceodqn443wxpcbpenrr5q
 - [stats webapp] https://www.peerbench.ai/inspect/bagaaiera3i6e5mjpk477yhjwz53ho7hjp3hoibylbpmcpnjpvkurr5vbgm5q
 
@@ -244,7 +250,7 @@ Peerbench also includes its own ranking page that shows performance of different
 
 *Screenshot: Peerbench frontend showing model leaderboard on a variety of test sets*
 
-## Workflow 3: Purchase AI Chat Services using CLI (Generic LLM Protocol)
+## Workflow 3: Purchase AI Chat Services using CLI (Generic LLM Protocol) 💳
 
 #### Step 5: Check Your Wallet Balance
 
@@ -276,7 +282,7 @@ If the user entering the Agreement doesn't have enough allowance, the CLI will a
 > [!IMPORTANT]
 > **Save your Agreement ID**: The command above will output an agreement ID (e.g., `123`). You'll need this ID for making API calls.
 
-### Workflow 4: Make API Calls to Your Purchased Resource using CLI (Generic LLM Protocol)
+### Workflow 4: Make API Calls to Your Purchased Resource using CLI (Generic LLM Protocol) 🔌
 
 Once you have an active agreement, you can make API calls to the purchased service using the Forest CLI.
 
@@ -307,3 +313,9 @@ forest api gllm chat/completions \
 <img src="./img/screenshots/cli-api-completion.png" alt="API Completion Response" width="750">
 
 *Screenshot: Output of a Chat Completion API Call to one of the LLM Providers we made an Agreement with*
+
+# 🎉 Thanks, If You Want to Learn More
+
+- Discord: [link](https://discord.gg/HWm96wKzWV)
+- CLI Docs: [link](/cli/README.md)
+- Project Summary: [link](README.md)
