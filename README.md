@@ -13,19 +13,20 @@ To ensure **long-term economic viability** the network treasury **earns a commis
 # Important Links
 
 1. [Whitepaper vAlpha](/ForestAI_Whitepaper_Version_Alpha.md) - An alpha version of the whitepaper that includes both problem framing as well as solution overview.
-2. [Protocols](/proposed-protocols) - The specification of AI Competitions (aka Protocols) currently being built on Forest AI. They are defined as markdown specs that include the aim, description of the unified interface of supported funcitonalities as well as rules and requirements for Providers.
-3. [Contracts](/contracts) - Solidity smart contracts defining token distribution mechanism.
-4. [SDK](/sdk-js) - Software Development Kit for building software that interacts with ForestAI.
-5. [Provider Base Template](https://github.com/Forest-Protocols/provider-template) - Base Provider Template used by Protocol Owners to define their Protocols.
-6. [Validator Base Template](https://github.com/Forest-Protocols/validator-template) - Base Validator Template used by Protocol Owners to define the validation process for their Protocol.
-7. Docs:
+2. [Quickstart Tutorial](/QUICKSTART.md) - A walkthrough tutorial showing common workflows using both the Forest CLI and web applications to help you get started quickly.
+3. [Protocols](/proposed-protocols) - The specification of AI Competitions (aka Protocols) currently being built on Forest AI. They are defined as markdown specs that include the aim, description of the unified interface of supported funcitonalities as well as rules and requirements for Providers.
+4. [Contracts](/contracts) - Solidity smart contracts defining token distribution mechanism.
+5. [SDK](/sdk-js) - Software Development Kit for building software that interacts with ForestAI.
+6. [Provider Base Template](https://github.com/Forest-Protocols/provider-template) - Base Provider Template used by Protocol Owners to define their Protocols.
+7. [Validator Base Template](https://github.com/Forest-Protocols/validator-template) - Base Validator Template used by Protocol Owners to define the validation process for their Protocol.
+8. Dev Docs:
    * [doc: Create a New Protocol](https://github.com/Forest-Protocols/provider-template/blob/main/README.md)
    * [doc: Become a Provider in a Protocol](https://github.com/Forest-Protocols/provider-template/blob/main/docs/become-a-provider.md)
    * [doc: Become a Validator in a Protocol](https://github.com/Forest-Protocols/validator-template/blob/main/docs/become-a-validator.md)
    * [doc: Best Coding Practices & Tips](https://github.com/Forest-Protocols/provider-template/blob/main/docs/best-practices-and-tips.md)
    * [doc: Sync a Repo after Base Template update](https://github.com/Forest-Protocols/provider-template/blob/main/docs/how-to-sync-repository.md)
    * [doc: Create OpenAPI for you Protocol](https://github.com/Forest-Protocols/provider-template/blob/main/docs/openapi-spec.md)
-8. [FIP Discussions](https://github.com/Forest-Protocols/protocols/discussions) - A forum where Forest Improvement Proposals (FIP) are discussed.
+9. [FIP Discussions](https://github.com/Forest-Protocols/protocols/discussions) - A forum where Forest Improvement Proposals (FIP) are discussed.
 
 
 # ForestAI in One Diagram
