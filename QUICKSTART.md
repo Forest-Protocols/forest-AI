@@ -214,10 +214,9 @@ Once audit log files are revealed, you can browse them on Peerbench in two ways:
 #### Direct Link
 
 In our workflow examples we had two links. Let's use one of them to see how a sample Audit File looks like:
-- [cli] https://peerbench.ai/inspect/bagaaiera2lpa4qbvumzc3cv25xdkcalquxw7dwxceodqn443wxpcbpenrr5q
-- [stats webapp] https://www.peerbench.ai/inspect/bagaaiera3i6e5mjpk477yhjwz53ho7hjp3hoibylbpmcpnjpvkurr5vbgm5q
+- https://www.peerbench.ai/inspect/bagaaiera3i6e5mjpk477yhjwz53ho7hjp3hoibylbpmcpnjpvkurr5vbgm5q
 
-If we click on these links we are taken to the audit file itself. In there you can see the exact tests that were performed. 
+If we click on the link we are taken to the audit file itself. In there you can see the exact tests that were performed. 
 
 Some audit files might include a single test but some might include a whole suite of tests:
 
