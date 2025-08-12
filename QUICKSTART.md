@@ -28,6 +28,7 @@ Before starting, ensure you have:
 > - A wallet with Base Sepolia testnet ETH for transaction fees
 > - USDC tokens for entering agreements and paying for services
 > - Basic understanding of blockchain transactions
+> If you need test tokens contact the Forest team. Link at the end of this guide.
 
 ## Setup
 
@@ -40,10 +41,10 @@ npm i @forest-protocols/cli@latest -g
 ### 2. Set Up Your Account
 
 > [!CAUTION]
-> **Security Warning**: Never share your private key or commit it to version control. Use a test account for this tutorial.
+> **Security Warning**: Never share your private key or commit it to version control.
 
 ```bash
-# Set your account private key (use a test account)
+# Set your account private key
 forest config set account 0x69...368b
 
 # Verify configuration
@@ -56,7 +57,7 @@ forest config get
 - **Peerbench**: [https://peerbench.com](https://peerbench.com)
 
 > [!NOTE]
-> The Forest Stats Webapp provides a user-friendly interface for viewing protocol data, Peerbench shows detailed validation and benchmarking data for providers to help you make informed purchasing decisions, while CLI is used to view data but also execute actions like registering Actors, entering Agreements and using the purchased Resources. Ultimately all functionalities will be available via the webapp.
+> The Forest Stats Webapp provides a user-friendly interface for viewing protocol data, Peerbench shows detailed validation and benchmarking audit logs for full transparency of the process, while CLI is used to view data but also execute actions like registering Actors, entering Agreements and using the purchased Resources. Ultimately all functionalities will be available via the webapp.
 
 ---
 
@@ -125,11 +126,11 @@ forest get offer
 
 *Screenshot: CLI output showing a list of Offers in the Generic LLM Protocol*
 
-We are interested in Offer `ID @ Protocol: 5 @ 0x2cf3a88a17fa5c5601de77b44f19a02e572c03af` because it comes from our Top-Scorer last epoch.
+We are interested in Offer `ID @ Protocol: 5 @ 0x2cf3a88a17fa5c5601de77b44f19a02e572c03af` because it comes from our top-scoring last epoch `promptlayer` provider.
 
 ### Option B: Using Forest Stats Webapp
 
-Let's try a similar workflow now using the Stats webapp.
+Before we get into purchasing a Resource, let's try a similar workflow now using the Stats webapp.
 
 #### Step 1: Open Forest Stats Webapp
 
@@ -193,7 +194,7 @@ The process of publishing validations follows three distinct phases:
 2. **Score Reveal (aka Partial Reveal)**: Validators reveal the actual scores (mandatory for all validations).
 3. **Audit Log Reveal (aka Full Reveal)**: Detailed test data is revealed (happens via random sampling).
 
-On [https://stats.forestai.io](https://stats.forestai.io) you can see this in `Status` column in `Recent Evaluations` tables found in a couple of places. **Commit Phase** is visualised with the left-side box being highlighted in yellow. **Score Reveal** is visualised with the middle box being highlighted in green. **Audit Log Reveal** is visualised with the right-side box being highlighted in green.
+On [https://stats.forestai.io](https://stats.forestai.io) you can see this in `Status` column in `Recent Evaluations` tables found in a couple of places. **Commit Phase** is visualised with the left-side box being highlighted in yellow: 🟨 ⬜ ⬜. **Score Reveal** is visualised with the middle box being highlighted in green: 🟨 🟩 ⬜. **Audit Log Reveal** is visualised with the right-side box being highlighted in green: 🟨 ⬜ 🟩.
 
 <img src="./img/screenshots/stats-drand-reveal.png" alt="List of Tests in an Audit File" width="750">
 
